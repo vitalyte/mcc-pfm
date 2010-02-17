@@ -16,6 +16,8 @@ public class Main {
      */
     public static void main(String[] args) {
         // TODO code application logic here
+        //for (int i=)
+    System.out.println(NormalDistribution.CDF(0.5, 0, 1));
     }
 
 }
