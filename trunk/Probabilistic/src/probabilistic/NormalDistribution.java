@@ -5,7 +5,7 @@
  */
 //import ;
 package probabilistic;
-
+import  java.lang.*;
 /**
  *
  * @author Alximik
@@ -22,8 +22,10 @@ static double CDF(double val, double mean, double scale){
     final double a3 = 1.781477937;
     final double a4= -1.821255978;
     final double a5 =  1.330274429;
+    x= (val - mean) / scale;
+    L= Math.abs(x);
     return 0.0;
-    /*x= (val - mean) / scal;
+    /*
     L= Math.fabs(x);
 
 x = (val - mean) / scal
