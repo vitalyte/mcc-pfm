@@ -5,7 +5,7 @@
  */
 //import ;
 package probabilistic;
-import  java.lang.*;
+import java.lang.*;
 /**
  *
  * @author Alximik
