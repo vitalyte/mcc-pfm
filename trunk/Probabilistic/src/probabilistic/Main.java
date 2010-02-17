@@ -18,7 +18,9 @@ public class Main {
         // TODO code application logic here
         //for (int i=)
     System.out.println(NormalDistribution.CDF(0.5, 0, 1));
+    System.out.println(NormalDistribution.PDF(0.5, 0, 1));
     System.out.println(NormalDistribution.PPF(0.999, 0, 1));
+
     }
 
 }
