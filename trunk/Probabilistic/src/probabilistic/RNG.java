@@ -10,7 +10,8 @@ package probabilistic;
  * @author Alximik
  */
 public class RNG {
-  
+
+   static int idum =0;
    static int idum2=123456789,iy=0;
    static int [] iv = new int [32];
    static void initRNG(){
@@ -37,6 +38,10 @@ static double  Ran2 (Integer idum)
     final double AM=1./IM1;
     int j=0,k=0;
     double temp;
+    if (RNG.idum !=0)
+        idum = RNG.idum;
+    else
+        RNG.idum = idum;
     if (idum <= 0) {
         idum=(idum==0 ? 1 : -idum);
 	idum2=idum;
@@ -59,6 +64,7 @@ static double  Ran2 (Integer idum)
     j=iy/NDIV;
     iy=iv[j]-idum2;
     iv[j] = idum;
+     RNG.idum = idum;
     if (iy < 1)
         iy += IMM1;
     if ((temp=AM*iy) > RNMX)

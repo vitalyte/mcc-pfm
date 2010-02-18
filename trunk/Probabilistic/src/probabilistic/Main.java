@@ -5,6 +5,8 @@
 
 package probabilistic;
 
+import java.util.Random;
+
 /**
  *
  * @author Alximik
@@ -20,8 +22,11 @@ public class Main {
     System.out.println(NormalDistribution.CDF(0.5, 0, 1));
     System.out.println(NormalDistribution.PDF(0.5, 0, 1));
     System.out.println(NormalDistribution.PPF(0.999, 0, 1));
+    // testing RNG
+    Random rnd = new Random();
+    int s = -rnd.nextInt(1000000)+1;
+    Integer seed = new Integer (s);
     for (int i=0;i<10;i++)
-        System.out.println(RNG.Ran2(-100));
+        System.out.println(RNG.Ran2(seed));
     }
-
 }
