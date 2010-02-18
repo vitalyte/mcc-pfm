@@ -20,7 +20,8 @@ public class Main {
     System.out.println(NormalDistribution.CDF(0.5, 0, 1));
     System.out.println(NormalDistribution.PDF(0.5, 0, 1));
     System.out.println(NormalDistribution.PPF(0.999, 0, 1));
-
+    for (int i=0;i<10;i++)
+        System.out.println(RNG.Ran2(-100));
     }
 
 }
