@@ -9,8 +9,10 @@
  * Created on 22 лют 2010, 14:05:53
  */
 
-package probabilistic.gui;
-
+ package probabilistic.gui;
+ import java.awt.Graphics;
+import java.util.Random;
+import probabilistic.*;
 /**
  *
  * @author Vitaly
@@ -21,6 +23,40 @@ public class GridJPanel extends javax.swing.JPanel {
     public GridJPanel() {
         initComponents();
         
+    }
+    @Override
+     public void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        this.setSize(400,400);
+        int width = this.getWidth();
+        int height = this.getHeight();
+        int stepW = width/20;
+        int stepH = height/20;
+        for (int i=0;i<=width;i+=stepW)
+            g.drawLine(i, 0, i, height);
+        for (int j=0;j<=width;j+=stepH)
+            g.drawLine(0, j, width, j);
+        FillRandomPoints(g, width, height, stepW, stepH);
+    }
+    void FillRandomPoints (Graphics g, int w,int h, int stepW, int stepH)
+    {
+       //UniformDistribution uniform = new UniformDistribution();
+         Random rnd = new Random();
+        int s = -rnd.nextInt(1000000) + 1;
+        Integer seed = new Integer(s);
+        int Nmax = w*h/(stepW*stepH);
+        for (int i=0;i<Nmax;i++)
+        {
+            double rndX = UniformDistribution.PPF(RNG.Ran2(seed), 0, w);
+            double rndY = UniformDistribution.PPF(RNG.Ran2(seed), 0, h);
+            g.drawLine((int)rndX, (int)rndY, (int)rndX+1, (int)rndY );
+        }
+        //for (int i = 0; i < 10; i++) {
+        //    System.out.println(RNG.Ran2(seed));
+        //}
+
+      // for (int i=0;i<w;i++)
+     //  UniformDistribution.PPF(, WIDTH, WIDTH);
     }
 
     /** This method is called from within the constructor to
