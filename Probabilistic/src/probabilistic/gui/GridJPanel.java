@@ -20,25 +20,32 @@ import probabilistic.*;
 public class GridJPanel extends javax.swing.JPanel {
 
     /** Creates new form GridJPanel */
+    int stepH=80;
+    int stepW=80;
+    int W=400;
+    int H=400;
+    int [][] matPointsX = new int [H/stepH][W/stepW];
+    int [][] matPointsY = new int [H/stepH][W/stepW];
     public GridJPanel() {
         initComponents();
-        
+        FillRandomPoints(W,H,stepW,stepH);
     }
     
-
-    @Override
+    //static boolean notPaint = false;
+   // @Override
      public void paintComponent(Graphics g) {
-        super.paintComponent(g);
-        this.setSize(400,400);
-        int width = this.getWidth();
-        int height = this.getHeight();
-        int stepW = width/5;
-        int stepH = height/5;
-        for (int i=0;i<=width;i+=stepW)
-            g.drawLine(i, 0, i, height);
-        for (int j=0;j<=width;j+=stepH)
-            g.drawLine(0, j, width, j);
-        FillRandomPoints(g, width, height, stepW, stepH);
+      
+           super.paintComponent(g);
+           this.setSize(W,H);
+           int width = this.getWidth();
+           int height = this.getHeight();
+           for (int i=0;i<=width;i+=stepW)
+                g.drawLine(i, 0, i, height);
+           for (int j=0;j<=height;j+=stepH)
+                g.drawLine(0, j, width, j);
+           for(int i=0; i <W/stepW; i++)
+                for (int j=0;j<H/stepH;j++)
+                   g.drawLine(matPointsX[i][j], matPointsY[i][j], matPointsX[i][j]+1,  matPointsY[i][j] );
     }
     boolean isSquareEmpty(boolean [][] matrix, int i,int j)
     {
@@ -46,15 +53,15 @@ public class GridJPanel extends javax.swing.JPanel {
            return true;
        return false;
     }
-    void FillRandomPoints (Graphics g, int w,int h, int stepW, int stepH)
+    void FillRandomPoints (int w,int h, int stepW, int stepH)
     {
        //UniformDistribution uniform = new UniformDistribution();
          Random rnd = new Random();
         int s = -rnd.nextInt(1000000) + 1;
         Integer seed = new Integer(s);
         int Nmax = w*h/(stepW*stepH);
-        int m = h/stepH;
-        int n = w/stepW;
+        int m = w/stepW ;
+        int n = h/stepH;
         boolean [][] matrix = new boolean [m][n];
         for (int i=0; i < m; i++)
             for(int j=0; j < n; j++)
@@ -68,24 +75,13 @@ public class GridJPanel extends javax.swing.JPanel {
             int rndJ = (int)rndY/stepH;
             if (isSquareEmpty(matrix,rndI,rndJ)){
                 // точку кинули в порожню клітину
+                matPointsX[rndI][rndJ] = (int)rndX;
+                matPointsY[rndI][rndJ] = (int)rndY;
                 matrix[rndI][rndJ] = true;
-                g.drawLine((int)rndX, (int)rndY, (int)rndX+1, (int)rndY );
                 i++;
             }
                 
         }
-       // for (int i=0;i<Nmax;i++)
-       // {
-       //     double rndX = UniformDistribution.PPF(RNG.Ran2(seed), 0, w);
-       //     double rndY = UniformDistribution.PPF(RNG.Ran2(seed), 0, h);
-       //     g.drawLine((int)rndX, (int)rndY, (int)rndX+1, (int)rndY );
-       // }
-        //for (int i = 0; i < 10; i++) {
-        //    System.out.println(RNG.Ran2(seed));
-        //}
-
-      // for (int i=0;i<w;i++)
-     //  UniformDistribution.PPF(, WIDTH, WIDTH);
     }
 
     /** This method is called from within the constructor to
