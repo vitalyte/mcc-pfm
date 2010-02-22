@@ -11,6 +11,8 @@
 
 package probabilistic.gui;
 
+import java.awt.*;
+import javax.swing.*;
 /**
  *
  * @author Vitaly
@@ -20,8 +22,15 @@ public class ProbabilisticGUI extends javax.swing.JFrame {
     /** Creates new form ProbabilisticGUI */
     public ProbabilisticGUI() {
         initComponents();
+        //Container content = getContentPane();
+
+        gridJPanel1.setSize(new Dimension (400,400));
+        gridJPanel1.setBorder(BorderFactory.createLineBorder (Color.blue, 2));
+        gridJPanel1.setBackground(Color.white);
+        gridJPanel1.setVisible(true);
         
     }
+  
 
     /** This method is called from within the constructor to
      * initialize the form.
@@ -45,6 +54,7 @@ public class ProbabilisticGUI extends javax.swing.JFrame {
         deviationjTextField = new javax.swing.JTextField();
         submitjButton = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
+        gridJPanel1 = new probabilistic.gui.GridJPanel();
         menuBar = new javax.swing.JMenuBar();
         fileMenu = new javax.swing.JMenu();
         openMenuItem = new javax.swing.JMenuItem();
@@ -66,11 +76,11 @@ public class ProbabilisticGUI extends javax.swing.JFrame {
         uniformjPanel.setLayout(uniformjPanelLayout);
         uniformjPanelLayout.setHorizontalGroup(
             uniformjPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 239, Short.MAX_VALUE)
+            .addGap(0, 219, Short.MAX_VALUE)
         );
         uniformjPanelLayout.setVerticalGroup(
             uniformjPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 266, Short.MAX_VALUE)
+            .addGap(0, 104, Short.MAX_VALUE)
         );
 
         jTabbedPane1.addTab("Uniform", uniformjPanel);
@@ -79,11 +89,11 @@ public class ProbabilisticGUI extends javax.swing.JFrame {
         exponentialPanel5.setLayout(exponentialPanel5Layout);
         exponentialPanel5Layout.setHorizontalGroup(
             exponentialPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 239, Short.MAX_VALUE)
+            .addGap(0, 219, Short.MAX_VALUE)
         );
         exponentialPanel5Layout.setVerticalGroup(
             exponentialPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 266, Short.MAX_VALUE)
+            .addGap(0, 104, Short.MAX_VALUE)
         );
 
         jTabbedPane1.addTab("Exponential", exponentialPanel5);
@@ -110,9 +120,9 @@ public class ProbabilisticGUI extends javax.swing.JFrame {
                             .addComponent(deviationjLabel))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(noramljPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(probabilityjTextField, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 155, Short.MAX_VALUE)
-                            .addComponent(averagejTextField, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 155, Short.MAX_VALUE)
-                            .addComponent(deviationjTextField, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 155, Short.MAX_VALUE)))
+                            .addComponent(probabilityjTextField, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 135, Short.MAX_VALUE)
+                            .addComponent(averagejTextField, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 135, Short.MAX_VALUE)
+                            .addComponent(deviationjTextField, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 135, Short.MAX_VALUE)))
                     .addComponent(submitjButton, javax.swing.GroupLayout.Alignment.TRAILING))
                 .addContainerGap())
         );
@@ -133,7 +143,7 @@ public class ProbabilisticGUI extends javax.swing.JFrame {
                     .addComponent(deviationjLabel, javax.swing.GroupLayout.Alignment.TRAILING))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(submitjButton)
-                .addContainerGap(163, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab("Normal", noramljPanel);
@@ -142,11 +152,11 @@ public class ProbabilisticGUI extends javax.swing.JFrame {
         FormjPanel.setLayout(FormjPanelLayout);
         FormjPanelLayout.setHorizontalGroup(
             FormjPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 244, Short.MAX_VALUE)
+            .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 224, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
         FormjPanelLayout.setVerticalGroup(
             FormjPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 294, Short.MAX_VALUE)
+            .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 132, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
 
         jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
@@ -155,11 +165,22 @@ public class ProbabilisticGUI extends javax.swing.JFrame {
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 221, Short.MAX_VALUE)
+            .addGap(0, 201, Short.MAX_VALUE)
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 316, Short.MAX_VALUE)
+            .addGap(0, 93, Short.MAX_VALUE)
+        );
+
+        javax.swing.GroupLayout gridJPanel1Layout = new javax.swing.GroupLayout(gridJPanel1);
+        gridJPanel1.setLayout(gridJPanel1Layout);
+        gridJPanel1Layout.setHorizontalGroup(
+            gridJPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 224, Short.MAX_VALUE)
+        );
+        gridJPanel1Layout.setVerticalGroup(
+            gridJPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 192, Short.MAX_VALUE)
         );
 
         fileMenu.setText("File");
@@ -217,20 +238,27 @@ public class ProbabilisticGUI extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 21, Short.MAX_VALUE)
-                .addComponent(FormjPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 41, Short.MAX_VALUE)
+                        .addComponent(FormjPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(30, 30, 30))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(gridJPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGap(272, 272, 272))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGap(11, 11, 11)
+                        .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(FormjPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap())
+                .addGap(15, 15, 15)
+                .addComponent(gridJPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(153, Short.MAX_VALUE))
         );
 
         pack();
@@ -266,6 +294,7 @@ public class ProbabilisticGUI extends javax.swing.JFrame {
     private javax.swing.JMenuItem exitMenuItem;
     private javax.swing.JPanel exponentialPanel5;
     private javax.swing.JMenu fileMenu;
+    private probabilistic.gui.GridJPanel gridJPanel1;
     private javax.swing.JMenu helpMenu;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JTabbedPane jTabbedPane1;

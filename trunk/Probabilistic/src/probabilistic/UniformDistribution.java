@@ -22,7 +22,7 @@ public class UniformDistribution {
      *
      * @return  value of random variable
      */
-    static double PPF(double p, double a, double b) {
+    public static double PPF(double p, double a, double b) {
         double result = 0;
         result = a + (b - a) * p;
         return result;
@@ -39,7 +39,7 @@ public class UniformDistribution {
      *
      * @return  probabilty
      */
-    static double CDF(double val, double a, double b) {
+    public static double CDF(double val, double a, double b) {
         double result = 0;
         result = (val - a) / (b - a);
         return result;
@@ -55,7 +55,7 @@ public class UniformDistribution {
      *
      * @return  value of function
      */
-    static double PDF(double val, double a, double b) {
+    public static double PDF(double val, double a, double b) {
         double result = 0;
         result = 1.0 / (b - a);
         return result;
