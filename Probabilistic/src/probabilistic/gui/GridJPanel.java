@@ -24,19 +24,27 @@ public class GridJPanel extends javax.swing.JPanel {
         initComponents();
         
     }
+    
+
     @Override
      public void paintComponent(Graphics g) {
         super.paintComponent(g);
         this.setSize(400,400);
         int width = this.getWidth();
         int height = this.getHeight();
-        int stepW = width/20;
-        int stepH = height/20;
+        int stepW = width/5;
+        int stepH = height/5;
         for (int i=0;i<=width;i+=stepW)
             g.drawLine(i, 0, i, height);
         for (int j=0;j<=width;j+=stepH)
             g.drawLine(0, j, width, j);
         FillRandomPoints(g, width, height, stepW, stepH);
+    }
+    boolean isSquareEmpty(boolean [][] matrix, int i,int j)
+    {
+       if (matrix[i][j] == false )
+           return true;
+       return false;
     }
     void FillRandomPoints (Graphics g, int w,int h, int stepW, int stepH)
     {
@@ -45,12 +53,33 @@ public class GridJPanel extends javax.swing.JPanel {
         int s = -rnd.nextInt(1000000) + 1;
         Integer seed = new Integer(s);
         int Nmax = w*h/(stepW*stepH);
-        for (int i=0;i<Nmax;i++)
+        int m = h/stepH;
+        int n = w/stepW;
+        boolean [][] matrix = new boolean [m][n];
+        for (int i=0; i < m; i++)
+            for(int j=0; j < n; j++)
+                matrix[i][j] = false;
+        int i=0;
+        while (i<Nmax)
         {
             double rndX = UniformDistribution.PPF(RNG.Ran2(seed), 0, w);
             double rndY = UniformDistribution.PPF(RNG.Ran2(seed), 0, h);
-            g.drawLine((int)rndX, (int)rndY, (int)rndX+1, (int)rndY );
+            int rndI = (int)rndX/stepW;
+            int rndJ = (int)rndY/stepH;
+            if (isSquareEmpty(matrix,rndI,rndJ)){
+                // точку кинули в порожню клітину
+                matrix[rndI][rndJ] = true;
+                g.drawLine((int)rndX, (int)rndY, (int)rndX+1, (int)rndY );
+                i++;
+            }
+                
         }
+       // for (int i=0;i<Nmax;i++)
+       // {
+       //     double rndX = UniformDistribution.PPF(RNG.Ran2(seed), 0, w);
+       //     double rndY = UniformDistribution.PPF(RNG.Ran2(seed), 0, h);
+       //     g.drawLine((int)rndX, (int)rndY, (int)rndX+1, (int)rndY );
+       // }
         //for (int i = 0; i < 10; i++) {
         //    System.out.println(RNG.Ran2(seed));
         //}
