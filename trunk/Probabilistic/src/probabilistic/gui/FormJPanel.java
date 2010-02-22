@@ -4,9 +4,9 @@
  */
 
 /*
- * GridJPanel.java
+ * FormJPanel.java
  *
- * Created on 22 лют 2010, 14:05:53
+ * Created on 22 лют 2010, 16:24:18
  */
 
 package probabilistic.gui;
@@ -15,12 +15,11 @@ package probabilistic.gui;
  *
  * @author Vitaly
  */
-public class GridJPanel extends javax.swing.JPanel {
+public class FormJPanel extends javax.swing.JPanel {
 
-    /** Creates new form GridJPanel */
-    public GridJPanel() {
+    /** Creates new form FormJPanel */
+    public FormJPanel() {
         initComponents();
-        
     }
 
     /** This method is called from within the constructor to
@@ -32,17 +31,17 @@ public class GridJPanel extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        setBorder(javax.swing.BorderFactory.createTitledBorder("grid"));
+        setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 261, Short.MAX_VALUE)
+            .addGap(0, 394, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 144, Short.MAX_VALUE)
+            .addGap(0, 294, Short.MAX_VALUE)
         );
     }// </editor-fold>//GEN-END:initComponents
 
