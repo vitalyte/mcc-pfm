@@ -20,12 +20,12 @@ import probabilistic.*;
 public class GridJPanel extends javax.swing.JPanel {
 
     /** Creates new form GridJPanel */
-    int stepH=80;
-    int stepW=80;
+    int stepH=200;
+    int stepW=200;
     int W=400;
     int H=400;
-    int [][] matPointsX = new int [H/stepH][W/stepW];
-    int [][] matPointsY = new int [H/stepH][W/stepW];
+    int [][] matPointsX = new int [W/stepW][H/stepH];
+    int [][] matPointsY = new int [W/stepW][H/stepH];
     public GridJPanel() {
         initComponents();
         FillRandomPoints(W,H,stepW,stepH);
@@ -55,8 +55,8 @@ public class GridJPanel extends javax.swing.JPanel {
     }
     void FillRandomPoints (int w,int h, int stepW, int stepH)
     {
-       //UniformDistribution uniform = new UniformDistribution();
-         Random rnd = new Random();
+       
+        Random rnd = new Random();
         int s = -rnd.nextInt(1000000) + 1;
         Integer seed = new Integer(s);
         int Nmax = w*h/(stepW*stepH);
