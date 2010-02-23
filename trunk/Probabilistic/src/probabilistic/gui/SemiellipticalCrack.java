@@ -4,6 +4,9 @@
  */
 package probabilistic.gui;
 
+import java.util.Random;
+import probabilistic.*;
+
 /**
  *
  * @author Vitaly
@@ -16,6 +19,64 @@ public class SemiellipticalCrack {
     private int length2a;
     private int lengthB;
     private double aspectRatio;
+    private static boolean[][] matrix;
+
+    public SemiellipticalCrack(int w, int h, int stepW, int stepH) {
+        Random rnd = new Random();
+        int s = -rnd.nextInt(1000000) + 1;
+        Integer seed = new Integer(s);
+        int Nmax = w * h / (stepW * stepH);
+        int m = w / stepW;
+        int n = h / stepH;
+        matrix = new boolean[m][n];
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                matrix[i][j] = false;
+            }
+        }
+        int i = 0;
+        while (i < Nmax) {
+            double rndX = UniformDistribution.PPF(RNG.Ran2(seed), 0, w);
+            double rndY = UniformDistribution.PPF(RNG.Ran2(seed), 0, h);
+            int rndI = (int) rndX / stepW;
+            int rndJ = (int) rndY / stepH;
+            if (isSquareEmpty(matrix, rndI, rndJ)) {
+                // точку кинули в порожню клітину
+                setSiteX((int) rndX);
+                setSiteY((int) rndY);
+                matrix[rndI][rndJ] = true;
+                i++;
+            }
+
+        }
+
+
+    }
+
+    boolean isSquareEmpty(boolean[][] matrix, int i, int j) {
+        if (matrix[i][j] == false) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Get the value of matrix
+     *
+     * @return the value of matrix
+     */
+    public boolean[][] getMatrix() {
+        return matrix;
+    }
+
+    /**
+     * Set the value of matrix
+     *
+     * @param matrix new value of matrix
+     */
+    public void setMatrix(boolean[][] matrix) {
+        this.matrix = matrix;
+    }
 
     /**
      * Get the value of aspectRatio
@@ -35,13 +96,12 @@ public class SemiellipticalCrack {
         this.aspectRatio = aspectRatio;
     }
 
-
     /**
      * Get the value of crackLengthB
      *
      * @return the value of crackLengthB
      */
-    public int getCrackLengthB() {
+    public int getLengthB() {
         return lengthB;
     }
 
@@ -50,17 +110,16 @@ public class SemiellipticalCrack {
      *
      * @param crackLengthB new value of crackLengthB
      */
-    public void setCrackLengthB(int crackLengthB) {
+    public void setLengthB(int crackLengthB) {
         this.lengthB = crackLengthB;
     }
-
 
     /**
      * Get the value of crackLength
      *
      * @return the value of crackLength
      */
-    public int getCrackLength2a() {
+    public int getLength2a() {
         return length2a;
     }
 
@@ -69,17 +128,16 @@ public class SemiellipticalCrack {
      *
      * @param crackLength new value of crackLength
      */
-    public void setCrackLength2a(int crackLength) {
+    public void setLength2a(int crackLength) {
         this.length2a = crackLength;
     }
-
 
     /**
      * Get the value of crackSiteY
      *
      * @return the value of crackSiteY
      */
-    public int getCrackSiteY() {
+    public int getSiteY() {
         return siteY;
     }
 
@@ -88,17 +146,16 @@ public class SemiellipticalCrack {
      *
      * @param crackSiteY new value of crackSiteY
      */
-    public void setCrackSiteY(int crackSiteY) {
+    public void setSiteY(int crackSiteY) {
         this.siteY = crackSiteY;
     }
-
 
     /**
      * Get the value of crackSiteX
      *
      * @return the value of crackSiteX
      */
-    public int getCrackSiteX() {
+    public int getSiteX() {
         return siteX;
     }
 
@@ -107,7 +164,7 @@ public class SemiellipticalCrack {
      *
      * @param crackSiteX new value of crackSiteX
      */
-    public void setCrackSiteX(int crackSiteX) {
+    public void setSiteX(int crackSiteX) {
         this.siteX = crackSiteX;
     }
 

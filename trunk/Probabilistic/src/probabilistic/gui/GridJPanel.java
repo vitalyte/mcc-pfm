@@ -35,6 +35,7 @@ public class GridJPanel extends javax.swing.JPanel {
 
     //static boolean notPaint = false;
     // @Override
+    @Override
     public void paintComponent(Graphics g) {
 
         super.paintComponent(g);
