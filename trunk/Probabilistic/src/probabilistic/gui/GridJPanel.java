@@ -8,11 +8,12 @@
  *
  * Created on 22 лют 2010, 14:05:53
  */
+package probabilistic.gui;
 
- package probabilistic.gui;
- import java.awt.Graphics;
+import java.awt.Graphics;
 import java.util.Random;
 import probabilistic.*;
+
 /**
  *
  * @author Vitaly
@@ -20,67 +21,74 @@ import probabilistic.*;
 public class GridJPanel extends javax.swing.JPanel {
 
     /** Creates new form GridJPanel */
-    int stepH=200;
-    int stepW=200;
-    int W=400;
-    int H=400;
-    int [][] matPointsX = new int [W/stepW][H/stepH];
-    int [][] matPointsY = new int [W/stepW][H/stepH];
+    int stepH = 200;
+    int stepW = 200;
+    int W = 400;
+    int H = 400;
+    int[][] matPointsX = new int[W / stepW][H / stepH];
+    int[][] matPointsY = new int[W / stepW][H / stepH];
+
     public GridJPanel() {
         initComponents();
-        FillRandomPoints(W,H,stepW,stepH);
+        FillRandomPoints(W, H, stepW, stepH);
     }
-    
+
     //static boolean notPaint = false;
-   // @Override
-     public void paintComponent(Graphics g) {
-      
-           super.paintComponent(g);
-           this.setSize(W,H);
-           int width = this.getWidth();
-           int height = this.getHeight();
-           for (int i=0;i<=width;i+=stepW)
-                g.drawLine(i, 0, i, height);
-           for (int j=0;j<=height;j+=stepH)
-                g.drawLine(0, j, width, j);
-           for(int i=0; i <W/stepW; i++)
-                for (int j=0;j<H/stepH;j++)
-                   g.drawLine(matPointsX[i][j], matPointsY[i][j], matPointsX[i][j]+1,  matPointsY[i][j] );
+    // @Override
+    public void paintComponent(Graphics g) {
+
+        super.paintComponent(g);
+        this.setSize(W, H);
+        int width = this.getWidth();
+        int height = this.getHeight();
+        for (int i = 0; i <= width; i += stepW) {
+            g.drawLine(i, 0, i, height);
+        }
+        for (int j = 0; j <= height; j += stepH) {
+            g.drawLine(0, j, width, j);
+        }
+        for (int i = 0; i < W / stepW; i++) {
+            for (int j = 0; j < H / stepH; j++) {
+                g.drawLine(matPointsX[i][j], matPointsY[i][j], matPointsX[i][j] + 1, matPointsY[i][j]);
+            }
+        }
     }
-    boolean isSquareEmpty(boolean [][] matrix, int i,int j)
-    {
-       if (matrix[i][j] == false )
-           return true;
-       return false;
+
+    boolean isSquareEmpty(boolean[][] matrix, int i, int j) {
+        if (matrix[i][j] == false) {
+            return true;
+        }
+        return false;
     }
-    void FillRandomPoints (int w,int h, int stepW, int stepH)
-    {
-       
+
+    void FillRandomPoints(int w, int h, int stepW, int stepH) {
+
         Random rnd = new Random();
         int s = -rnd.nextInt(1000000) + 1;
         Integer seed = new Integer(s);
-        int Nmax = w*h/(stepW*stepH);
-        int m = w/stepW ;
-        int n = h/stepH;
-        boolean [][] matrix = new boolean [m][n];
-        for (int i=0; i < m; i++)
-            for(int j=0; j < n; j++)
+        int Nmax = w * h / (stepW * stepH);
+        int m = w / stepW;
+        int n = h / stepH;
+        boolean[][] matrix = new boolean[m][n];
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
                 matrix[i][j] = false;
-        int i=0;
-        while (i<Nmax)
-        {
+            }
+        }
+        int i = 0;
+        while (i < Nmax) {
             double rndX = UniformDistribution.PPF(RNG.Ran2(seed), 0, w);
             double rndY = UniformDistribution.PPF(RNG.Ran2(seed), 0, h);
-            int rndI = (int)rndX/stepW;
-            int rndJ = (int)rndY/stepH;
-            if (isSquareEmpty(matrix,rndI,rndJ)){
+            int rndI = (int) rndX / stepW;
+            int rndJ = (int) rndY / stepH;
+            if (isSquareEmpty(matrix, rndI, rndJ)) {
                 // точку кинули в порожню клітину
-                matPointsX[rndI][rndJ] = (int)rndX;
-                matPointsY[rndI][rndJ] = (int)rndY;
+                matPointsX[rndI][rndJ] = (int) rndX;
+                matPointsY[rndI][rndJ] = (int) rndY;
                 matrix[rndI][rndJ] = true;
                 i++;
             }
-                
+
         }
     }
 
@@ -106,9 +114,6 @@ public class GridJPanel extends javax.swing.JPanel {
             .addGap(0, 144, Short.MAX_VALUE)
         );
     }// </editor-fold>//GEN-END:initComponents
-
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     // End of variables declaration//GEN-END:variables
-
 }
