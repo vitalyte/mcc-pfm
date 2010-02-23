@@ -27,6 +27,7 @@ public class testJFrame extends javax.swing.JFrame {
     /** Creates new form testJFrame */
     public testJFrame() {
         initComponents();
+        SemiellipticalCrack.initMatrix();
     }
 
     public void paintComponent(Graphics g) {

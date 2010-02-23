@@ -21,16 +21,15 @@ import probabilistic.*;
 public class GridJPanel extends javax.swing.JPanel {
 
     /** Creates new form GridJPanel */
-    int stepH = 200;
-    int stepW = 200;
-    int W = 400;
-    int H = 400;
-    int[][] matPointsX = new int[W / stepW][H / stepH];
-    int[][] matPointsY = new int[W / stepW][H / stepH];
+    private int height = 400;
+    private int width = 400;
+    private int grainHeight = 200;
+    private int grainWidth = 200;
+    SurfaceArea area = new SurfaceArea(height, width, grainHeight, grainWidth);
 
     public GridJPanel() {
         initComponents();
-        FillRandomPoints(W, H, stepW, stepH);
+//        FillRandomPoints(W, H, stepW, stepH);
     }
 
     //static boolean notPaint = false;
@@ -39,20 +38,20 @@ public class GridJPanel extends javax.swing.JPanel {
     public void paintComponent(Graphics g) {
 
         super.paintComponent(g);
-        this.setSize(W, H);
-        int width = this.getWidth();
-        int height = this.getHeight();
-        for (int i = 0; i <= width; i += stepW) {
-            g.drawLine(i, 0, i, height);
+        this.setSize(width, height);
+        int widthWindow = this.getWidth();
+        int heightWindow = this.getHeight();
+        for (int i = 0; i <= widthWindow; i += grainWidth) {
+            g.drawLine(i, 0, i, heightWindow);
         }
-        for (int j = 0; j <= height; j += stepH) {
-            g.drawLine(0, j, width, j);
+        for (int j = 0; j <= heightWindow; j += grainHeight) {
+            g.drawLine(0, j, widthWindow, j);
         }
-        for (int i = 0; i < W / stepW; i++) {
-            for (int j = 0; j < H / stepH; j++) {
-                g.drawLine(matPointsX[i][j], matPointsY[i][j], matPointsX[i][j] + 1, matPointsY[i][j]);
-            }
-        }
+//        for (int i = 0; i < W / stepW; i++) {
+//            for (int j = 0; j < H / stepH; j++) {
+//                g.drawLine(matPointsX[i][j], matPointsY[i][j], matPointsX[i][j] + 1, matPointsY[i][j]);
+//            }
+//        }
     }
 
     boolean isSquareEmpty(boolean[][] matrix, int i, int j) {
@@ -62,36 +61,36 @@ public class GridJPanel extends javax.swing.JPanel {
         return false;
     }
 
-    void FillRandomPoints(int w, int h, int stepW, int stepH) {
-
-        Random rnd = new Random();
-        int s = -rnd.nextInt(1000000) + 1;
-        Integer seed = new Integer(s);
-        int Nmax = w * h / (stepW * stepH);
-        int m = w / stepW;
-        int n = h / stepH;
-        boolean[][] matrix = new boolean[m][n];
-        for (int i = 0; i < m; i++) {
-            for (int j = 0; j < n; j++) {
-                matrix[i][j] = false;
-            }
-        }
-        int i = 0;
-        while (i < Nmax) {
-            double rndX = UniformDistribution.PPF(RNG.Ran2(seed), 0, w);
-            double rndY = UniformDistribution.PPF(RNG.Ran2(seed), 0, h);
-            int rndI = (int) rndX / stepW;
-            int rndJ = (int) rndY / stepH;
-            if (isSquareEmpty(matrix, rndI, rndJ)) {
-                // точку кинули в порожню клітину
-                matPointsX[rndI][rndJ] = (int) rndX;
-                matPointsY[rndI][rndJ] = (int) rndY;
-                matrix[rndI][rndJ] = true;
-                i++;
-            }
-
-        }
-    }
+//    void FillRandomPoints(int w, int h, int stepW, int stepH) {
+//
+//        Random rnd = new Random();
+//        int s = -rnd.nextInt(1000000) + 1;
+//        Integer seed = new Integer(s);
+//        int Nmax = w * h / (stepW * stepH);
+//        int m = w / stepW;
+//        int n = h / stepH;
+//        boolean[][] matrix = new boolean[m][n];
+//        for (int i = 0; i < m; i++) {
+//            for (int j = 0; j < n; j++) {
+//                matrix[i][j] = false;
+//            }
+//        }
+//        int i = 0;
+//        while (i < Nmax) {
+//            double rndX = UniformDistribution.PPF(RNG.Ran2(seed), 0, w);
+//            double rndY = UniformDistribution.PPF(RNG.Ran2(seed), 0, h);
+//            int rndI = (int) rndX / stepW;
+//            int rndJ = (int) rndY / stepH;
+//            if (isSquareEmpty(matrix, rndI, rndJ)) {
+//                // точку кинули в порожню клітину
+//                matPointsX[rndI][rndJ] = (int) rndX;
+//                matPointsY[rndI][rndJ] = (int) rndY;
+//                matrix[rndI][rndJ] = true;
+//                i++;
+//            }
+//
+//        }
+//    }
 
     /** This method is called from within the constructor to
      * initialize the form.
