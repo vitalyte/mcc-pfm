@@ -29,7 +29,7 @@ public class SemiellipticalCrack {
         int m = w / stepW;
         int n = h / stepH;
         matrix = new boolean[m][n];
-        
+
         for (int i = 0; i < m; i++) {
             for (int j = 0; j < n; j++) {
                 matrix[i][j] = false;
@@ -56,6 +56,19 @@ public class SemiellipticalCrack {
             return true;
         }
         return false;
+    }
+
+    /**
+     * Set the value of matrix
+     *
+     * @param matrix new value of matrix
+     */
+    public static void initMatrix() {
+        for (int i = 0; i < matrix.length; i++) {
+            for (int j = 0; j < matrix.length; j++) {
+                matrix[i][j] = false;
+            }
+        }
     }
 
     /**
