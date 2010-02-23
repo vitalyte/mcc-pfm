@@ -28,13 +28,8 @@ public class SemiellipticalCrack {
         int Nmax = w * h / (stepW * stepH);
         int m = w / stepW;
         int n = h / stepH;
-        matrix = new boolean[m][n];
+        
 
-        for (int i = 0; i < m; i++) {
-            for (int j = 0; j < n; j++) {
-                matrix[i][j] = false;
-            }
-        }
         double rndX = UniformDistribution.PPF(RNG.Ran2(seed), 0, w);
         double rndY = UniformDistribution.PPF(RNG.Ran2(seed), 0, h);
         int rndI = (int) rndX / stepW;
@@ -64,6 +59,7 @@ public class SemiellipticalCrack {
      * @param matrix new value of matrix
      */
     public static void initMatrix() {
+        matrix = new boolean[2][2];
         for (int i = 0; i < matrix.length; i++) {
             for (int j = 0; j < matrix.length; j++) {
                 matrix[i][j] = false;
