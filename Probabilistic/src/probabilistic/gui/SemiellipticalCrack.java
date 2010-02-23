@@ -29,24 +29,22 @@ public class SemiellipticalCrack {
         int m = w / stepW;
         int n = h / stepH;
         matrix = new boolean[m][n];
+        
         for (int i = 0; i < m; i++) {
             for (int j = 0; j < n; j++) {
                 matrix[i][j] = false;
             }
         }
-        int i = 0;
-        while (i < Nmax) {
-            double rndX = UniformDistribution.PPF(RNG.Ran2(seed), 0, w);
-            double rndY = UniformDistribution.PPF(RNG.Ran2(seed), 0, h);
-            int rndI = (int) rndX / stepW;
-            int rndJ = (int) rndY / stepH;
-            if (isSquareEmpty(matrix, rndI, rndJ)) {
-                // точку кинули в порожню клітину
-                setSiteX((int) rndX);
-                setSiteY((int) rndY);
-                matrix[rndI][rndJ] = true;
-                i++;
-            }
+        double rndX = UniformDistribution.PPF(RNG.Ran2(seed), 0, w);
+        double rndY = UniformDistribution.PPF(RNG.Ran2(seed), 0, h);
+        int rndI = (int) rndX / stepW;
+        int rndJ = (int) rndY / stepH;
+        if (isSquareEmpty(matrix, rndI, rndJ)) {
+            // точку кинули в порожню клітину
+            setSiteX((int) rndX);
+            setSiteY((int) rndY);
+            matrix[rndI][rndJ] = true;
+
 
         }
 
@@ -75,7 +73,7 @@ public class SemiellipticalCrack {
      * @param matrix new value of matrix
      */
     public void setMatrix(boolean[][] matrix) {
-        this.matrix = matrix;
+        SemiellipticalCrack.matrix = matrix;
     }
 
     /**
