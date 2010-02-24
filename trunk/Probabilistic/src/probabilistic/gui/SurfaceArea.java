@@ -16,14 +16,47 @@ public class SurfaceArea {
     private int grainWidth = 200;
     private int[][] matPointsX;
     private int[][] matPointsY;
+    private static int Nmax;
+    private static int numColumns;
+    private static int numRows;
 
     public SurfaceArea(int height, int width, int grainHeight, int grainWidth) {
         this.width = width;
         this.height = height;
         this.grainHeight = grainHeight;
         this.grainWidth = grainWidth;
+        Nmax = width * height / grainWidth * grainHeight;
         matPointsX = new int[this.width / this.grainWidth][this.height / this.grainHeight];
         matPointsY = new int[this.width / this.grainWidth][this.height / this.grainHeight];
+        SurfaceArea.numColumns = this.width / this.grainWidth;
+        SurfaceArea.numRows = this.height / this.grainHeight;
+    }
+
+    /**
+     * Get the value of Nmax
+     *
+     * @return the value of Nmax
+     */
+    public static int getNmax() {
+        return Nmax;
+    }
+
+    /**
+     * Get the value of numRows
+     *
+     * @return the value of numRows
+     */
+    public static int getNumRows() {
+        return numRows;
+    }
+
+    /**
+     * Get the value of numColumns
+     *
+     * @return the value of numColumns
+     */
+    public static int getNumColumns() {
+        return numColumns;
     }
 
     /**
