@@ -23,14 +23,51 @@ public class GridJPanel extends javax.swing.JPanel {
     /** Creates new form GridJPanel */
     private int height = 400;
     private int width = 400;
-    private int grainHeight = 20;
-    private int grainWidth = 20;
+    private int grainHeight = 200;
+    private int grainWidth = 200;
     private SurfaceArea surface;
     private SemiellipticalCrack crack;
 //    SurfaceArea area = new SurfaceArea(height, width, grainHeight, grainWidth);
 
     public GridJPanel() {
         initComponents();
+        FillRandomCracks(height, width, grainHeight, grainWidth);
+    }
+
+    //static boolean notPaint = false;
+    // @Override
+    @Override
+    public void paintComponent(Graphics g) {
+
+        super.paintComponent(g);
+        this.setSize(width, height);
+        int widthWindow = this.getWidth();
+        int heightWindow = this.getHeight();
+        for (int i = 0; i <= widthWindow; i += grainWidth) {
+            g.drawLine(i, 0, i, heightWindow);
+        }
+        for (int j = 0; j <= heightWindow; j += grainHeight) {
+            g.drawLine(0, j, widthWindow, j);
+        }
+        for (int i = 0; i < surface.getNumColumns(); i++) {
+            for (int j = 0; j < surface.getNumRows(); j++) {
+                g.drawLine(surface.getMatPointsX()[i][j] - crack.getLength2a()/2,
+                        surface.getMatPointsY()[i][j],
+                        surface.getMatPointsX()[i][j] + crack.getLength2a()/2,
+                        surface.getMatPointsY()[i][j]);
+            }
+        }
+
+    }
+
+    boolean isSquareEmpty(boolean[][] matrix, int i, int j) {
+        if (matrix[i][j] == false) {
+            return true;
+        }
+        return false;
+    }
+
+    void FillRandomCracks(int height, int width, int grainHeight, int grainWidth) {
         surface = new SurfaceArea(height, width, grainHeight, grainWidth);
         int i = 0;
         while (i < surface.getNmax()) {
@@ -51,82 +88,14 @@ public class GridJPanel extends javax.swing.JPanel {
 
             i++;
         }
-
-
-
-
-
-
     }
 
-    //static boolean notPaint = false;
-    // @Override
-    @Override
-    public void paintComponent(Graphics g) {
-
-        super.paintComponent(g);
-        this.setSize(width, height);
-        int widthWindow = this.getWidth();
-        int heightWindow = this.getHeight();
-        for (int i = 0; i <= widthWindow; i += grainWidth) {
-            g.drawLine(i, 0, i, heightWindow);
-        }
-        for (int j = 0; j <= heightWindow; j += grainHeight) {
-            g.drawLine(0, j, widthWindow, j);
-        }
-        for (int i = 0; i < surface.getNumColumns(); i++) {
-            for (int j = 0; j < surface.getNumRows(); j++) {
-                g.drawLine(surface.getMatPointsX()[i][j],
-                        surface.getMatPointsY()[i][j],
-                        surface.getMatPointsX()[i][j] + 1,
-                        surface.getMatPointsY()[i][j]);
-            }
-        }
-
-//        for (int i = 0; i < W / stepW; i++) {
-//            for (int j = 0; j < H / stepH; j++) {
-//                g.drawLine(matPointsX[i][j], matPointsY[i][j], matPointsX[i][j] + 1, matPointsY[i][j]);
-//            }
-//        }
+    public SemiellipticalCrack getCrack() {
+        return crack;
     }
 
-    boolean isSquareEmpty(boolean[][] matrix, int i, int j) {
-        if (matrix[i][j] == false) {
-            return true;
-        }
-        return false;
-    }
 
-//    void FillRandomPoints(int w, int h, int stepW, int stepH) {
-//
-//        Random rnd = new Random();
-//        int s = -rnd.nextInt(1000000) + 1;
-//        Integer seed = new Integer(s);
-//        int Nmax = w * h / (stepW * stepH);
-//        int m = w / stepW;
-//        int n = h / stepH;
-//        boolean[][] matrix = new boolean[m][n];
-//        for (int i = 0; i < m; i++) {
-//            for (int j = 0; j < n; j++) {
-//                matrix[i][j] = false;
-//            }
-//        }
-//        int i = 0;
-//        while (i < Nmax) {
-//            double rndX = UniformDistribution.PPF(RNG.Ran2(seed), 0, w);
-//            double rndY = UniformDistribution.PPF(RNG.Ran2(seed), 0, h);
-//            int rndI = (int) rndX / stepW;
-//            int rndJ = (int) rndY / stepH;
-//            if (isSquareEmpty(matrix, rndI, rndJ)) {
-//                // точку кинули в порожню клітину
-//                matPointsX[rndI][rndJ] = (int) rndX;
-//                matPointsY[rndI][rndJ] = (int) rndY;
-//                matrix[rndI][rndJ] = true;
-//                i++;
-//            }
-//
-//        }
-//    }
+
     /** This method is called from within the constructor to
      * initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is
