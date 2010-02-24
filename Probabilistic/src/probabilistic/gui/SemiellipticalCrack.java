@@ -20,86 +20,20 @@ public class SemiellipticalCrack {
     private int lengthB;
     private double aspectRatio;
     private static SurfaceArea surfaceAreaObj;
-    private static boolean[][] matrix;
-    private static Integer seed;
-    private static int Nmax;
-    public static int[][] matPointsX;
-    public static int[][] matPointsY;
-    //double rndX;
+
 
     public SemiellipticalCrack() {
 
 
-        double rndX = UniformDistribution.PPF(RNG.Ran2(seed), 0, surfaceAreaObj.getWidth());
-        double rndY = UniformDistribution.PPF(RNG.Ran2(seed), 0, surfaceAreaObj.getHeight());
-        int rndI = (int) rndX / surfaceAreaObj.getGrainWidth();
-        int rndJ = (int) rndY / surfaceAreaObj.getGrainHeight();
-        if (isSquareEmpty(matrix, rndI, rndJ)) {
-            // точку кинули в порожню клітину
-            setSiteX((int) rndX);
-            matPointsX[rndI][rndJ] = siteX;
-            setSiteY((int) rndY);
-            matPointsY[rndI][rndJ] = siteY;
-            matrix[rndI][rndJ] = true;
-        }
+        
     }
 
-    /**
-     * Set the value of matrix
-     *
-     * @param matrix new value of matrix
-     */
-    public static void initMatrix(int width, int height, int garinWidth, int grainHeight) {
-        surfaceAreaObj = new SurfaceArea(height, width, grainHeight, garinWidth);
-        Random rnd = new Random();
-        int s = -rnd.nextInt(1000000) + 1;
-        SemiellipticalCrack.seed = new Integer(s);
-        matPointsX = new int[SurfaceArea.getNumColumns()][SurfaceArea.getNumRows()];
-        matPointsY = new int[SurfaceArea.getNumColumns()][SurfaceArea.getNumRows()];
 
-        SemiellipticalCrack.matrix = new boolean[SurfaceArea.getNumColumns()][SurfaceArea.getNumRows()];
-        for (int i = 0; i < SurfaceArea.getNumColumns(); i++) {
-            for (int j = 0; j < SurfaceArea.getNumRows(); j++) {
-                SemiellipticalCrack.matrix[i][j] = false;
-            }
-        }
-    }
 
-    /**
-     * Get the value of matPointsY
-     *
-     * @return the value of matPointsY
-     */
-    public static int[][] getMatPointsY() {
-        return matPointsY;
-    }
 
-    /**
-     * Get the value of matPointsX
-     *
-     * @return the value of matPointsX
-     */
-    public static int[][] getMatPointsX() {
-        return matPointsX;
-    }
 
-    /**
-     * Get the value of Nmax
-     *
-     * @return the value of Nmax
-     */
-    public static int getNmax() {
-        return Nmax;
-    }
 
-    /**
-     * Get the value of seed
-     *
-     * @return the value of seed
-     */
-    public Integer getSeed() {
-        return seed;
-    }
+
 
     /**
      * Get the value of surfaceAreaObj
@@ -110,30 +44,10 @@ public class SemiellipticalCrack {
         return surfaceAreaObj;
     }
 
-    boolean isSquareEmpty(boolean[][] matrix, int i, int j) {
-        if (matrix[i][j] == false) {
-            return true;
-        }
-        return false;
-    }
 
-    /**
-     * Get the value of matrix
-     *
-     * @return the value of matrix
-     */
-    public boolean[][] getMatrix() {
-        return matrix;
-    }
 
-    /**
-     * Set the value of matrix
-     *
-     * @param matrix new value of matrix
-     */
-    public void setMatrix(boolean[][] matrix) {
-        SemiellipticalCrack.matrix = matrix;
-    }
+
+
 
     /**
      * Get the value of aspectRatio

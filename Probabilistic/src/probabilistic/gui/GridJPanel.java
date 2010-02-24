@@ -23,19 +23,40 @@ public class GridJPanel extends javax.swing.JPanel {
     /** Creates new form GridJPanel */
     private int height = 400;
     private int width = 400;
-    private int grainHeight = 200;
-    private int grainWidth = 200;
+    private int grainHeight = 20;
+    private int grainWidth = 20;
+    private SurfaceArea surface;
+    private SemiellipticalCrack crack;
 //    SurfaceArea area = new SurfaceArea(height, width, grainHeight, grainWidth);
 
     public GridJPanel() {
         initComponents();
-        SemiellipticalCrack.initMatrix(width, height, grainWidth, grainHeight);
-         for (int i = 0; i < 50000; i++) {
-             SemiellipticalCrack crack = new SemiellipticalCrack();
-             crack.getSiteX();
-         }
-       // SemiellipticalCrack crack = new SemiellipticalCrack();
-//        FillRandomPoints(W, H, stepW, stepH);
+        surface = new SurfaceArea(height, width, grainHeight, grainWidth);
+        int i = 0;
+        while (i < surface.getNmax()) {
+            crack = new SemiellipticalCrack();
+            //ввести ще один цикл перевірки координати точки!!!
+            double rndX = UniformDistribution.PPF(RNG.Ran2(surface.getSeed()), 0, surface.getWidth());
+            double rndY = UniformDistribution.PPF(RNG.Ran2(surface.getSeed()), 0, surface.getHeight());
+            int rndI = (int) rndX / surface.getGrainWidth();
+            int rndJ = (int) rndY / surface.getGrainHeight();
+            if (surface.isSquareEmpty(surface.getMatrix(), rndI, rndJ)) {
+                // точку кинули в порожню клітину
+                crack.setSiteX((int) rndX);
+                surface.setMatPointsX(rndI, rndJ, crack.getSiteX());
+                crack.setSiteY((int) rndY);
+                surface.setMatPointsY(rndI, rndJ, crack.getSiteY());
+                surface.setMatrix(rndI, rndJ, true);
+            }
+
+            i++;
+        }
+
+
+
+
+
+
     }
 
     //static boolean notPaint = false;
@@ -53,12 +74,12 @@ public class GridJPanel extends javax.swing.JPanel {
         for (int j = 0; j <= heightWindow; j += grainHeight) {
             g.drawLine(0, j, widthWindow, j);
         }
-        for (int i = 0; i < SurfaceArea.getNumColumns(); i++) {
-            for (int j = 0; j < SurfaceArea.getNumRows(); j++) {
-                g.drawLine(SemiellipticalCrack.matPointsX[i][j],
-                        SemiellipticalCrack.matPointsY[i][j],
-                        SemiellipticalCrack.matPointsX[i][j] + 1,
-                        SemiellipticalCrack.matPointsY[i][j]);
+        for (int i = 0; i < surface.getNumColumns(); i++) {
+            for (int j = 0; j < surface.getNumRows(); j++) {
+                g.drawLine(surface.getMatPointsX()[i][j],
+                        surface.getMatPointsY()[i][j],
+                        surface.getMatPointsX()[i][j] + 1,
+                        surface.getMatPointsY()[i][j]);
             }
         }
 

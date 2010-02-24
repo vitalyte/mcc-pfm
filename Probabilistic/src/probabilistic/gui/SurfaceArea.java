@@ -4,6 +4,8 @@
  */
 package probabilistic.gui;
 
+import java.util.Random;
+
 /**
  *
  * @author Vitaly
@@ -16,9 +18,11 @@ public class SurfaceArea {
     private int grainWidth = 200;
     private int[][] matPointsX;
     private int[][] matPointsY;
-    private static int Nmax;
-    private static int numColumns;
-    private static int numRows;
+    private int Nmax;
+    private int numColumns;
+    private int numRows;
+    private Integer seed;
+    private boolean[][] matrix;
 
     public SurfaceArea(int height, int width, int grainHeight, int grainWidth) {
         this.width = width;
@@ -28,16 +32,68 @@ public class SurfaceArea {
         Nmax = width * height / grainWidth * grainHeight;
         matPointsX = new int[this.width / this.grainWidth][this.height / this.grainHeight];
         matPointsY = new int[this.width / this.grainWidth][this.height / this.grainHeight];
-        SurfaceArea.numColumns = this.width / this.grainWidth;
-        SurfaceArea.numRows = this.height / this.grainHeight;
+        numColumns = this.width / this.grainWidth;
+        numRows = this.height / this.grainHeight;
+        initMatrix(height, width, grainHeight, grainWidth);
     }
+
+    /**
+     * Set the value of matrix
+     *
+     * @param matrix new value of matrix
+     */
+    public void initMatrix(int height, int width, int grainHeight, int garinWidth ) {
+        Random rnd = new Random();
+        int s = -rnd.nextInt(1000000) + 1;
+        seed = new Integer(s);
+        matPointsX = new int[numColumns][numRows];
+        matPointsY = new int[numColumns][numRows];
+
+        matrix = new boolean[numColumns][numRows];
+        for (int i = 0; i < numColumns; i++) {
+            for (int j = 0; j < numRows; j++) {
+                matrix[i][j] = false;
+            }
+        }
+    }
+
+    boolean isSquareEmpty(boolean[][] matrix, int i, int j) {
+        if (matrix[i][j] == false) {
+            return true;
+        }
+        return false;
+    }
+
+    public void setMatPointsX(int i, int j, int valueX) {
+        this.matPointsX[i][j] = valueX;
+    }
+
+    public void setMatPointsY(int i, int j, int valueY) {
+        this.matPointsY[i][j] = valueY;
+    }
+
+    public void setMatrix(int i, int j, boolean  value) {
+        this.matrix[i][j] = value;
+    }
+
+
+    public boolean[][] getMatrix() {
+        return matrix;
+    }
+
+
+
+    public Integer getSeed() {
+        return seed;
+    }
+
 
     /**
      * Get the value of Nmax
      *
      * @return the value of Nmax
      */
-    public static int getNmax() {
+    public int getNmax() {
         return Nmax;
     }
 
@@ -46,7 +102,7 @@ public class SurfaceArea {
      *
      * @return the value of numRows
      */
-    public static int getNumRows() {
+    public int getNumRows() {
         return numRows;
     }
 
@@ -55,7 +111,7 @@ public class SurfaceArea {
      *
      * @return the value of numColumns
      */
-    public static int getNumColumns() {
+    public int getNumColumns() {
         return numColumns;
     }
 
