@@ -32,8 +32,9 @@ public class GridJPanel extends javax.swing.JPanel {
         SemiellipticalCrack.initMatrix(width, height, grainWidth, grainHeight);
          for (int i = 0; i < 50000; i++) {
              SemiellipticalCrack crack = new SemiellipticalCrack();
+             crack.getSiteX();
          }
-        SemiellipticalCrack crack = new SemiellipticalCrack();
+       // SemiellipticalCrack crack = new SemiellipticalCrack();
 //        FillRandomPoints(W, H, stepW, stepH);
     }
 

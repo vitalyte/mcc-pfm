@@ -25,12 +25,13 @@ public class SemiellipticalCrack {
     private static int Nmax;
     public static int[][] matPointsX;
     public static int[][] matPointsY;
+    //double rndX;
 
     public SemiellipticalCrack() {
 
 
-        double rndX = UniformDistribution.PPF(RNG.Ran2(seed), 0, surfaceAreaObj.getGrainWidth());
-        double rndY = UniformDistribution.PPF(RNG.Ran2(seed), 0, surfaceAreaObj.getGrainHeight());
+        double rndX = UniformDistribution.PPF(RNG.Ran2(seed), 0, surfaceAreaObj.getWidth());
+        double rndY = UniformDistribution.PPF(RNG.Ran2(seed), 0, surfaceAreaObj.getHeight());
         int rndI = (int) rndX / surfaceAreaObj.getGrainWidth();
         int rndJ = (int) rndY / surfaceAreaObj.getGrainHeight();
         if (isSquareEmpty(matrix, rndI, rndJ)) {
