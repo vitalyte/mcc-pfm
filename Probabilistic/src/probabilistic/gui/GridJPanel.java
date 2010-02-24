@@ -25,10 +25,15 @@ public class GridJPanel extends javax.swing.JPanel {
     private int width = 400;
     private int grainHeight = 200;
     private int grainWidth = 200;
-    SurfaceArea area = new SurfaceArea(height, width, grainHeight, grainWidth);
+//    SurfaceArea area = new SurfaceArea(height, width, grainHeight, grainWidth);
 
     public GridJPanel() {
         initComponents();
+        SemiellipticalCrack.initMatrix(width, height, grainWidth, grainHeight);
+         for (int i = 0; i < 50000; i++) {
+             SemiellipticalCrack crack = new SemiellipticalCrack();
+         }
+        SemiellipticalCrack crack = new SemiellipticalCrack();
 //        FillRandomPoints(W, H, stepW, stepH);
     }
 
@@ -47,6 +52,15 @@ public class GridJPanel extends javax.swing.JPanel {
         for (int j = 0; j <= heightWindow; j += grainHeight) {
             g.drawLine(0, j, widthWindow, j);
         }
+        for (int i = 0; i < SurfaceArea.getNumColumns(); i++) {
+            for (int j = 0; j < SurfaceArea.getNumRows(); j++) {
+                g.drawLine(SemiellipticalCrack.matPointsX[i][j],
+                        SemiellipticalCrack.matPointsY[i][j],
+                        SemiellipticalCrack.matPointsX[i][j] + 1,
+                        SemiellipticalCrack.matPointsY[i][j]);
+            }
+        }
+
 //        for (int i = 0; i < W / stepW; i++) {
 //            for (int j = 0; j < H / stepH; j++) {
 //                g.drawLine(matPointsX[i][j], matPointsY[i][j], matPointsX[i][j] + 1, matPointsY[i][j]);
@@ -91,7 +105,6 @@ public class GridJPanel extends javax.swing.JPanel {
 //
 //        }
 //    }
-
     /** This method is called from within the constructor to
      * initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is

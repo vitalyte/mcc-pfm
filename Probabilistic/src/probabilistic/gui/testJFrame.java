@@ -27,12 +27,14 @@ public class testJFrame extends javax.swing.JFrame {
     /** Creates new form testJFrame */
     public testJFrame() {
         initComponents();
-        SemiellipticalCrack.initMatrix();
+        SemiellipticalCrack.initMatrix(400, 400, 200, 200);
     }
 
     public void paintComponent(Graphics g) {
-        crackObj = new SemiellipticalCrack(w, h, stepW, stepH);
-        g.drawLine(crackObj.getSiteX(), crackObj.getSiteY(), crackObj.getSiteX() + 1, crackObj.getSiteY());
+        crackObj = new SemiellipticalCrack();
+//        g.drawLine(crackObj.getSiteX(), crackObj.getSiteY(), crackObj.getSiteX() + 1, crackObj.getSiteY());
+        
+
     }
 
     /** This method is called from within the constructor to
