@@ -16,8 +16,8 @@ public class SemiellipticalCrack {
     private int initiationTime;
     private int siteX;
     private int siteY;
-    private int length2a;
-    private int lengthB;
+    private double length2a;
+    private double lengthB;
     private double aspectRatio;
     private static SurfaceArea surfaceAreaObj;
 
@@ -72,7 +72,7 @@ public class SemiellipticalCrack {
      *
      * @return the value of crackLengthB
      */
-    public int getLengthB() {
+    public double getLengthB() {
         return lengthB;
     }
 
@@ -81,7 +81,7 @@ public class SemiellipticalCrack {
      *
      * @param crackLengthB new value of crackLengthB
      */
-    public void setLengthB(int crackLengthB) {
+    public void setLengthB(double crackLengthB) {
         this.lengthB = crackLengthB;
     }
 
@@ -90,7 +90,7 @@ public class SemiellipticalCrack {
      *
      * @return the value of crackLength
      */
-    public int getLength2a() {
+    public double getLength2a() {
         return length2a;
     }
 
@@ -99,7 +99,7 @@ public class SemiellipticalCrack {
      *
      * @param crackLength new value of crackLength
      */
-    public void setLength2a(int crackLength) {
+    public void setLength2a(double crackLength) {
         this.length2a = crackLength;
     }
 
@@ -183,5 +183,35 @@ public class SemiellipticalCrack {
         KIB = b0 + b1*lambda+b2*lambda*lambda;
         result = sigma*Math.sqrt(Math.PI*lengthB)*KIB;
         return result;
+    }
+    public double CriticalRadius (SemiellipticalCrack crack2,double sigma,double sigmaYS, double k)
+    {
+        double RC=0;
+        RC = (k/Math.PI)*Math.pow(this.SIF_A(sigma)/sigmaYS,2)+
+             (k/Math.PI)*Math.pow(crack2.SIF_A(sigma)/sigmaYS,2);
+       return RC;
+    }
+
+    public SemiellipticalCrack CrackCoalescence(SemiellipticalCrack cr1, SemiellipticalCrack cr2){
+        if (CanCoalescence(cr1, cr2))
+        {
+            SemiellipticalCrack newCrack = new SemiellipticalCrack();
+            double newLengthB = Math.max(cr1.getLengthB(),cr2.getLengthB());
+            double newLength2A = cr1.getLength2a() + cr2.getLength2a();
+            double newAspectRatio = 2*newLengthB/newLength2A;
+            newCrack.setLength2a(newLength2A);
+            newCrack.setLengthB(newLengthB);
+            newCrack.setAspectRatio(newAspectRatio);
+            //Подумати, де будуть siteX і SiteY
+            return newCrack;
+        }
+            return null;
+      
+    }
+    static boolean CanCoalescence (SemiellipticalCrack cr1,SemiellipticalCrack cr2)
+    {
+       boolean result = false;
+       // Додати перевірку об"єднання двох тріщин
+       return result;
     }
 }

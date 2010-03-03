@@ -51,9 +51,9 @@ public class GridJPanel extends javax.swing.JPanel {
         }
         for (int i = 0; i < surface.getNumColumns(); i++) {
             for (int j = 0; j < surface.getNumRows(); j++) {
-                g.drawLine(surface.getMatPointsX()[i][j] - crack.getLength2a()/2,
+                g.drawLine((int)surface.getMatPointsX()[i][j] -(int) crack.getLength2a()/2,
                         surface.getMatPointsY()[i][j],
-                        surface.getMatPointsX()[i][j] + crack.getLength2a()/2,
+                        surface.getMatPointsX()[i][j] + (int)crack.getLength2a()/2,
                         surface.getMatPointsY()[i][j]);
             }
         }
