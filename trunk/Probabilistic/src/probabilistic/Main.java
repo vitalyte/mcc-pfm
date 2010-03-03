@@ -4,8 +4,12 @@
  */
 package probabilistic;
 
+//import java.awt.Point;
+//import java.awt.geom.Point2D;
 import java.util.Random;
 import probabilistic.gui.SemiellipticalCrack;
+import probabilistic.gui.Point;
+import probabilistic.gui.Circle;
 
 /**
  *
@@ -36,6 +40,10 @@ public class Main {
         crack.setLengthB(1);
         crack.SIF_A(1);
         crack.SIF_B(1);*/
-
+       /* Point O = new Point(2, 1);
+        Point p = new Point(1, 1);
+        System.out.println(Point.Distance(O, p));*/
+        /*Circle c = new Circle(new Point(0,0),1);
+        System.out.println(c.IsPointInsideCircle(new Point(-0.5,-1.3)));*/
     }
 }
