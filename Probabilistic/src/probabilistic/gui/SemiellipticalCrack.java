@@ -156,4 +156,32 @@ public class SemiellipticalCrack {
     public void setInitiationTime(int initiationTime) {
         this.initiationTime = initiationTime;
     }
+    public double SIF_A(double sigma)
+    {
+        double result = 0;
+        double KIA = 0;
+        double lambda = 2*lengthB/length2a;
+        final double b0=0.23153;
+        final double b1=0.61945;
+        final double b2=-0.19862;
+        final double b3=0.02754;
+        final double b4=0.00137;
+        KIA = b0 + b1*lambda+b2*lambda*lambda+
+        b3*Math.pow(lambda, 3)+b4*Math.pow(lambda, 4);
+        result = sigma*Math.sqrt(Math.PI*length2a/2)*KIA;
+        return result;
+    }
+
+    public double SIF_B(double sigma)
+    {
+        double result = 0;
+        double KIB = 0;
+        double lambda = 2*lengthB/length2a;
+        final double b0=1.15713;
+        final double b1=-0.7302;
+        final double b2=0.20827;
+        KIB = b0 + b1*lambda+b2*lambda*lambda;
+        result = sigma*Math.sqrt(Math.PI*length2a/2)*KIB;
+        return result;
+    }
 }
