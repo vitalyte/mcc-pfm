@@ -69,12 +69,14 @@ public class GridJPanel extends javax.swing.JPanel {
 
     void FillRandomCracks(int height, int width, int grainHeight, int grainWidth) {
         surface = new SurfaceArea(height, width, grainHeight, grainWidth);
+        Integer seed = surface.getSeed();
         int i = 0;
         while (i < surface.getNmax()) {
             crack = new SemiellipticalCrack();
             //ввести ще один цикл перевірки координати точки!!!
-            double rndX = UniformDistribution.PPF(RNG.Ran2(surface.getSeed()), 0, surface.getWidth());
-            double rndY = UniformDistribution.PPF(RNG.Ran2(surface.getSeed()), 0, surface.getHeight());
+
+            double rndX = UniformDistribution.PPF(RNG.Ran2(seed), 0, surface.getWidth());
+            double rndY = UniformDistribution.PPF(RNG.Ran2(seed), 0, surface.getHeight());
             int rndI = (int) rndX / surface.getGrainWidth();
             int rndJ = (int) rndY / surface.getGrainHeight();
             if (surface.isSquareEmpty(surface.getMatrix(), rndI, rndJ)) {
