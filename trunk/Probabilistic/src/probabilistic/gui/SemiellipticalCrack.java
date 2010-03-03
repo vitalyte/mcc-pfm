@@ -181,7 +181,7 @@ public class SemiellipticalCrack {
         final double b1=-0.7302;
         final double b2=0.20827;
         KIB = b0 + b1*lambda+b2*lambda*lambda;
-        result = sigma*Math.sqrt(Math.PI*length2a/2)*KIB;
+        result = sigma*Math.sqrt(Math.PI*lengthB)*KIB;
         return result;
     }
 }
