@@ -193,4 +193,13 @@ public class SemiellipticalCrack {
         // Додати перевірку об"єднання двох тріщин
         return result;
     }
+
+    double da_dtKIrate (double K){
+        double result=0;
+        result = Math.pow(1.1,-7.0)*
+                Math.pow((2.5*Math.pow(10.0,10.0)*
+                Math.exp(-(3*Math.pow(10.0,-19.0)-1.5*Math.pow(10.0,-20.0)*
+                Math.pow((K-2),(1/3))))),0.443);
+        return result;
+    }
 }
