@@ -27,6 +27,11 @@ public class GridJPanel extends javax.swing.JPanel {
     private int grainWidth = 200;
     private SurfaceArea surface;
     private SemiellipticalCrack crack;
+
+    public void setSurface(SurfaceArea surface) {
+        this.surface = surface;
+    }
+
     {
     }
 //    SurfaceArea area = new SurfaceArea(height, width, grainHeight, grainWidth);
@@ -37,8 +42,18 @@ public class GridJPanel extends javax.swing.JPanel {
         FillRandomCracks(height, width, grainHeight, grainWidth);
     }
 
+    public GridJPanel(int height_, int width_, int grainHeight_, int grainWidth_) {
+        height = height_;
+        width = width_;
+        grainHeight = grainHeight_;
+        grainWidth = grainWidth_;
+
+        surface = new SurfaceArea(height_, width_, grainHeight_, grainWidth_);
+        FillRandomCracks(height_, width_, grainHeight_, grainWidth_);
+    }
     //static boolean notPaint = false;
-    // @Override
+
+    //paint grid
     @Override
     public void paintComponent(Graphics g) {
 
@@ -54,9 +69,9 @@ public class GridJPanel extends javax.swing.JPanel {
         }
         for (int i = 0; i < surface.getNumColumns(); i++) {
             for (int j = 0; j < surface.getNumRows(); j++) {
-                g.drawLine((int)surface.getMatPointsX()[i][j] -(int) crack.getLength2a()/2,
+                g.drawLine((int) surface.getMatPointsX()[i][j] - (int) crack.getLength2a() / 2,
                         surface.getMatPointsY()[i][j],
-                        surface.getMatPointsX()[i][j] + (int)crack.getLength2a()/2,
+                        surface.getMatPointsX()[i][j] + (int) crack.getLength2a() / 2,
                         surface.getMatPointsY()[i][j]);
             }
         }
@@ -71,11 +86,11 @@ public class GridJPanel extends javax.swing.JPanel {
     }
 
     void FillRandomCracks(int height, int width, int grainHeight, int grainWidth) {
-        
+
         Integer seed = surface.getSeed();
         int i = 0;
         while (i < surface.getNmax()) {
-            
+
             //ввести ще один цикл перевірки координати точки!!!
 
             double rndX = UniformDistribution.PPF(RNG.Ran2(seed), 0, surface.getWidth());
@@ -100,7 +115,25 @@ public class GridJPanel extends javax.swing.JPanel {
         return crack;
     }
 
+    public SurfaceArea getSurface() {
+        return surface;
+    }
 
+    public void setGrainHeight(int grainHeight) {
+        this.grainHeight = grainHeight;
+    }
+
+    public void setGrainWidth(int grainWidth) {
+        this.grainWidth = grainWidth;
+    }
+
+    public void setHeight(int height) {
+        this.height = height;
+    }
+
+    public void setWidth(int width) {
+        this.width = width;
+    }
 
     /** This method is called from within the constructor to
      * initialize the form.
