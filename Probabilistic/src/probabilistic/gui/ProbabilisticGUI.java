@@ -24,10 +24,10 @@ public class ProbabilisticGUI extends javax.swing.JFrame {
         initComponents();
         //Container content = getContentPane();
 
-        gridJPanel1.setSize(new Dimension(400, 400));
-        gridJPanel1.setBorder(BorderFactory.createLineBorder(Color.blue, 2));
-        gridJPanel1.setBackground(Color.white);
-        gridJPanel1.setVisible(true);
+//        gridJPanel1.setSize(new Dimension(400, 400));
+//        gridJPanel1.setBorder(BorderFactory.createLineBorder(Color.blue, 2));
+//        gridJPanel1.setBackground(Color.white);
+//        gridJPanel1.setVisible(true);
 
     }
 
@@ -61,11 +61,8 @@ public class ProbabilisticGUI extends javax.swing.JFrame {
         submitCrack1 = new javax.swing.JButton();
         jPanel1 = new javax.swing.JPanel();
         repaint = new javax.swing.JButton();
-        jScrollPane2 = new javax.swing.JScrollPane();
-        jPanel2 = new javax.swing.JPanel();
         gridJPanel1 = new probabilistic.gui.GridJPanel();
-        jLayeredPane1 = new javax.swing.JLayeredPane();
-        jPanel3 = new javax.swing.JPanel();
+        surfaceGeometry = new javax.swing.JLabel();
         menuBar = new javax.swing.JMenuBar();
         fileMenu = new javax.swing.JMenu();
         openMenuItem = new javax.swing.JMenuItem();
@@ -127,7 +124,7 @@ public class ProbabilisticGUI extends javax.swing.JFrame {
             }
         });
 
-        jLabel3.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        jLabel3.setFont(new java.awt.Font("Tahoma", 1, 11));
         jLabel3.setText("Grain");
 
         gHeight.setText("200");
@@ -259,9 +256,8 @@ public class ProbabilisticGUI extends javax.swing.JFrame {
             }
         });
 
-        jScrollPane2.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
-        jScrollPane2.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-        jScrollPane2.setMinimumSize(new java.awt.Dimension(400, 400));
+        gridJPanel1.setBackground(new java.awt.Color(244, 237, 237));
+        gridJPanel1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 153)));
 
         javax.swing.GroupLayout gridJPanel1Layout = new javax.swing.GroupLayout(gridJPanel1);
         gridJPanel1.setLayout(gridJPanel1Layout);
@@ -274,38 +270,10 @@ public class ProbabilisticGUI extends javax.swing.JFrame {
             .addGap(0, 373, Short.MAX_VALUE)
         );
 
-        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
-        jPanel2.setLayout(jPanel2Layout);
-        jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(gridJPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(357, Short.MAX_VALUE))
-        );
-        jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(gridJPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(34, Short.MAX_VALUE))
-        );
-
-        jScrollPane2.setViewportView(jPanel2);
-
-        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
-        jPanel3.setLayout(jPanel3Layout);
-        jPanel3Layout.setHorizontalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 767, Short.MAX_VALUE)
-        );
-        jPanel3Layout.setVerticalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 467, Short.MAX_VALUE)
-        );
-
-        jPanel3.setBounds(0, 0, 767, 467);
-        jLayeredPane1.add(jPanel3, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        surfaceGeometry.setText("hxw surface=" + gridJPanel1.getSurface().getHeight() + "x"
+            + gridJPanel1.getSurface().getWidth() + " "
+            + "grain=" + gridJPanel1.getSurface().getGrainHeight() + "x"
+            + gridJPanel1.getSurface().getGrainWidth());
 
         fileMenu.setText("File");
 
@@ -362,30 +330,29 @@ public class ProbabilisticGUI extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 435, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 28, Short.MAX_VALUE)
-                        .addComponent(jLayeredPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(256, 256, 256)
-                        .addComponent(Geometry, javax.swing.GroupLayout.PREFERRED_SIZE, 224, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(gridJPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(surfaceGeometry))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 365, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(Geometry, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 224, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(repaint, javax.swing.GroupLayout.Alignment.TRAILING))
-                .addContainerGap())
+                .addContainerGap(15, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(243, 243, 243)
-                .addComponent(jLayeredPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(547, Short.MAX_VALUE))
-            .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.LEADING, 0, 371, Short.MAX_VALUE)
-                    .addComponent(Geometry, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 371, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(40, 40, 40)
-                .addComponent(repaint)
-                .addGap(445, 445, 445))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(Geometry, javax.swing.GroupLayout.PREFERRED_SIZE, 371, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(40, 40, 40)
+                        .addComponent(repaint))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(surfaceGeometry)
+                        .addGap(2, 2, 2)
+                        .addComponent(gridJPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(445, Short.MAX_VALUE))
         );
 
         pack();
@@ -411,9 +378,13 @@ public class ProbabilisticGUI extends javax.swing.JFrame {
         // TODO add your handling code here:
         gridJPanel1.getCrack().setLength2a(Integer.parseInt(crackLength.getText()));
 
-        Graphics g = this.getGraphics();
-        this.validateTree();
-        this.repaint();
+        gridJPanel1.FillRandomCracks();
+
+        gridJPanel1.validate();
+        gridJPanel1.invalidate();
+        //this.validateTree();
+        gridJPanel1.repaint();
+
 
 
 
@@ -445,26 +416,18 @@ public class ProbabilisticGUI extends javax.swing.JFrame {
         int sHeight_ = (Integer.parseInt(surfaceHeight.getText()));
         int gWidth_ = (Integer.parseInt(gWidth.getText()));
         int gHeight_ = (Integer.parseInt(gHeight.getText()));
-        jPanel2.remove(gridJPanel1);
-        gridJPanel1 = new GridJPanel(sHeight_, sWidth_, gHeight_, gWidth_);
-        gridJPanel1.setSize(new Dimension(sHeight_, sWidth_));
-        gridJPanel1.setBorder(BorderFactory.createLineBorder(Color.blue, 2));
-        gridJPanel1.setBackground(Color.white);
-
-        //jPanel2.add(gridJPanel1);
-        jScrollPane2.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
-        jScrollPane2.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-        jScrollPane2.getViewport().add(gridJPanel1);
-        //jScrollPane2.setViewportView(jPanel2);
-
-
-        this.validate();
+        gridJPanel1.setSurface(new SurfaceArea(sHeight_, sWidth_, gHeight_, gWidth_));
+        gridJPanel1.paintComponent(gridJPanel1.getGraphics());
+        surfaceGeometry.setText("hxw surface=" + gridJPanel1.getSurface().getHeight() + "x"
+                + gridJPanel1.getSurface().getWidth() + " " + "grain=" + gridJPanel1.getSurface().getGrainHeight() + "x"
+                + gridJPanel1.getSurface().getGrainWidth());
 
 
 
-        this.invalidate();
+        gridJPanel1.validate();
+        gridJPanel1.invalidate();
         //this.validateTree();
-        this.repaint();
+        gridJPanel1.repaint();
 
     }//GEN-LAST:event_submitCrack1ActionPerformed
 
@@ -504,11 +467,7 @@ public class ProbabilisticGUI extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
-    private javax.swing.JLayeredPane jLayeredPane1;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel2;
-    private javax.swing.JPanel jPanel3;
-    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JMenuBar menuBar;
     private javax.swing.JMenuItem openMenuItem;
     private javax.swing.JMenuItem pasteMenuItem;
@@ -517,6 +476,7 @@ public class ProbabilisticGUI extends javax.swing.JFrame {
     private javax.swing.JMenuItem saveMenuItem;
     private javax.swing.JButton submitCrack;
     private javax.swing.JButton submitCrack1;
+    private javax.swing.JLabel surfaceGeometry;
     private javax.swing.JTextField surfaceHeight;
     private javax.swing.JTextField surfaceWidth;
     private javax.swing.JLabel width;
