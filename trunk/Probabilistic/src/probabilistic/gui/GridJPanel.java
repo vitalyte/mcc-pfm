@@ -56,11 +56,14 @@ public class GridJPanel extends javax.swing.JPanel {
     //paint grid
     @Override
     public void paintComponent(Graphics g) {
-
+        width = surface.getWidth();
+        height = surface.getHeight();
+        grainWidth = surface.getGrainWidth();
+        grainHeight = surface.getGrainHeight();
         super.paintComponent(g);
-        this.setSize(width, height);
-        int widthWindow = this.getWidth();
-        int heightWindow = this.getHeight();
+        this.setSize(surface.getWidth(), surface.getHeight());
+        int widthWindow = surface.getWidth();
+        int heightWindow = surface.getHeight();
         for (int i = 0; i <= widthWindow; i += grainWidth) {
             g.drawLine(i, 0, i, heightWindow);
         }
@@ -83,6 +86,9 @@ public class GridJPanel extends javax.swing.JPanel {
             return true;
         }
         return false;
+    }
+    void FillRandomCracks() {
+        this.FillRandomCracks(this.height, this.width, this.grainHeight, this.grainWidth);
     }
 
     void FillRandomCracks(int height, int width, int grainHeight, int grainWidth) {
@@ -133,6 +139,14 @@ public class GridJPanel extends javax.swing.JPanel {
 
     public void setWidth(int width) {
         this.width = width;
+    }
+
+    public int getGrainHeight() {
+        return grainHeight;
+    }
+
+    public int getGrainWidth() {
+        return grainWidth;
     }
 
     /** This method is called from within the constructor to
