@@ -23,8 +23,8 @@ public class GridJPanel extends javax.swing.JPanel {
     /** Creates new form GridJPanel */
     private int height = 400;
     private int width = 400;
-    private int grainHeight = 200;
-    private int grainWidth = 200;
+    private int grainHeight = 20;
+    private int grainWidth = 20;
     private SurfaceArea surface;
     private SemiellipticalCrack crack;
 
