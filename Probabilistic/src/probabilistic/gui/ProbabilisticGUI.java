@@ -22,12 +22,6 @@ public class ProbabilisticGUI extends javax.swing.JFrame {
     /** Creates new form ProbabilisticGUI */
     public ProbabilisticGUI() {
         initComponents();
-        //Container content = getContentPane();
-
-//        gridJPanel1.setSize(new Dimension(400, 400));
-//        gridJPanel1.setBorder(BorderFactory.createLineBorder(Color.blue, 2));
-//        gridJPanel1.setBackground(Color.white);
-//        gridJPanel1.setVisible(true);
 
     }
 
