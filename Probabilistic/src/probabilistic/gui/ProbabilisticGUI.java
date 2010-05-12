@@ -74,7 +74,7 @@ public class ProbabilisticGUI extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        surfaceHeight.setText("600");
+        surfaceHeight.setText("400");
         surfaceHeight.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 surfaceHeightActionPerformed(evt);
@@ -85,7 +85,7 @@ public class ProbabilisticGUI extends javax.swing.JFrame {
 
         width.setText("Width:");
 
-        surfaceWidth.setText("600");
+        surfaceWidth.setText("400");
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 1, 11));
         jLabel1.setText("Surface");
@@ -95,7 +95,7 @@ public class ProbabilisticGUI extends javax.swing.JFrame {
 
         heightjLabel.setText("Length:");
 
-        crackLength.setText("50");
+        crackLength.setText("10");
         crackLength.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 crackLengthActionPerformed(evt);
@@ -121,14 +121,14 @@ public class ProbabilisticGUI extends javax.swing.JFrame {
         jLabel3.setFont(new java.awt.Font("Tahoma", 1, 11));
         jLabel3.setText("Grain");
 
-        gHeight.setText("200");
+        gHeight.setText("20");
         gHeight.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 gHeightActionPerformed(evt);
             }
         });
 
-        gWidth.setText("200");
+        gWidth.setText("20");
         gWidth.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 gWidthActionPerformed(evt);
