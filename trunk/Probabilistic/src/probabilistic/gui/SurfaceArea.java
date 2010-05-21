@@ -29,7 +29,7 @@ public class SurfaceArea {
         this.height = height;
         this.grainHeight = grainHeight;
         this.grainWidth = grainWidth;
-        Nmax = width * height / grainWidth * grainHeight;
+        Nmax = (width * height) / (grainWidth * grainHeight);
         matPointsX = new int[this.width / this.grainWidth][this.height / this.grainHeight];
         matPointsY = new int[this.width / this.grainWidth][this.height / this.grainHeight];
         numColumns = this.width / this.grainWidth;

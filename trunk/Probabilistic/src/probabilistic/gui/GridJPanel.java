@@ -21,19 +21,16 @@ import probabilistic.*;
 public class GridJPanel extends javax.swing.JPanel {
 
     /** Creates new form GridJPanel */
-    private int height = 400;
-    private int width = 400;
-    private int grainHeight = 20;
-    private int grainWidth = 20;
+    private int height = 600;
+    private int width = 600;
+    private int grainHeight = 200;
+    private int grainWidth = 200;
     private SurfaceArea surface;
     private SemiellipticalCrack crack;
+    private InitiationTime time;
 
-    public void setSurface(SurfaceArea surface) {
-        this.surface = surface;
-    }
 
-    {
-    }
+
 //    SurfaceArea area = new SurfaceArea(height, width, grainHeight, grainWidth);
 
     public GridJPanel() {
@@ -49,6 +46,7 @@ public class GridJPanel extends javax.swing.JPanel {
         grainWidth = grainWidth_;
 
         surface = new SurfaceArea(height_, width_, grainHeight_, grainWidth_);
+        time = new InitiationTime(surface.getNmax(), 0.3, 34.54);
         FillRandomCracks(height_, width_, grainHeight_, grainWidth_);
     }
     //static boolean notPaint = false;
@@ -104,7 +102,7 @@ public class GridJPanel extends javax.swing.JPanel {
             int rndI = (int) rndX / surface.getGrainWidth();
             int rndJ = (int) rndY / surface.getGrainHeight();
             if (surface.isSquareEmpty(surface.getMatrix(), rndI, rndJ)) {
-                crack = new SemiellipticalCrack();
+                crack = new SemiellipticalCrack(surface);
                 // точку кинули в порожню клітину
                 crack.setSiteX((int) rndX);
                 surface.setMatPointsX(rndI, rndJ, crack.getSiteX());
@@ -117,6 +115,17 @@ public class GridJPanel extends javax.swing.JPanel {
         }
     }
 
+    public InitiationTime getTime() {
+        return time;
+    }
+
+    public void setTime(InitiationTime time) {
+        this.time = time;
+    }
+
+    public void setSurface(SurfaceArea surface) {
+        this.surface = surface;
+    }
     public SemiellipticalCrack getCrack() {
         return crack;
     }
