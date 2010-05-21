@@ -13,12 +13,29 @@ public class SemiellipticalCrack {
     private int initiationTime;
     private int siteX;
     private int siteY;
+    private double siteXPoint;
+    private double siteYpoint;
     private double length2a = 10;
     private double lengthB;
     private double aspectRatio;
     private static SurfaceArea surfaceAreaObj;
+    private Point crackPoint;
+
+    public SemiellipticalCrack(SurfaceArea surface) {
+        surfaceAreaObj = surface;
+//        crackPoint = new Point(surfaceAreaObj.getMatPointsX(), surfaceAreaObj.getMatPointsY());
+    }
 
     public SemiellipticalCrack() {
+        this(surfaceAreaObj);
+    }
+
+    public SemiellipticalCrack(Point pointObj) {
+        siteXPoint = pointObj.getX();
+    }
+
+    public static void setSurfaceAreaObj(SurfaceArea surfaceAreaObj) {
+        SemiellipticalCrack.surfaceAreaObj = surfaceAreaObj;
     }
 
     /**
@@ -194,12 +211,12 @@ public class SemiellipticalCrack {
         return result;
     }
 
-    double da_dtKIrate (double K){
-        double result=0;
-        result = Math.pow(1.1,-7.0)*
-                Math.pow((2.5*Math.pow(10.0,10.0)*
-                Math.exp(-(3*Math.pow(10.0,-19.0)-1.5*Math.pow(10.0,-20.0)*
-                Math.pow((K-2),(1/3))))),0.443);
+    double da_dtKIrate(double K) {
+        double result = 0;
+        result = Math.pow(1.1, -7.0)
+                * Math.pow((2.5 * Math.pow(10.0, 10.0)
+                * Math.exp(-(3 * Math.pow(10.0, -19.0) - 1.5 * Math.pow(10.0, -20.0)
+                * Math.pow((K - 2), (1 / 3))))), 0.443);
         return result;
     }
 }

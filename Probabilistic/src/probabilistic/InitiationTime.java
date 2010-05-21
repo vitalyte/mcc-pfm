@@ -20,7 +20,7 @@ public class InitiationTime {
     double scale;
     int Nmax;
 
-    InitiationTime(int Nmax, double mean, double scale) {
+   public InitiationTime(int Nmax, double mean, double scale) {
         initTime = new ArrayList();
         this.Nmax = Nmax;
         this.mean = mean;
@@ -37,7 +37,7 @@ public class InitiationTime {
         SortInitTime(this.initTime);
     }
 
-    InitiationTime() {
+   public InitiationTime() {
         this(100, 0.3, 34.54);
     }
 
@@ -53,7 +53,7 @@ public class InitiationTime {
 
     public static void main(String[] args) {
         InitiationTime inittimeObj = new InitiationTime();
-        SortInitTime(inittimeObj.initTime);
+        //SortInitTime(inittimeObj.initTime);
         inittimeObj.PrintInitTime();
     }
 }
