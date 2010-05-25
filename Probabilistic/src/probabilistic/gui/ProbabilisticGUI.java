@@ -25,6 +25,7 @@ public class ProbabilisticGUI extends javax.swing.JFrame {
     /** Creates new form ProbabilisticGUI */
     public ProbabilisticGUI() {
         initComponents();
+        gridJPanel1.validate();
 
     }
 
@@ -82,7 +83,7 @@ public class ProbabilisticGUI extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        surfaceHeight.setText("400");
+        surfaceHeight.setText("300");
         surfaceHeight.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 surfaceHeightActionPerformed(evt);
@@ -93,7 +94,7 @@ public class ProbabilisticGUI extends javax.swing.JFrame {
 
         width.setText("Width:");
 
-        surfaceWidth.setText("400");
+        surfaceWidth.setText("300");
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 1, 11));
         jLabel1.setText("Surface");
@@ -129,14 +130,14 @@ public class ProbabilisticGUI extends javax.swing.JFrame {
         jLabel3.setFont(new java.awt.Font("Tahoma", 1, 11));
         jLabel3.setText("Grain");
 
-        gHeight.setText("20");
+        gHeight.setText("100");
         gHeight.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 gHeightActionPerformed(evt);
             }
         });
 
-        gWidth.setText("20");
+        gWidth.setText("100");
         gWidth.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 gWidthActionPerformed(evt);
@@ -221,7 +222,7 @@ public class ProbabilisticGUI extends javax.swing.JFrame {
                     .addComponent(gWidth, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(submitCrack1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 43, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 40, Short.MAX_VALUE)
                 .addComponent(jLabel2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(SurfaceAreaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -417,7 +418,7 @@ public class ProbabilisticGUI extends javax.swing.JFrame {
 
     private void repaintActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_repaintActionPerformed
         // TODO add your handling code here:
-        Graphics g = this.getGraphics();
+        Graphics g = gridJPanel1.getGraphics();
         this.validateTree();
         this.repaint();
 
@@ -426,11 +427,9 @@ public class ProbabilisticGUI extends javax.swing.JFrame {
     private void submitCrackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_submitCrackActionPerformed
         // TODO add your handling code here:
         gridJPanel1.getCrack().setLength2a(Integer.parseInt(crackLength.getText()));
-
         gridJPanel1.FillRandomCracks();
-
         gridJPanel1.validate();
-        gridJPanel1.invalidate();
+        //gridJPanel1.invalidate();
         //this.validateTree();
         gridJPanel1.repaint();
 
@@ -488,10 +487,9 @@ public class ProbabilisticGUI extends javax.swing.JFrame {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
         surfaceObj = gridJPanel1.getSurface();
-        InitiationTime timeMatrix = new InitiationTime(surfaceObj.getNmax(), Double.parseDouble(timeMean.getText()),
-                Double.parseDouble(timeScale.getText()));
-        System.out.println(surfaceObj.getNmax());
-        timeMatrix.PrintInitTime();
+//        InitiationTime timeMatrix = new InitiationTime(surfaceObj.getNmax(), Double.parseDouble(timeMean.getText()),
+//                Double.parseDouble(timeScale.getText()));
+        
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void timeScaleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_timeScaleActionPerformed
