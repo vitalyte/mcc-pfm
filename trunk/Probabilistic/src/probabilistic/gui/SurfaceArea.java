@@ -4,6 +4,7 @@
  */
 package probabilistic.gui;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 /**
@@ -23,6 +24,8 @@ public class SurfaceArea {
     private int numRows;
     private Integer seed;
     private boolean[][] matrix;
+    private ArrayList pointObjList;
+    boolean filleddCkracks = false;
 
     public SurfaceArea(int height, int width, int grainHeight, int grainWidth) {
         this.width = width;
@@ -35,6 +38,7 @@ public class SurfaceArea {
         numColumns = this.width / this.grainWidth;
         numRows = this.height / this.grainHeight;
         initMatrix(height, width, grainHeight, grainWidth);
+        pointObjList = new ArrayList();
     }
 
     /**
@@ -204,4 +208,23 @@ public class SurfaceArea {
     public void setWidth(int width) {
         this.width = width;
     }
+
+    public ArrayList getPointObjList() {
+        return pointObjList;
+    }
+
+    public void setPointObjList(ArrayList pointObjList) {
+        this.pointObjList = pointObjList;
+    }
+
+    public boolean isFilleddCkracks() {
+        return filleddCkracks;
+    }
+
+    public void setFilleddCkracks(boolean filleddCkracks) {
+        this.filleddCkracks = filleddCkracks;
+    }
+
+
+
 }
