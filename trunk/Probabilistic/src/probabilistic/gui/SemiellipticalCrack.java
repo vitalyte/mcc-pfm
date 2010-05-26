@@ -4,13 +4,15 @@
  */
 package probabilistic.gui;
 
+import probabilistic.InitiationTime;
+
 /**
  *
  * @author Vitaly
  */
 public class SemiellipticalCrack {
 
-    private int initiationTime;
+    private InitiationTime initiationTimeObj;
     private int siteX;
     private int siteY;
     private double siteXPoint;
@@ -20,6 +22,7 @@ public class SemiellipticalCrack {
     private double aspectRatio;
     private static SurfaceArea surfaceAreaObj;
     private Point crackPoint;
+    
 
     public SemiellipticalCrack(SurfaceArea surface, double pointX, double pointY) {
         surfaceAreaObj = surface;
@@ -144,8 +147,8 @@ public class SemiellipticalCrack {
      *
      * @return the value of initiationTime
      */
-    public int getInitiationTime() {
-        return initiationTime;
+    public InitiationTime getInitiationTime() {
+        return initiationTimeObj;
     }
 
     /**
@@ -153,8 +156,8 @@ public class SemiellipticalCrack {
      *
      * @param initiationTime new value of initiationTime
      */
-    public void setInitiationTime(int initiationTime) {
-        this.initiationTime = initiationTime;
+    public void setInitiationTime(InitiationTime initiationTimeObj) {
+        this.initiationTimeObj = initiationTimeObj;
     }
 
     public Point getCrackPoint() {
