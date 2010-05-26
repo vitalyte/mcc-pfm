@@ -44,7 +44,7 @@ public class GridJPanel extends javax.swing.JPanel {
         grainWidth = grainWidth_;
 
         surface = new SurfaceArea(height_, width_, grainHeight_, grainWidth_);
-        //time = new InitiationTime(surface.getNmax(), 0.3, 34.54);
+        time = new InitiationTime(surface.getNmax(), 0.3, 34.54);
         FillRandomCracks(height_, width_, grainHeight_, grainWidth_);
     }
     //static boolean notPaint = false;

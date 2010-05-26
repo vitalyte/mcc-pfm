@@ -487,8 +487,8 @@ public class ProbabilisticGUI extends javax.swing.JFrame {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
         surfaceObj = gridJPanel1.getSurface();
-//        InitiationTime timeMatrix = new InitiationTime(surfaceObj.getNmax(), Double.parseDouble(timeMean.getText()),
-//                Double.parseDouble(timeScale.getText()));
+        InitiationTime timeMatrix = new InitiationTime(surfaceObj.getNmax(), Double.parseDouble(timeMean.getText()),
+                Double.parseDouble(timeScale.getText()));
         
     }//GEN-LAST:event_jButton1ActionPerformed
 
