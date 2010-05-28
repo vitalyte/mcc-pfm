@@ -14,7 +14,7 @@ import java.lang.*;
  */
 public class NormalDistribution {
 
-    static double PPF(double p, double mean, double scale) {
+    public static double PPF(double p, double mean, double scale) {
 
         //   This is the inverse normal algorithm developed by
         //   P. J. Acklam.  It is accurate to 1.15E-9.
@@ -78,7 +78,7 @@ public class NormalDistribution {
         return result;
     }
 
-    static double CDF(double val, double mean, double scale) {
+    public static double CDF(double val, double mean, double scale) {
         double L, k, x;
         final double pi = 4 * Math.atan(1);
         final double a1 = 0.31938153;
@@ -105,7 +105,7 @@ public class NormalDistribution {
      * @param scal  deviation (scale parametr)
      * @return  value of function
      */
-    static double PDF(double val, double mean, double scal) {
+   public static double PDF(double val, double mean, double scal) {
         double result = 0;
         double pi = 4 * Math.atan(1);
         result = (1 / (scal * Math.sqrt(2 * pi))) * Math.exp(-0.5 * Math.pow((val - mean) / scal, 2));
