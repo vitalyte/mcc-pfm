@@ -6,6 +6,8 @@ package probabilistic.gui;
 
 import java.util.ArrayList;
 import java.util.Random;
+import probabilistic.InitiationTime;
+import probabilistic.*;
 
 /**
  *
@@ -25,7 +27,9 @@ public class SurfaceArea {
     private Integer seed;
     private boolean[][] matrix;
     private ArrayList pointObjList;
-    boolean filleddCkracks = false;
+    boolean filledCkracks = false;
+    private InitiationTime timeObj;
+    private ArrayList ellipticalCrack ;
 
     public SurfaceArea(int height, int width, int grainHeight, int grainWidth) {
         this.width = width;
@@ -39,6 +43,8 @@ public class SurfaceArea {
         numRows = this.height / this.grainHeight;
         initMatrix(height, width, grainHeight, grainWidth);
         pointObjList = new ArrayList();
+        timeObj = new InitiationTime(Nmax, 0.3, 34.54);
+        ellipticalCrack = new ArrayList();
     }
 
     /**
@@ -60,6 +66,55 @@ public class SurfaceArea {
             }
         }
     }
+
+    void FillRandomCracks(int height, int width, int grainHeight, int grainWidth) {
+
+        if (isFilleddCkracks() == false) {
+
+            int i = 0;
+            while (i < Nmax) {
+                //ввести ще один цикл перевірки координати точки!!!
+                double rndX = UniformDistribution.PPF(RNG.Ran2(seed), 0, width);
+                double rndY = UniformDistribution.PPF(RNG.Ran2(seed), 0, height);
+                int rndI = (int) rndX / grainWidth;
+                int rndJ = (int) rndY / grainHeight;
+                if (isSquareEmpty(matrix, rndI, rndJ)) {
+                     //потягнути з панелі
+                    double length2A = NormalDistribution.PPF(RNG.Ran2(seed),10,1 );
+                    double depth = NormalDistribution.PPF(RNG.Ran2(seed), 2,1);
+                    ellipticalCrack.add(new SemiellipticalCrack(this, rndX, rndY, length2A, depth, i)); 
+                    // точку кинули в порожню клітину
+                    SemiellipticalCrack crack = (SemiellipticalCrack) ellipticalCrack.get(i);
+                    crack.setSiteX((int) rndX);
+                    matPointsX [rndI] [rndJ] = crack.getSiteX();
+                    crack.setSiteY((int) rndY);
+                    matPointsY [rndI] [rndJ] = crack.getSiteY();
+                    matrix [rndI] [rndJ] = true;
+                    
+                    i++;
+                }
+            }
+            filledCkracks = true;
+        }
+        ////відладка
+        print(ellipticalCrack);
+
+    }
+
+ //   ****************
+    //відладка
+    public void print(ArrayList lst) {
+        lst = ellipticalCrack;
+        for (int i = 0; i < lst.size(); i++) {
+            SemiellipticalCrack objectCrack = (SemiellipticalCrack) lst.get(i);
+            System.out.println("Initiation Time: " + objectCrack.getInitiationTime()
+                    + "\tCoordinate : " + objectCrack.getCrackPoint().getX() + " x "
+                    + objectCrack.getCrackPoint().getY());
+        }
+        System.out.println("\n\n");
+    }
+//**********************
+
 
     boolean isSquareEmpty(boolean[][] matrix, int i, int j) {
         if (matrix[i][j] == false) {
@@ -218,11 +273,27 @@ public class SurfaceArea {
     }
 
     public boolean isFilleddCkracks() {
-        return filleddCkracks;
+        return filledCkracks;
     }
 
     public void setFilleddCkracks(boolean filleddCkracks) {
-        this.filleddCkracks = filleddCkracks;
+        this.filledCkracks = filleddCkracks;
+    }
+
+    public InitiationTime getTimeObj() {
+        return timeObj;
+    }
+
+    public void setTimeObj(InitiationTime timeObj) {
+        this.timeObj = timeObj;
+    }
+
+    public ArrayList getEllipticalCrack() {
+        return ellipticalCrack;
+    }
+
+    public void setEllipticalCrack(ArrayList ellipticalCrack) {
+        this.ellipticalCrack = ellipticalCrack;
     }
 
 

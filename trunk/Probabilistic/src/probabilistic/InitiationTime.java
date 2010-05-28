@@ -15,7 +15,7 @@ import java.util.Random;
  */
 public class InitiationTime {
 
-    public ArrayList initTime;
+    private ArrayList initTime;
     double mean;
     double scale;
     int Nmax;
@@ -50,6 +50,14 @@ public class InitiationTime {
             System.out.println(initTime.get(i));
         }
     }
+
+    public ArrayList getInitTime() {
+        return initTime;
+    }
+
+//    public void setInitTime(ArrayList initTime) {
+//        this.initTime = initTime;
+//    }
 
     public static void main(String[] args) {
         InitiationTime inittimeObj = new InitiationTime();

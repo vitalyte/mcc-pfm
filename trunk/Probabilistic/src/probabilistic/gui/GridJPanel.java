@@ -14,6 +14,7 @@ import java.awt.Graphics;
 import java.util.ArrayList;
 import java.util.Random;
 import probabilistic.*;
+import probabilistic.NormalDistribution;
 
 /**
  *
@@ -101,19 +102,42 @@ public class GridJPanel extends javax.swing.JPanel {
                 int rndI = (int) rndX / surface.getGrainWidth();
                 int rndJ = (int) rndY / surface.getGrainHeight();
                 if (surface.isSquareEmpty(surface.getMatrix(), rndI, rndJ)) {
-                    crack = new SemiellipticalCrack(surface, rndX, rndY);
+                     //потягнути з панелі
+                    double length2A = NormalDistribution.PPF(RNG.Ran2(seed),10,1 );
+                    double depth = NormalDistribution.PPF(RNG.Ran2(seed), 2,1);
+                    crack = new SemiellipticalCrack(surface, rndX, rndY, length2A, depth, i);
+                    Double crackTime = (Double) surface.getTimeObj().getInitTime().get(i);
+                    
                     // точку кинули в порожню клітину
                     crack.setSiteX((int) rndX);
                     surface.setMatPointsX(rndI, rndJ, crack.getSiteX());
                     crack.setSiteY((int) rndY);
                     surface.setMatPointsY(rndI, rndJ, crack.getSiteY());
                     surface.setMatrix(rndI, rndJ, true);
+                    surface.getEllipticalCrack().add(crack);
                     i++;
                 }
             }
             surface.setFilleddCkracks(true);
         }
+        ////відладка
+        print(surface.getEllipticalCrack());
+
     }
+
+ //   ****************
+    //відладка
+    public void print(ArrayList lst) {
+        lst = surface.getEllipticalCrack();
+        for (int i = 0; i < lst.size(); i++) {
+            SemiellipticalCrack objectCrack = (SemiellipticalCrack) lst.get(i);
+            System.out.println("Initiation Time: " + objectCrack.getInitiationTime()
+                    + "\tCoordinate : " + objectCrack.getCrackPoint().getX() + " x "
+                    + objectCrack.getCrackPoint().getY());
+        }
+        System.out.println("\n\n");
+    }
+//**********************
 
     public InitiationTime getTime() {
         return time;

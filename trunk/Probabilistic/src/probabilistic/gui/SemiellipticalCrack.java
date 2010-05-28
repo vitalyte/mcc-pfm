@@ -12,7 +12,7 @@ import probabilistic.InitiationTime;
  */
 public class SemiellipticalCrack {
 
-    private InitiationTime initiationTimeObj;
+    private double initiationTimeObj;
     private int siteX;
     private int siteY;
     private double siteXPoint;
@@ -22,15 +22,23 @@ public class SemiellipticalCrack {
     private double aspectRatio;
     private static SurfaceArea surfaceAreaObj;
     private Point crackPoint;
-    
-
-    public SemiellipticalCrack(SurfaceArea surface, double pointX, double pointY) {
+    int timeIndex;
+   
+//
+//    public SemiellipticalCrack(SurfaceArea surface, double pointX, double pointY) {
+//        surfaceAreaObj = surface;
+//        siteXPoint = pointX;
+//        siteYPoint = pointY;
+//        crackPoint = new Point(pointX, pointY);
+//    }
+     public SemiellipticalCrack(SurfaceArea surface, double pointX, double pointY,
+        double length2A, double lengthB, int timeIndex) {
         surfaceAreaObj = surface;
-        siteXPoint = pointX;
-        siteYPoint = pointY;
         crackPoint = new Point(pointX, pointY);
-    }
+        this.length2a = length2A;
+        this.lengthB = lengthB;
 
+    }
 //    public SemiellipticalCrack() {
 //        this(surfaceAreaObj);
 //    }
@@ -147,7 +155,7 @@ public class SemiellipticalCrack {
      *
      * @return the value of initiationTime
      */
-    public InitiationTime getInitiationTime() {
+    public double getInitiationTime() {
         return initiationTimeObj;
     }
 
@@ -156,7 +164,7 @@ public class SemiellipticalCrack {
      *
      * @param initiationTime new value of initiationTime
      */
-    public void setInitiationTime(InitiationTime initiationTimeObj) {
+    public void setInitiationTime(double initiationTimeObj) {
         this.initiationTimeObj = initiationTimeObj;
     }
 
@@ -167,6 +175,7 @@ public class SemiellipticalCrack {
     public void setCrackPoint(Point crackPoint) {
         this.crackPoint = crackPoint;
     }
+
 
 
 
