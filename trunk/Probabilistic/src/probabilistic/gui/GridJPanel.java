@@ -11,10 +11,10 @@
 package probabilistic.gui;
 
 import java.awt.Graphics;
-import java.util.ArrayList;
-import java.util.Random;
-import probabilistic.*;
-import probabilistic.NormalDistribution;
+//import java.util.ArrayList;
+//import java.util.Random;
+//import probabilistic.*;
+//import probabilistic.NormalDistribution;
 
 /**
  *
@@ -28,28 +28,27 @@ public class GridJPanel extends javax.swing.JPanel {
     private int grainHeight = 100;
     private int grainWidth = 100;
     private SurfaceArea surface;
-    private SemiellipticalCrack crack;
-    private InitiationTime time;
+//    private SemiellipticalCrack crack;
+//    private InitiationTime time;
 
 //    SurfaceArea area = new SurfaceArea(height, width, grainHeight, grainWidth);
     public GridJPanel() {
         initComponents();
-        surface = new SurfaceArea(height, width, grainHeight, grainWidth);
-        FillRandomCracks(height, width, grainHeight, grainWidth);
+        surface = new SurfaceArea(height, width, grainHeight, grainWidth, 0.3, 34.54);
+        surface.FillRandomCracks(height, width, grainHeight, grainWidth, 10, 8, 10, 8);
     }
 
-    public GridJPanel(int height_, int width_, int grainHeight_, int grainWidth_) {
-        height = height_;
-        width = width_;
-        grainHeight = grainHeight_;
-        grainWidth = grainWidth_;
-
-        surface = new SurfaceArea(height_, width_, grainHeight_, grainWidth_);
-        time = new InitiationTime(surface.getNmax(), 0.3, 34.54);
-        FillRandomCracks(height_, width_, grainHeight_, grainWidth_);
-    }
+//    public GridJPanel(int height_, int width_, int grainHeight_, int grainWidth_) {
+//        height = height_;
+//        width = width_;
+//        grainHeight = grainHeight_;
+//        grainWidth = grainWidth_;
+//
+//        surface = new SurfaceArea(height_, width_, grainHeight_, grainWidth_);
+////        time = new InitiationTime(surface.getNmax(), 0.3, 34.54);
+//        surface.FillRandomCracks(height_, width_, grainHeight_, grainWidth_);
+//    }
     //static boolean notPaint = false;
-
     //paint grid
     @Override
     public void paintComponent(Graphics g) {
@@ -67,96 +66,101 @@ public class GridJPanel extends javax.swing.JPanel {
         for (int j = 0; j <= heightWindow; j += grainHeight) {
             g.drawLine(0, j, widthWindow, j);
         }
-        for (int i = 0; i < surface.getNumColumns(); i++) {
-            for (int j = 0; j < surface.getNumRows(); j++) {
-                g.drawLine((int) surface.getMatPointsX()[i][j] - (int) crack.getLength2a() / 2,
-                        surface.getMatPointsY()[i][j],
-                        surface.getMatPointsX()[i][j] + (int) crack.getLength2a() / 2,
-                        surface.getMatPointsY()[i][j]);
-            }
+//        for (int i = 0; i < surface.getNumColumns(); i++) {
+//            for (int j = 0; j < surface.getNumRows(); j++) {
+//                g.drawLine((int) surface.getMatPointsX()[i][j] - (int) crack.getLength2a() / 2,
+//                        surface.getMatPointsY()[i][j],
+//                        surface.getMatPointsX()[i][j] + (int) crack.getLength2a() / 2,
+//                        surface.getMatPointsY()[i][j]);
+//            }
+//        }
+
+        for (int i = 0; i < surface.getEllipticalCrack().size(); i++) {
+            SemiellipticalCrack crack = (SemiellipticalCrack) surface.getEllipticalCrack().get(i);
+            g.drawLine((crack.getSiteX() - (int) crack.getLength2a()), crack.getSiteY(),
+                    (crack.getSiteX() + (int) crack.getLength2a()), crack.getSiteY());
+
         }
 
 
     }
 
-    boolean isSquareEmpty(boolean[][] matrix, int i, int j) {
-        if (matrix[i][j] == false) {
-            return true;
-        }
-        return false;
-    }
-
-    void FillRandomCracks() {
-        this.FillRandomCracks(this.height, this.width, this.grainHeight, this.grainWidth);
-    }
-
-    void FillRandomCracks(int height, int width, int grainHeight, int grainWidth) {
-
-        if (surface.isFilleddCkracks() == false) {
-            Integer seed = surface.getSeed();
-            int i = 0;
-            while (i < surface.getNmax()) {
-                //ввести ще один цикл перевірки координати точки!!!
-                double rndX = UniformDistribution.PPF(RNG.Ran2(seed), 0, surface.getWidth());
-                double rndY = UniformDistribution.PPF(RNG.Ran2(seed), 0, surface.getHeight());
-                int rndI = (int) rndX / surface.getGrainWidth();
-                int rndJ = (int) rndY / surface.getGrainHeight();
-                if (surface.isSquareEmpty(surface.getMatrix(), rndI, rndJ)) {
-                     //потягнути з панелі
-                    double length2A = NormalDistribution.PPF(RNG.Ran2(seed),10,1 );
-                    double depth = NormalDistribution.PPF(RNG.Ran2(seed), 2,1);
-                    crack = new SemiellipticalCrack(surface, rndX, rndY, length2A, depth, i);
-                    Double crackTime = (Double) surface.getTimeObj().getInitTime().get(i);
-                    
-                    // точку кинули в порожню клітину
-                    crack.setSiteX((int) rndX);
-                    surface.setMatPointsX(rndI, rndJ, crack.getSiteX());
-                    crack.setSiteY((int) rndY);
-                    surface.setMatPointsY(rndI, rndJ, crack.getSiteY());
-                    surface.setMatrix(rndI, rndJ, true);
-                    surface.getEllipticalCrack().add(crack);
-                    i++;
-                }
-            }
-            surface.setFilleddCkracks(true);
-        }
-        ////відладка
-        print(surface.getEllipticalCrack());
-
-    }
-
- //   ****************
-    //відладка
-    public void print(ArrayList lst) {
-        lst = surface.getEllipticalCrack();
-        for (int i = 0; i < lst.size(); i++) {
-            SemiellipticalCrack objectCrack = (SemiellipticalCrack) lst.get(i);
-            System.out.println("Initiation Time: " + objectCrack.getInitiationTime()
-                    + "\tCoordinate : " + objectCrack.getCrackPoint().getX() + " x "
-                    + objectCrack.getCrackPoint().getY());
-        }
-        System.out.println("\n\n");
-    }
-//**********************
-
-    public InitiationTime getTime() {
-        return time;
-    }
-
-    public void setTime(InitiationTime time) {
-        this.time = time;
+//    boolean isSquareEmpty(boolean[][] matrix, int i, int j) {
+//        if (matrix[i][j] == false) {
+//            return true;
+//        }
+//        return false;
+//    }
+//    void FillRandomCracks() {
+//        this.FillRandomCracks(this.height, this.width, this.grainHeight, this.grainWidth);
+//    }
+//
+//    void FillRandomCracks(int height, int width, int grainHeight, int grainWidth) {
+//
+//        if (surface.isFilleddCkracks() == false) {
+//            Integer seed = surface.getSeed();
+//            int i = 0;
+//            while (i < surface.getNmax()) {
+//                //ввести ще один цикл перевірки координати точки!!!
+//                double rndX = UniformDistribution.PPF(RNG.Ran2(seed), 0, surface.getWidth());
+//                double rndY = UniformDistribution.PPF(RNG.Ran2(seed), 0, surface.getHeight());
+//                int rndI = (int) rndX / surface.getGrainWidth();
+//                int rndJ = (int) rndY / surface.getGrainHeight();
+//                if (surface.isSquareEmpty(surface.getMatrix(), rndI, rndJ)) {
+//                     //потягнути з панелі
+//                    double length2A = NormalDistribution.PPF(RNG.Ran2(seed),10,1 );
+//                    double depth = NormalDistribution.PPF(RNG.Ran2(seed), 2,1);
+//                    crack = new SemiellipticalCrack(surface, rndX, rndY, length2A, depth, i);
+//                    Double crackTime = (Double) surface.getTimeObj().getInitTime().get(i);
+//
+//                    // точку кинули в порожню клітину
+//                    crack.setSiteX((int) rndX);
+//                    surface.setMatPointsX(rndI, rndJ, crack.getSiteX());
+//                    crack.setSiteY((int) rndY);
+//                    surface.setMatPointsY(rndI, rndJ, crack.getSiteY());
+//                    surface.setMatrix(rndI, rndJ, true);
+//                    surface.getEllipticalCrack().add(crack);
+//                    i++;
+//                }
+//            }
+//            surface.setFilleddCkracks(true);
+//        }
+//        ////відладка
+//        print(surface.getEllipticalCrack());
+//
+//    }
+//
+// //   ****************
+//    //відладка
+//    public void print(ArrayList lst) {
+//        lst = surface.getEllipticalCrack();
+//        for (int i = 0; i < lst.size(); i++) {
+//            SemiellipticalCrack objectCrack = (SemiellipticalCrack) lst.get(i);
+//            System.out.println("Initiation Time: " + objectCrack.getInitiationTime()
+//                    + "\tCoordinate : " + objectCrack.getCrackPoint().getX() + " x "
+//                    + objectCrack.getCrackPoint().getY());
+//        }
+//        System.out.println("\n\n");
+//    }
+////**********************
+//    public InitiationTime getTime() {
+//        return time;
+//    }
+//
+//    public void setTime(InitiationTime time) {
+//        this.time = time;
+//    }
+//
+//
+//    public SemiellipticalCrack getCrack() {
+//        return crack;
+//    }
+    public SurfaceArea getSurface() {
+        return surface;
     }
 
     public void setSurface(SurfaceArea surface) {
         this.surface = surface;
-    }
-
-    public SemiellipticalCrack getCrack() {
-        return crack;
-    }
-
-    public SurfaceArea getSurface() {
-        return surface;
     }
 
     public void setGrainHeight(int grainHeight) {
