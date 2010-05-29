@@ -26,24 +26,22 @@ public class SurfaceArea {
     private int numRows;
     private Integer seed;
     private boolean[][] matrix;
-    private ArrayList pointObjList;
+//    private ArrayList pointObjList;
     boolean filledCkracks = false;
     private InitiationTime timeObj;
     private ArrayList ellipticalCrack ;
 
-    public SurfaceArea(int height, int width, int grainHeight, int grainWidth) {
+    public SurfaceArea(int height, int width, int grainHeight, int grainWidth,
+            double meanInitiationTime, double scaleInitiationTime) {
         this.width = width;
         this.height = height;
         this.grainHeight = grainHeight;
         this.grainWidth = grainWidth;
         Nmax = (width * height) / (grainWidth * grainHeight);
-        matPointsX = new int[this.width / this.grainWidth][this.height / this.grainHeight];
-        matPointsY = new int[this.width / this.grainWidth][this.height / this.grainHeight];
         numColumns = this.width / this.grainWidth;
         numRows = this.height / this.grainHeight;
         initMatrix(height, width, grainHeight, grainWidth);
-        pointObjList = new ArrayList();
-        timeObj = new InitiationTime(Nmax, 0.3, 34.54);
+        timeObj = new InitiationTime(Nmax, meanInitiationTime, scaleInitiationTime);
         ellipticalCrack = new ArrayList();
     }
 
@@ -58,7 +56,6 @@ public class SurfaceArea {
         seed = new Integer(s);
         matPointsX = new int[numColumns][numRows];
         matPointsY = new int[numColumns][numRows];
-
         matrix = new boolean[numColumns][numRows];
         for (int i = 0; i < numColumns; i++) {
             for (int j = 0; j < numRows; j++) {
@@ -67,10 +64,10 @@ public class SurfaceArea {
         }
     }
 
-    void FillRandomCracks(int height, int width, int grainHeight, int grainWidth) {
-
+    void FillRandomCracks(int height, int width, int grainHeight, int grainWidth,
+            double length2AMean, double length2AScale,
+            double depthMean, double depthScale ) {
         if (isFilleddCkracks() == false) {
-
             int i = 0;
             while (i < Nmax) {
                 //ввести ще один цикл перевірки координати точки!!!
@@ -80,8 +77,8 @@ public class SurfaceArea {
                 int rndJ = (int) rndY / grainHeight;
                 if (isSquareEmpty(matrix, rndI, rndJ)) {
                      //потягнути з панелі
-                    double length2A = NormalDistribution.PPF(RNG.Ran2(seed),10,1 );
-                    double depth = NormalDistribution.PPF(RNG.Ran2(seed), 2,1);
+                    double length2A = NormalDistribution.PPF(RNG.Ran2(seed),length2AMean, length2AScale);
+                    double depth = NormalDistribution.PPF(RNG.Ran2(seed), depthMean, depthScale);
                     ellipticalCrack.add(new SemiellipticalCrack(this, rndX, rndY, length2A, depth, i)); 
                     // точку кинули в порожню клітину
                     SemiellipticalCrack crack = (SemiellipticalCrack) ellipticalCrack.get(i);
@@ -89,8 +86,7 @@ public class SurfaceArea {
                     matPointsX [rndI] [rndJ] = crack.getSiteX();
                     crack.setSiteY((int) rndY);
                     matPointsY [rndI] [rndJ] = crack.getSiteY();
-                    matrix [rndI] [rndJ] = true;
-                    
+                    matrix [rndI] [rndJ] = true;                    
                     i++;
                 }
             }
@@ -107,7 +103,7 @@ public class SurfaceArea {
         lst = ellipticalCrack;
         for (int i = 0; i < lst.size(); i++) {
             SemiellipticalCrack objectCrack = (SemiellipticalCrack) lst.get(i);
-            System.out.println("Initiation Time: " + objectCrack.getInitiationTime()
+            System.out.println("Initiation Time: " + objectCrack.getTimeIndex()
                     + "\tCoordinate : " + objectCrack.getCrackPoint().getX() + " x "
                     + objectCrack.getCrackPoint().getY());
         }
@@ -264,13 +260,13 @@ public class SurfaceArea {
         this.width = width;
     }
 
-    public ArrayList getPointObjList() {
-        return pointObjList;
-    }
-
-    public void setPointObjList(ArrayList pointObjList) {
-        this.pointObjList = pointObjList;
-    }
+//    public ArrayList getPointObjList() {
+//        return pointObjList;
+//    }
+//
+//    public void setPointObjList(ArrayList pointObjList) {
+//        this.pointObjList = pointObjList;
+//    }
 
     public boolean isFilleddCkracks() {
         return filledCkracks;

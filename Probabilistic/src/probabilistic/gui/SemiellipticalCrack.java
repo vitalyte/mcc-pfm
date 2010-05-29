@@ -37,6 +37,7 @@ public class SemiellipticalCrack {
         crackPoint = new Point(pointX, pointY);
         this.length2a = length2A;
         this.lengthB = lengthB;
+        this.timeIndex = timeIndex;
 
     }
 //    public SemiellipticalCrack() {
@@ -174,6 +175,14 @@ public class SemiellipticalCrack {
 
     public void setCrackPoint(Point crackPoint) {
         this.crackPoint = crackPoint;
+    }
+
+    public int getTimeIndex() {
+        return timeIndex;
+    }
+
+    public void setTimeIndex(int timeIndex) {
+        this.timeIndex = timeIndex;
     }
 
 
