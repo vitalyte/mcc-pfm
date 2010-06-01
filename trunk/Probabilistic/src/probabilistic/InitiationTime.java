@@ -15,13 +15,13 @@ import java.util.Random;
  */
 public class InitiationTime {
 
-    private ArrayList initTime;
+    private ArrayList<Double> initTime;
     double mean;
     double scale;
     int Nmax;
 
    public InitiationTime(int Nmax, double mean, double scale) {
-        initTime = new ArrayList();
+        initTime = new ArrayList<Double>();
         this.Nmax = Nmax;
         this.mean = mean;
         this.scale = scale;
@@ -51,7 +51,7 @@ public class InitiationTime {
         }
     }
 
-    public ArrayList getInitTime() {
+    public ArrayList<Double> getInitTime() {
         return initTime;
     }
 

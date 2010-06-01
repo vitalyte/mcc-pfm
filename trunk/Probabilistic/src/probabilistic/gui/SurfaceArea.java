@@ -29,7 +29,7 @@ public class SurfaceArea {
 //    private ArrayList pointObjList;
     boolean filledCkracks = false;
     private InitiationTime timeObj;
-    private ArrayList ellipticalCrack ;
+    private ArrayList <SemiellipticalCrack> ellipticalCrack ;
 
     public SurfaceArea(int height, int width, int grainHeight, int grainWidth,
             double meanInitiationTime, double scaleInitiationTime) {
@@ -42,7 +42,7 @@ public class SurfaceArea {
         numRows = this.height / this.grainHeight;
         initMatrix(height, width, grainHeight, grainWidth);
         timeObj = new InitiationTime(Nmax, meanInitiationTime, scaleInitiationTime);
-        ellipticalCrack = new ArrayList();
+        ellipticalCrack = new ArrayList<SemiellipticalCrack>();
     }
 
     /**
@@ -79,14 +79,28 @@ public class SurfaceArea {
                      //потягнути з панелі
                     double length2A = NormalDistribution.PPF(RNG.Ran2(seed),length2AMean, length2AScale);
                     double depth = NormalDistribution.PPF(RNG.Ran2(seed), depthMean, depthScale);
+                    double deltaT;
                     ellipticalCrack.add(new SemiellipticalCrack(this, rndX, rndY, length2A, depth, i)); 
                     // точку кинули в порожню клітину
-                    SemiellipticalCrack crack = (SemiellipticalCrack) ellipticalCrack.get(i);
+                    SemiellipticalCrack crack = ellipticalCrack.get(i);
                     crack.setSiteX((int) rndX);
                     matPointsX [rndI] [rndJ] = crack.getSiteX();
                     crack.setSiteY((int) rndY);
                     matPointsY [rndI] [rndJ] = crack.getSiteY();
-                    matrix [rndI] [rndJ] = true;                    
+                    matrix [rndI] [rndJ] = true;
+                    if (i > 0){
+                    deltaT =  timeObj.getInitTime().get(i) -  timeObj.getInitTime().get(i - 1);
+                    }else
+                    {deltaT = timeObj.getInitTime().get(i);
+                    }
+
+
+//                    while (ellipticalCrack.hasNext()) {
+//                        Object ellipticalCrack = it.next();
+//
+//                    }
+
+
                     i++;
                 }
             }

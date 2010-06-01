@@ -15,15 +15,15 @@ public class SemiellipticalCrack {
     private double initiationTimeObj;
     private int siteX;
     private int siteY;
-    private double siteXPoint;
-    private double siteYPoint;
+//    private double siteXPoint;
+//    private double siteYPoint;
     private double length2a = 10;
-    private double lengthB;
+    private double depthB;
     private double aspectRatio;
     private static SurfaceArea surfaceAreaObj;
     private Point crackPoint;
     int timeIndex;
-   
+
 //
 //    public SemiellipticalCrack(SurfaceArea surface, double pointX, double pointY) {
 //        surfaceAreaObj = surface;
@@ -31,23 +31,94 @@ public class SemiellipticalCrack {
 //        siteYPoint = pointY;
 //        crackPoint = new Point(pointX, pointY);
 //    }
-     public SemiellipticalCrack(SurfaceArea surface, double pointX, double pointY,
-        double length2A, double lengthB, int timeIndex) {
+    public SemiellipticalCrack(SurfaceArea surface, double pointX, double pointY,
+            double length2A, double depthB, int timeIndex) {
         surfaceAreaObj = surface;
         crackPoint = new Point(pointX, pointY);
         this.length2a = length2A;
-        this.lengthB = lengthB;
+        this.depthB = depthB;
         this.timeIndex = timeIndex;
 
     }
+
+    public double SIF_A(double sigma) {
+        double result = 0;
+        double KIA = 0;
+        double lambda = 2 * depthB / length2a;
+        final double b0 = 0.23153;
+        final double b1 = 0.61945;
+        final double b2 = -0.19862;
+        final double b3 = 0.02754;
+        final double b4 = 0.00137;
+        KIA = b0 + b1 * lambda + b2 * lambda * lambda
+                + b3 * Math.pow(lambda, 3) + b4 * Math.pow(lambda, 4);
+        result = sigma * Math.sqrt(Math.PI * length2a / 2) * KIA;
+        return result;
+    }
+
+    public double SIF_B(double sigma) {
+        double result = 0;
+        double KIB = 0;
+        double lambda = 2 * depthB / length2a;
+        final double b0 = 1.15713;
+        final double b1 = -0.7302;
+        final double b2 = 0.20827;
+        KIB = b0 + b1 * lambda + b2 * lambda * lambda;
+        result = sigma * Math.sqrt(Math.PI * depthB) * KIB;
+        return result;
+    }
+
+    public double CriticalRadius(SemiellipticalCrack crack2, double sigma, double sigmaYS, double k) {
+        double RC = 0;
+        RC = (k / Math.PI) * Math.pow(this.SIF_A(sigma) / sigmaYS, 2)
+                + (k / Math.PI) * Math.pow(crack2.SIF_A(sigma) / sigmaYS, 2);
+        return RC;
+    }
+
+//    public static SemiellipticalCrack CrackCoalescence(SemiellipticalCrack cr1, SemiellipticalCrack cr2) {
+//        if (CanCoalescence(cr1, cr2)) {
+//            //визначимо початок тріщини зліва
+//            if ((cr1.getCrackPoint().getX() - cr1.getLength2a()/2) -
+//                    (cr2.getCrackPoint().getX() - cr2.getLength2a()/2))
+//            double newLength2A = cr1.getLength2a() + cr2.getLength2a();
+//            double newDepthB = Math.max(cr1.getDepthB(), cr2.getDepthB());
+//            double newAspectRatio = 2 * newDepthB / newLength2A;
+//
+//            SemiellipticalCrack newCrack = new SemiellipticalCrack(surfaceAreaObj, 10, 10,
+//                    newLength2A, newDepthB, cr1.getTimeIndex());
+//            newCrack.setAspectRatio(newAspectRatio);
+//            //Подумати, де будуть siteX і SiteY
+//            return newCrack;
+//        }
+//        return null;
+//
+//    }
+
+//    public static boolean CanCoalescence(SemiellipticalCrack cr1, SemiellipticalCrack cr2) {
+//        boolean result = false;
+//        // Додати перевірку об"єднання двох тріщин
+//        double
+//        if (result) {
+//
+//        }
+//        return result;
+//    }
+
+    public double da_dtKIrate(double K) {
+        double result = 0;
+        result = Math.pow(1.1, -7.0)
+                * Math.pow((2.5 * Math.pow(10.0, 10.0)
+                * Math.exp(-(3 * Math.pow(10.0, -19.0) - 1.5 * Math.pow(10.0, -20.0)
+                * Math.pow((K - 2), (1 / 3))))), 0.443);
+        return result;
+    }
+
 //    public SemiellipticalCrack() {
 //        this(surfaceAreaObj);
 //    }
-
 //    public SemiellipticalCrack(Point pointObj) {
 //        siteXPoint = pointObj.getX();
 //    }
-
     public static void setSurfaceAreaObj(SurfaceArea surfaceAreaObj) {
         SemiellipticalCrack.surfaceAreaObj = surfaceAreaObj;
     }
@@ -84,8 +155,8 @@ public class SemiellipticalCrack {
      *
      * @return the value of crackLengthB
      */
-    public double getLengthB() {
-        return lengthB;
+    public double getDepthB() {
+        return depthB;
     }
 
     /**
@@ -93,8 +164,8 @@ public class SemiellipticalCrack {
      *
      * @param crackLengthB new value of crackLengthB
      */
-    public void setLengthB(double crackLengthB) {
-        this.lengthB = crackLengthB;
+    public void setDepthB(double crackDepthB) {
+        this.depthB = crackDepthB;
     }
 
     /**
@@ -183,73 +254,5 @@ public class SemiellipticalCrack {
 
     public void setTimeIndex(int timeIndex) {
         this.timeIndex = timeIndex;
-    }
-
-
-
-
-    public double SIF_A(double sigma) {
-        double result = 0;
-        double KIA = 0;
-        double lambda = 2 * lengthB / length2a;
-        final double b0 = 0.23153;
-        final double b1 = 0.61945;
-        final double b2 = -0.19862;
-        final double b3 = 0.02754;
-        final double b4 = 0.00137;
-        KIA = b0 + b1 * lambda + b2 * lambda * lambda
-                + b3 * Math.pow(lambda, 3) + b4 * Math.pow(lambda, 4);
-        result = sigma * Math.sqrt(Math.PI * length2a / 2) * KIA;
-        return result;
-    }
-
-    public double SIF_B(double sigma) {
-        double result = 0;
-        double KIB = 0;
-        double lambda = 2 * lengthB / length2a;
-        final double b0 = 1.15713;
-        final double b1 = -0.7302;
-        final double b2 = 0.20827;
-        KIB = b0 + b1 * lambda + b2 * lambda * lambda;
-        result = sigma * Math.sqrt(Math.PI * lengthB) * KIB;
-        return result;
-    }
-
-    public double CriticalRadius(SemiellipticalCrack crack2, double sigma, double sigmaYS, double k) {
-        double RC = 0;
-        RC = (k / Math.PI) * Math.pow(this.SIF_A(sigma) / sigmaYS, 2)
-                + (k / Math.PI) * Math.pow(crack2.SIF_A(sigma) / sigmaYS, 2);
-        return RC;
-    }
-
-//    public static SemiellipticalCrack CrackCoalescence(SemiellipticalCrack cr1, SemiellipticalCrack cr2) {
-//        if (CanCoalescence(cr1, cr2)) {
-//            SemiellipticalCrack newCrack = new SemiellipticalCrack();
-//            double newLengthB = Math.max(cr1.getLengthB(), cr2.getLengthB());
-//            double newLength2A = cr1.getLength2a() + cr2.getLength2a();
-//            double newAspectRatio = 2 * newLengthB / newLength2A;
-//            newCrack.setLength2a(newLength2A);
-//            newCrack.setLengthB(newLengthB);
-//            newCrack.setAspectRatio(newAspectRatio);
-//            //Подумати, де будуть siteX і SiteY
-//            return newCrack;
-//        }
-//        return null;
-//
-//    }
-//
-//    static boolean CanCoalescence(SemiellipticalCrack cr1, SemiellipticalCrack cr2) {
-//        boolean result = false;
-//        // Додати перевірку об"єднання двох тріщин
-//        return result;
-//    }
-
-    double da_dtKIrate(double K) {
-        double result = 0;
-        result = Math.pow(1.1, -7.0)
-                * Math.pow((2.5 * Math.pow(10.0, 10.0)
-                * Math.exp(-(3 * Math.pow(10.0, -19.0) - 1.5 * Math.pow(10.0, -20.0)
-                * Math.pow((K - 2), (1 / 3))))), 0.443);
-        return result;
     }
 }
