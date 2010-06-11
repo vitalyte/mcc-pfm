@@ -10,7 +10,7 @@ import probabilistic.InitiationTime;
  *
  * @author Vitaly
  */
-public class SemiellipticalCrack {
+public class SemiellipticalCrack implements Comparable<SemiellipticalCrack> {
 
     private double initiationTimeObj;
     private int siteX;
@@ -23,6 +23,8 @@ public class SemiellipticalCrack {
     private static SurfaceArea surfaceAreaObj;
     private Point crackPoint;
     int timeIndex;
+    private Double rightTip;
+
 
 //
 //    public SemiellipticalCrack(SurfaceArea surface, double pointX, double pointY) {
@@ -38,6 +40,7 @@ public class SemiellipticalCrack {
         this.length2a = length2A;
         this.depthB = depthB;
         this.timeIndex = timeIndex;
+        rightTip = pointX + length2A/2;
 
     }
 
@@ -255,4 +258,28 @@ public class SemiellipticalCrack {
     public void setTimeIndex(int timeIndex) {
         this.timeIndex = timeIndex;
     }
+
+    public Double getRightTip() {
+        return rightTip;
+    }
+
+    public int compareTo(SemiellipticalCrack o) {
+        if (o == null){
+        throw new UnsupportedOperationException("Not supported yet.");
+        }
+        if (rightTip > o.rightTip) {
+            return 1;
+        }
+        if (rightTip < o.rightTip) {
+            return -1;
+        }
+        if (rightTip == o.rightTip) {
+            return 0;
+        }
+        return 0;
+
+    }
+
+
+
 }
