@@ -24,6 +24,8 @@ public class SemiellipticalCrack implements Comparable<SemiellipticalCrack> {
     private Point crackPoint;
     int timeIndex;
     private Double rightTip;
+    private double sigma, sigmaYS, k;
+
 
 
 //
@@ -40,11 +42,13 @@ public class SemiellipticalCrack implements Comparable<SemiellipticalCrack> {
         this.length2a = length2A;
         this.depthB = depthB;
         this.timeIndex = timeIndex;
-        rightTip = pointX + length2A/2;
+        rightTip = pointX + length2A / 2;
+
+
 
     }
 
-    public double SIF_A(double sigma) {
+    private double SIF_A() {
         double result = 0;
         double KIA = 0;
         double lambda = 2 * depthB / length2a;
@@ -59,7 +63,7 @@ public class SemiellipticalCrack implements Comparable<SemiellipticalCrack> {
         return result;
     }
 
-    public double SIF_B(double sigma) {
+    private double SIF_B() {
         double result = 0;
         double KIB = 0;
         double lambda = 2 * depthB / length2a;
@@ -71,10 +75,10 @@ public class SemiellipticalCrack implements Comparable<SemiellipticalCrack> {
         return result;
     }
 
-    public double CriticalRadius(SemiellipticalCrack crack2, double sigma, double sigmaYS, double k) {
+    public double CriticalRadius(SemiellipticalCrack crack2) {
         double RC = 0;
-        RC = (k / Math.PI) * Math.pow(this.SIF_A(sigma) / sigmaYS, 2)
-                + (k / Math.PI) * Math.pow(crack2.SIF_A(sigma) / sigmaYS, 2);
+        RC = (k / Math.PI) * Math.pow(this.SIF_A() / sigmaYS, 2)
+                + (k / Math.PI) * Math.pow(crack2.SIF_A() / sigmaYS, 2);
         return RC;
     }
 
@@ -96,7 +100,6 @@ public class SemiellipticalCrack implements Comparable<SemiellipticalCrack> {
 //        return null;
 //
 //    }
-
 //    public static boolean CanCoalescence(SemiellipticalCrack cr1, SemiellipticalCrack cr2) {
 //        boolean result = false;
 //        // Додати перевірку об"єднання двох тріщин
@@ -106,7 +109,6 @@ public class SemiellipticalCrack implements Comparable<SemiellipticalCrack> {
 //        }
 //        return result;
 //    }
-
     public double da_dtKIrate(double K) {
         double result = 0;
         result = Math.pow(1.1, -7.0)
@@ -264,8 +266,8 @@ public class SemiellipticalCrack implements Comparable<SemiellipticalCrack> {
     }
 
     public int compareTo(SemiellipticalCrack o) {
-        if (o == null){
-        throw new UnsupportedOperationException("Not supported yet.");
+        if (o == null) {
+            throw new UnsupportedOperationException("Not supported yet.");
         }
         if (rightTip > o.rightTip) {
             return 1;
@@ -279,7 +281,4 @@ public class SemiellipticalCrack implements Comparable<SemiellipticalCrack> {
         return 0;
 
     }
-
-
-
 }

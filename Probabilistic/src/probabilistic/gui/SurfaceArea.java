@@ -4,6 +4,7 @@
  */
 package probabilistic.gui;
 
+import sorting.CrackSorter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;

@@ -2,9 +2,10 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package probabilistic.gui;
+package sorting;
 
 import java.util.Comparator;
+import probabilistic.gui.SemiellipticalCrack;
 
 /**
  *
