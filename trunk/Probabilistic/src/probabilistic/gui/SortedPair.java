@@ -3,9 +3,11 @@
  * and open the template in the editor.
  */
 package probabilistic.gui;
-
 import java.util.ArrayList;
-import java.util.Iterator;
+import java.util.Collections;
+
+import sorting.SortPairRC;
+import sorting.SortPairRatio;
 
 /**
  *
@@ -14,36 +16,54 @@ import java.util.Iterator;
 public class SortedPair {
 
     private ArrayList<SemiellipticalCrack> sourceList;
-    private ArrayList<crackPair> listOfPair;
-    private ArrayList<crackPair> sortedListOfPair;
+    private ArrayList<CrackPair> listOfPair;
+    private ArrayList<CrackPair> sortedListOfPair = new ArrayList<CrackPair>();
+    private double minRC;
+    private CrackPair coalescencePair;
 
-    public void createPairs(ArrayList<SemiellipticalCrack> sourceListParametr) {
-        listOfPair = new ArrayList<crackPair>();
+    public SortedPair(ArrayList<SemiellipticalCrack> sourceList, double minRC) {
+        this.sourceList = sourceList;
+        this.minRC = minRC;
+    }
+
+
+
+
+    void createPairs(ArrayList<SemiellipticalCrack> sourceListParametr) {
+        listOfPair = new ArrayList<CrackPair>();
         for (int j = 0; j < sourceListParametr.size(); j++) {
 //            SemiellipticalCrack semiellipticalCrack = sourceListParametr.get(j);
             for (int i = j; i < sourceListParametr.size(); i++) {
                 if ((j + i) <= sourceListParametr.size()) {
-                    sortedListOfPair.add(new crackPair(sourceListParametr.get(j), sourceListParametr.get(j + i)));
-                }else break;
+                    listOfPair.add(new CrackPair(sourceListParametr.get(j), sourceListParametr.get(j + i)));
+                } else {
+                    break;
+                }
             }
         }
     }
-
-    private class crackPair {
-
-        private SemiellipticalCrack crackObj1, crackObj2;
-        Double distance;
-
-        public crackPair(SemiellipticalCrack crackObj1, SemiellipticalCrack crackObj2) {
-            this.crackObj1 = crackObj1;
-            this.crackObj2 = crackObj2;
+    private void sortPairsRC(double rC) {
+        Collections.sort(listOfPair,new SortPairRC());
+        for (int i = 0; (rC >= listOfPair.get(i).getCriticalRadiusRC()); i++) {
+            sortedListOfPair.add(listOfPair.get(i));
         }
-        Double calculateDistance (SemiellipticalCrack crackObj1, SemiellipticalCrack crackObj2){
-            double distanceX = crackObj1.getCrackPoint().getX() - crackObj1.getLength2a()/2 - crackObj1.getRightTip();
-            double distanceY = crackObj1.getCrackPoint().getY() - crackObj2.getCrackPoint().getY();
-            //порахувати відстань між вершинами
-        return new Double(distanceY);
+        if (!sortedListOfPair.get(0).equals(null)){
+        Collections.sort(sortedListOfPair, new SortPairRatio());
+        coalescencePair = sortedListOfPair.get(0);
+//        SemiellipticalCrack crack1 = sortedListOfPair.get(0).getCrackObj1();
+//        SemiellipticalCrack crack2 = sortedListOfPair.get(0).getCrackObj2();
         }
-
     }
+
+
+    public ArrayList<CrackPair> getSortedListOfPair() {
+
+        return sortedListOfPair;
+    }
+
+
+
+
+
+    
 }
