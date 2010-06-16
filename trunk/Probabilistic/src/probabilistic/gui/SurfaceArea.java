@@ -4,7 +4,7 @@
  */
 package probabilistic.gui;
 
-import sorting.CrackSorter;
+import sorting.CrackSorterRTip;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -88,10 +88,8 @@ public class SurfaceArea {
 
                     // точку кинули в порожню клітину
                     SemiellipticalCrack crack = ellipticalCrack.get(i);
-                    crack.setSiteX((int) rndX);
-                    matPointsX[rndI][rndJ] = crack.getSiteX();
-                    crack.setSiteY((int) rndY);
-                    matPointsY[rndI][rndJ] = crack.getSiteY();
+                    matPointsX[rndI][rndJ] = (int) rndX;
+                    matPointsY[rndI][rndJ] = (int) rndY;
                     matrix[rndI][rndJ] = true;
                     if (i > 0) {
                         deltaT = timeObj.getInitTime().get(i) - timeObj.getInitTime().get(i - 1);
@@ -99,8 +97,21 @@ public class SurfaceArea {
                         deltaT = timeObj.getInitTime().get(i);
                     }
                     crackSortedByRightTip = new ArrayList<SemiellipticalCrack>(ellipticalCrack);
-                    Collections.sort(crackSortedByRightTip, new CrackSorter());
-
+                    Collections.sort(crackSortedByRightTip, new CrackSorterRTip());
+                    //визначаєм пару тріщин що буде об'єднуватись
+                    SortedPair pairObj = new SortedPair(crackSortedByRightTip);
+                    //повторюємо в циклі об'єднання
+                    //!!! Помилка
+                    if (pairObj.isCanCoalescence()) {
+                        if (pairObj.isCanCoalescence()) {
+                            ellipticalCrack.add(new SemiellipticalCrack(pairObj.getCoalescencePair().getCrackObj1(), pairObj.getCoalescencePair().getCrackObj2(), i));
+                            ellipticalCrack.remove(pairObj.getCoalescencePair().getCrackObj1());
+                            ellipticalCrack.remove(pairObj.getCoalescencePair().getCrackObj2());
+                            crackSortedByRightTip = new ArrayList<SemiellipticalCrack>(ellipticalCrack);
+                            Collections.sort(crackSortedByRightTip, new CrackSorterRTip());
+                            pairObj = new SortedPair(crackSortedByRightTip);
+                        }
+                    }
 
                     i++;
                 }
@@ -112,8 +123,8 @@ public class SurfaceArea {
 //        Collections.copy(crackSortedByRightTip, ellipticalCrack);
 //        Collections.sort(ellipticalCrack);
 
-        print(ellipticalCrack);
-        print(crackSortedByRightTip);
+//        print(ellipticalCrack);
+//        print(crackSortedByRightTip);
 
     }
 
@@ -124,14 +135,12 @@ public class SurfaceArea {
         for (int i = 0; i < lst.size(); i++) {
             SemiellipticalCrack objectCrack = (SemiellipticalCrack) lst.get(i);
             System.out.println("Initiation Time: " + objectCrack.getTimeIndex()
-                    + "\tCoordinate of right tip : " + objectCrack.getRightTip() + " x "
+                    + "\tCoordinate of right tip : " + objectCrack.getRightTip().getX() + " x "
                     + objectCrack.getCrackPoint().getY());
         }
         System.out.println("\n\n");
     }
 //**********************
-
-
 
     /*
      * Сортує тріщини по координаті правої вершини

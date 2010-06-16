@@ -29,6 +29,10 @@ public class Point {
     {
        return x;
     }
+    public Double getXDouble()
+    {
+       return x;
+    }
     public double getY()
     {
        return y;

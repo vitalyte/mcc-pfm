@@ -11,7 +11,7 @@ import probabilistic.gui.SemiellipticalCrack;
  *
  * @author Vitaly
  */
-public class CrackSorter implements Comparator<SemiellipticalCrack> {
+public class CrackSorterRTip implements Comparator<SemiellipticalCrack> {
 
 //    1  якщо(о1)   більше(о2   ) ,
 //   -1  якщо параметр (о1) менше (о2),
@@ -33,7 +33,7 @@ public class CrackSorter implements Comparator<SemiellipticalCrack> {
                 throw new UnsupportedOperationException("Not supported yet.");
             }
 //         System.out.println(o2.getRightTip().compareTo(o1.getRightTip()));
-            return o2.getRightTip().compareTo(o1.getRightTip());
+            return o2.getRightTip().getXDouble().compareTo(o1.getRightTip().getXDouble());
         
     }
 }

@@ -4,8 +4,6 @@
  */
 package probabilistic.gui;
 
-import java.util.Comparator;
-
 /**
  *
  * @author Vitaly
@@ -13,43 +11,20 @@ import java.util.Comparator;
 public class CrackPair {
 
     private SemiellipticalCrack crackObj1, crackObj2;
-    Double distanceBetweenTips, criticalRadiusRC, ratioDistanceToRC;
+    Double distanceBetweenTips, ratioDistanceToRC;
     Point centerOfRC;
     double CriticalRadius;
+    boolean entersTheRadius;
+//    SemiellipticalCrack
 
     public CrackPair(SemiellipticalCrack crackObj1, SemiellipticalCrack crackObj2) {
         this.crackObj1 = crackObj1;
         this.crackObj2 = crackObj2;
-        distanceBetweenTips = calculateDistance();
-        criticalRadiusRC = calculateRC();
-        ratioDistanceToRC = ratioDistanceToRC();
-        centerOfRC = centerOfRC();
+        distanceBetweenTips = Point.Distance(crackObj2.getLeftTip(), crackObj1.getRightTip());
         CriticalRadius = crackObj1.CriticalRadius(crackObj2);
-    }
-
-    double calculateDistance() {
-        double distanceX = crackObj2.getCrackPoint().getX() - crackObj2.getLength2a() / 2 - crackObj1.getRightTip();
-        double distanceY = crackObj1.getCrackPoint().getY() - crackObj2.getCrackPoint().getY();
-        // відстань між вершинами
-        double distance = Math.sqrt(Math.abs(distanceY + Math.abs(distanceX)));
-        return distance;
-    }
-
-    double calculateRC() {
-        return 2 * Math.abs(crackObj2.getCrackPoint().getX() - crackObj2.getLength2a() / 2 - crackObj1.getRightTip());
-    }
-
-    Point centerOfRC() {
-        return new Point(((crackObj2.getCrackPoint().getX() - crackObj2.getLength2a() / 2 - crackObj1.getRightTip()) / 2),
-                crackObj1.getCrackPoint().getY());
-    }
-
-    double ratioDistanceToRC() {
-        return calculateDistance() / calculateRC();
-    }
-
-    public Double getCriticalRadiusRC() {
-        return criticalRadiusRC;
+        ratioDistanceToRC = distanceBetweenTips / CriticalRadius;
+        centerOfRC = new Point(crackObj1.getRightTip().getX()+CriticalRadius/2, crackObj1.getCrackPoint().getY());  
+        entersTheRadius = new Circle(centerOfRC, CriticalRadius).IsPointInsideCircle(crackObj2.getLeftTip());
     }
 
     public Double getDistanceBetweenTips() {
@@ -70,6 +45,10 @@ public class CrackPair {
 
     public double getCriticalRadius() {
         return CriticalRadius;
+    }
+
+    public boolean isEntersTheRadius() {
+        return entersTheRadius;
     }
 
 }

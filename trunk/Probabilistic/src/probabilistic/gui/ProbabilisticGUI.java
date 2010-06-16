@@ -10,10 +10,6 @@
  */
 package probabilistic.gui;
 
-import java.awt.*;
-import javax.swing.*;
-import probabilistic.InitiationTime;
-
 /**
  *
  * @author Vitaly
