@@ -77,8 +77,8 @@ public class GridJPanel extends javax.swing.JPanel {
 
         for (int i = 0; i < surface.getEllipticalCrack().size(); i++) {
             SemiellipticalCrack crack = (SemiellipticalCrack) surface.getEllipticalCrack().get(i);
-            g.drawLine((crack.getSiteX() - (int) crack.getLength2a()/2), crack.getSiteY(),
-                    (crack.getSiteX() + (int) crack.getLength2a()/2), crack.getSiteY());
+            g.drawLine((int)crack.getLeftTip().getX(), (int)crack.getLeftTip().getY(),
+                    (int)crack.getRightTip().getX(), (int)crack.getRightTip().getY());
 
         }
 
