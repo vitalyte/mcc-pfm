@@ -11,7 +11,8 @@ package probabilistic.gui;
 public class CrackPair {
 
     private SemiellipticalCrack crackObj1, crackObj2;
-    Double distanceBetweenTips, ratioDistanceToRC;
+    Double  ratioDistanceToRC;
+    double distanceBetweenTips;
     Point centerOfRC;
     double CriticalRadius;
     boolean entersTheRadius;

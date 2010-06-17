@@ -34,8 +34,14 @@ public class GridJPanel extends javax.swing.JPanel {
 //    SurfaceArea area = new SurfaceArea(height, width, grainHeight, grainWidth);
     public GridJPanel() {
         initComponents();
-        surface = new SurfaceArea(height, width, grainHeight, grainWidth, 0.3, 34.54);
-        surface.FillRandomCracks(height, width, grainHeight, grainWidth, 10, 8, 10, 8);
+//        surface = new SurfaceArea(height, width, grainHeight, grainWidth, 0.3, 34.54, 500000000, 5, 500000000);
+//        surface.FillRandomCracks(10, 8, 10, 8);
+    }
+
+    public GridJPanel(SurfaceArea surface) {
+        initComponents();
+        this.surface = surface;
+//        surface.FillRandomCracks(10, 8, 10, 8);
     }
 
 //    public GridJPanel(int height_, int width_, int grainHeight_, int grainWidth_) {
@@ -52,20 +58,21 @@ public class GridJPanel extends javax.swing.JPanel {
     //paint grid
     @Override
     public void paintComponent(Graphics g) {
-        width = surface.getWidth();
-        height = surface.getHeight();
-        grainWidth = surface.getGrainWidth();
-        grainHeight = surface.getGrainHeight();
-        super.paintComponent(g);
-        this.setSize(surface.getWidth(), surface.getHeight());
-        int widthWindow = surface.getWidth();
-        int heightWindow = surface.getHeight();
-        for (int i = 0; i <= widthWindow; i += grainWidth) {
-            g.drawLine(i, 0, i, heightWindow);
-        }
-        for (int j = 0; j <= heightWindow; j += grainHeight) {
-            g.drawLine(0, j, widthWindow, j);
-        }
+        if (surface != null) {
+            width = surface.getWidth();
+            height = surface.getHeight();
+            grainWidth = surface.getGrainWidth();
+            grainHeight = surface.getGrainHeight();
+            super.paintComponent(g);
+            this.setSize(surface.getWidth(), surface.getHeight());
+            int widthWindow = surface.getWidth();
+            int heightWindow = surface.getHeight();
+            for (int i = 0; i <= widthWindow; i += grainWidth) {
+                g.drawLine(i, 0, i, heightWindow);
+            }
+            for (int j = 0; j <= heightWindow; j += grainHeight) {
+                g.drawLine(0, j, widthWindow, j);
+            }
 //        for (int i = 0; i < surface.getNumColumns(); i++) {
 //            for (int j = 0; j < surface.getNumRows(); j++) {
 //                g.drawLine((int) surface.getMatPointsX()[i][j] - (int) crack.getLength2a() / 2,
@@ -75,12 +82,22 @@ public class GridJPanel extends javax.swing.JPanel {
 //            }
 //        }
 
-        for (int i = 0; i < surface.getEllipticalCrack().size(); i++) {
-            SemiellipticalCrack crack = (SemiellipticalCrack) surface.getEllipticalCrack().get(i);
-            g.drawLine((int)crack.getLeftTip().getX(), (int)crack.getLeftTip().getY(),
-                    (int)crack.getRightTip().getX(), (int)crack.getRightTip().getY());
+            for (int i = 0; i < surface.getEllipticalCrack().size(); i++) {
+                SemiellipticalCrack crack = (SemiellipticalCrack) surface.getEllipticalCrack().get(i);
+                g.drawLine((int) crack.getLeftTip().getX(), (int) crack.getLeftTip().getY(),
+                        (int) crack.getRightTip().getX(), (int) crack.getRightTip().getY());
+
+            }
+        } else {
+            super.paintComponent(g);
+            int a = 100;
+//            this.setSize(a, a);
+                
+            
 
         }
+
+
 
 
     }

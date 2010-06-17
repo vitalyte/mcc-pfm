@@ -4,15 +4,13 @@
  */
 package probabilistic.gui;
 
-
 /**
  *
  * @author Vitaly
  */
-public class SemiellipticalCrack  {
+public class SemiellipticalCrack {
 
     private double initiationTimeObj;
-
 //    private double siteXPoint;
 //    private double siteYPoint;
     private double length2a = 10;
@@ -23,10 +21,7 @@ public class SemiellipticalCrack  {
     private Point rightTip;
     private Point leftTip;
     int timeIndex;
-    
     private double sigma, sigmaYS, k;
-
-
 
 //
 //    public SemiellipticalCrack(SurfaceArea surface, double pointX, double pointY) {
@@ -44,17 +39,21 @@ public class SemiellipticalCrack  {
         this.timeIndex = timeIndex;
         rightTip = new Point((pointX + length2A / 2), pointY);
         leftTip = new Point((pointX - length2A / 2), pointY);
+        sigma = surfaceAreaObj.getSigma();
+        sigmaYS = surfaceAreaObj.getYieldStress();
+        k = surfaceAreaObj.getParametrK();
     }
 
     public SemiellipticalCrack(SemiellipticalCrack obj1, SemiellipticalCrack obj2, int timeIndex) {
         surfaceAreaObj = obj1.getSurfaceAreaObj();
-        length2a = obj1.getLeftTip().getX() - obj2.getRightTip().getX();
-        crackPoint = new Point(obj1.getLeftTip().getX() + length2a/2, obj1.getLeftTip().getY());
+        length2a = Math.abs(obj1.getLeftTip().getX() - obj2.getRightTip().getX());
+        crackPoint = new Point(obj1.getLeftTip().getX() + length2a / 2, obj1.getLeftTip().getY());
         this.depthB = Math.max(obj1.getDepthB(), obj2.getDepthB());
         this.timeIndex = timeIndex;
+        sigma = surfaceAreaObj.getSigma();
+        sigmaYS = surfaceAreaObj.getYieldStress();
+        k = surfaceAreaObj.getParametrK();
     }
-
-
 
     private double SIF_A() {
         double result = 0;
@@ -199,15 +198,11 @@ public class SemiellipticalCrack  {
         this.length2a = crackLength;
     }
 
-
-
     /**
      * Get the value of crackSiteX
      *
      * @return the value of crackSiteX
      */
-
-
     /**
      * Get the value of initiationTime
      *
@@ -249,8 +244,4 @@ public class SemiellipticalCrack  {
     public Point getRightTip() {
         return rightTip;
     }
-
-
-
-
 }
