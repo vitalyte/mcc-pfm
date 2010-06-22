@@ -31,14 +31,15 @@ public class SemiellipticalCrack {
 //        crackPoint = new Point(pointX, pointY);
 //    }
     public SemiellipticalCrack(SurfaceArea surface, double pointX, double pointY,
-            double length2A, double depthB, int timeIndex) {
+            double length2a, double depthB, int timeIndex) {
         surfaceAreaObj = surface;
         crackPoint = new Point(pointX, pointY);
-        this.length2a = length2A;
+        this.length2a = length2a;
         this.depthB = depthB;
+        aspectRatio = depthB/length2a/2;
         this.timeIndex = timeIndex;
-        rightTip = new Point((pointX + length2A / 2), pointY);
-        leftTip = new Point((pointX - length2A / 2), pointY);
+        rightTip = new Point((crackPoint.getX() + length2a / 2), crackPoint.getY());
+        leftTip = new Point((crackPoint.getX() - length2a / 2), crackPoint.getY());
         sigma = surfaceAreaObj.getSigma();
         sigmaYS = surfaceAreaObj.getYieldStress();
         k = surfaceAreaObj.getParametrK();
@@ -48,7 +49,10 @@ public class SemiellipticalCrack {
         surfaceAreaObj = obj1.getSurfaceAreaObj();
         length2a = Math.abs(obj1.getLeftTip().getX() - obj2.getRightTip().getX());
         crackPoint = new Point(obj1.getLeftTip().getX() + length2a / 2, obj1.getLeftTip().getY());
+        rightTip = new Point((crackPoint.getX() + length2a / 2), crackPoint.getY());
+        leftTip = new Point((crackPoint.getX() - length2a / 2), crackPoint.getY());
         this.depthB = Math.max(obj1.getDepthB(), obj2.getDepthB());
+        aspectRatio = depthB/length2a/2;
         this.timeIndex = timeIndex;
         sigma = surfaceAreaObj.getSigma();
         sigmaYS = surfaceAreaObj.getYieldStress();

@@ -4,12 +4,14 @@
  */
 package probabilistic.gui;
 
-import sorting.CrackSorterRTip;
+//import sorting.CrackSorterRTip;
 import java.util.ArrayList;
+//import java.util.Collections;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 import probabilistic.*;
+import sorting.CrackSorterRTip;
 
 /**
  *
@@ -34,6 +36,7 @@ public class SurfaceArea {
     private InitiationTime timeObj;
     private ArrayList<SemiellipticalCrack> ellipticalCrack;
     private ArrayList<SemiellipticalCrack> crackSortedByRightTip;
+    double maxCrackLength;
 
     public SurfaceArea(int height, int width, int grainHeight, int grainWidth,
             double meanInitiationTime, double scaleInitiationTime, double sigma, double yieldStress, double parametrK) {
@@ -99,15 +102,14 @@ public class SurfaceArea {
                         deltaT = timeObj.getInitTime().get(i);
                     }
                     crackSortedByRightTip = new ArrayList<SemiellipticalCrack>(ellipticalCrack);
-//                    Collections.sort(crackSortedByRightTip, new CrackSorterRTip());
-                    SortedPair pairObj = new SortedPair(ellipticalCrack);
-                    while (pairObj.isCanCoalescence()) {
-                        ellipticalCrack.add(new SemiellipticalCrack(pairObj.getCoalescencePair().getCrackObj1(), pairObj.getCoalescencePair().getCrackObj2(), i));
-                        ellipticalCrack.remove(pairObj.getCoalescencePair().getCrackObj1());
-                        ellipticalCrack.remove(pairObj.getCoalescencePair().getCrackObj2());
+                    Collections.sort(crackSortedByRightTip, new CrackSorterRTip());
+                    while (SortedPair.createPairs(crackSortedByRightTip)) {
+                        ellipticalCrack.add(new SemiellipticalCrack(SortedPair.getCoalescencePair().getCrackObj1(), SortedPair.getCoalescencePair().getCrackObj2(), i));
+                        ellipticalCrack.remove(SortedPair.getCoalescencePair().getCrackObj1());
+                        ellipticalCrack.remove(SortedPair.getCoalescencePair().getCrackObj2());
                         crackSortedByRightTip = new ArrayList<SemiellipticalCrack>(ellipticalCrack);
-//                        Collections.sort(crackSortedByRightTip, new CrackSorterRTip());
-                        pairObj = new SortedPair(ellipticalCrack);
+                        Collections.sort(crackSortedByRightTip, new CrackSorterRTip());
+//                        pairObj = new SortedPair(ellipticalCrack);
                     }
 
 
