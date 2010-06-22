@@ -23,10 +23,10 @@ import java.awt.Graphics;
 public class GridJPanel extends javax.swing.JPanel {
 
     /** Creates new form GridJPanel */
-    private int height = 300;
-    private int width = 300;
-    private int grainHeight = 100;
-    private int grainWidth = 100;
+    private int height;
+    private int width;
+    private int grainHeight;
+    private int grainWidth;
     private SurfaceArea surface;
 //    private SemiellipticalCrack crack;
 //    private InitiationTime time;
