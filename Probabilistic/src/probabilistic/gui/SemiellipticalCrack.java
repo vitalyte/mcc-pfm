@@ -59,7 +59,7 @@ public class SemiellipticalCrack {
         k = surfaceAreaObj.getParametrK();
     }
 
-    private double SIF_A() {
+    public double SIF_A() {
         double result = 0;
         double KIA = 0;
         double lambda = 2 * depthB / length2a;
@@ -74,7 +74,7 @@ public class SemiellipticalCrack {
         return result;
     }
 
-    private double SIF_B() {
+    public double SIF_B() {
         double result = 0;
         double KIB = 0;
         double lambda = 2 * depthB / length2a;
