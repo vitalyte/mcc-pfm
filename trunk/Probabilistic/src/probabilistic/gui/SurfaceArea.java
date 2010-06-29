@@ -5,11 +5,17 @@
 package probabilistic.gui;
 
 //import sorting.CrackSorterRTip;
+import integration.CrackOrderOde;
 import java.util.ArrayList;
 //import java.util.Collections;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
+import org.apache.commons.math.ode.DerivativeException;
+import org.apache.commons.math.ode.FirstOrderDifferentialEquations;
+import org.apache.commons.math.ode.FirstOrderIntegrator;
+import org.apache.commons.math.ode.IntegratorException;
+import org.apache.commons.math.ode.nonstiff.DormandPrince853Integrator;
 import probabilistic.*;
 import sorting.CrackSorterRTip;
 
@@ -37,6 +43,7 @@ public class SurfaceArea {
     private ArrayList<SemiellipticalCrack> ellipticalCrack;
     private ArrayList<SemiellipticalCrack> crackSortedByRightTip;
     double maxCrackLength;
+    double k1SCC = 2;
 
     public SurfaceArea(int height, int width, int grainHeight, int grainWidth,
             double meanInitiationTime, double scaleInitiationTime, double sigma, double yieldStress, double parametrK) {
@@ -75,7 +82,7 @@ public class SurfaceArea {
     }
 
     void FillRandomCracks(double length2AMean, double length2AScale,
-            double depthMean, double depthScale) {
+            double depthMean, double depthScale) throws DerivativeException, IntegratorException {
         if (isFilleddCkracks() == false) {
             int i = 0;
             while (i < Nmax) {
@@ -96,11 +103,18 @@ public class SurfaceArea {
                     matPointsX[rndI][rndJ] = (int) rndX;
                     matPointsY[rndI][rndJ] = (int) rndY;
                     matrix[rndI][rndJ] = true;
+                    double currentTime = timeObj.getInitTime().get(i);
+                    double previousTime = timeObj.getInitTime().get(i);
                     if (i > 0) {
                         deltaT = timeObj.getInitTime().get(i) - timeObj.getInitTime().get(i - 1);
+                        previousTime = timeObj.getInitTime().get(i - 1);
+
                     } else {
                         deltaT = timeObj.getInitTime().get(i);
                     }
+
+                    //**
+                    //об'єднання тріщин
                     crackSortedByRightTip = new ArrayList<SemiellipticalCrack>(ellipticalCrack);
                     Collections.sort(crackSortedByRightTip, new CrackSorterRTip());
                     while (SortedPair.createPairs(crackSortedByRightTip)) {
@@ -111,23 +125,15 @@ public class SurfaceArea {
                         Collections.sort(crackSortedByRightTip, new CrackSorterRTip());
 //                        pairObj = new SortedPair(ellipticalCrack);
                     }
+                    //**
+                    //підростання тріщин
+                    FirstOrderIntegrator dp853 = new DormandPrince853Integrator(1.0e-8, 100.0, 1.0e-10, 1.0e-10);
+                    FirstOrderDifferentialEquations ode = new CrackOrderOde(new double[] { ellipticalCrack.get(i).SIF_A(), ellipticalCrack.get(i).SIF_B() }, k1SCC);
+                    double[] y = new double[] { 0.0, 1.0 }; // initial state
+                    dp853.integrate(ode, previousTime, y, currentTime, y); // now y contains final state at time t=16.0
 
 
-//                    Collections.sort(crackSortedByRightTip, new CrackSorterRTip());
-                    //визначаєм пару тріщин що буде об'єднуватись
-//                    SortedPair pairObj = new SortedPair(crackSortedByRightTip);
-//                    //повторюємо в циклі об'єднання
-////                    //!!! Помилка
-//                    if (i > 2) {
-//                        while (pairObj.isCanCoalescence()) {
-//                        ellipticalCrack.add(new SemiellipticalCrack(pairObj.getCoalescencePair().getCrackObj1(), pairObj.getCoalescencePair().getCrackObj2(), i));
-//                        ellipticalCrack.remove(pairObj.getCoalescencePair().getCrackObj1());
-//                        ellipticalCrack.remove(pairObj.getCoalescencePair().getCrackObj2());
-//                        crackSortedByRightTip = new ArrayList<SemiellipticalCrack>(ellipticalCrack);
-//                        Collections.sort(crackSortedByRightTip, new CrackSorterRTip());
-//                        pairObj = new SortedPair(crackSortedByRightTip);
-//                        }
-//                    }
+
 
 
                     i++;
