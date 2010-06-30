@@ -10,6 +10,9 @@
  */
 package probabilistic.gui;
 
+import org.apache.commons.math.ode.DerivativeException;
+import org.apache.commons.math.ode.IntegratorException;
+
 /**
  *
  * @author Vitaly
@@ -701,14 +704,19 @@ public class ProbabilisticGUI extends javax.swing.JFrame {
         valueYieldStress = Double.parseDouble(yieldStress.getText());
         valueSigma = Double.parseDouble(sigma.getText());
         surfaceObj = new SurfaceArea(HeightValue, WidthValue, gHeightValue, gWidthValue, timeMeanValue, timeScaleValue, valueSigma, valueYieldStress, valueParametrK);
-        surfaceObj.FillRandomCracks(lengthMean, lengthScale, depthMean, depthScale);
+        try {
+            surfaceObj.FillRandomCracks(lengthMean, lengthScale, depthMean, depthScale);
+        } catch (DerivativeException e) {
+        } catch (IntegratorException e1) {
+        }
+
         gridJPanel1.setSurface(surfaceObj);
         textLabel = "hxw surface=" + gridJPanel1.getSurface().getHeight() + "x"
-    + gridJPanel1.getSurface().getWidth() + " "
-    + "grain=" + gridJPanel1.getSurface().getGrainHeight() + "x"
-    + gridJPanel1.getSurface().getGrainWidth();
+                + gridJPanel1.getSurface().getWidth() + " "
+                + "grain=" + gridJPanel1.getSurface().getGrainHeight() + "x"
+                + gridJPanel1.getSurface().getGrainWidth();
 
-        
+
         gridJPanel1.paintComponent(gridJPanel1.getGraphics());
         surfaceGeometry.setText("hxw surface=" + gridJPanel1.getSurface().getHeight() + "x"
                 + gridJPanel1.getSurface().getWidth() + " " + "grain=" + gridJPanel1.getSurface().getGrainHeight() + "x"
