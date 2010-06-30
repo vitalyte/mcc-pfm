@@ -13,11 +13,11 @@ import org.apache.commons.math.ode.FirstOrderDifferentialEquations;
  */
 public class CrackOrderOde implements FirstOrderDifferentialEquations {
 
-    private double[] k1;
-    private double k1SCC;
+    private double[] K1;
+    private double k1SCC =2;
 
-    public CrackOrderOde(double[] k1, double k1SCC) {
-        this.k1 = k1;
+    public CrackOrderOde(double[] c, double k1SCC) {
+        this.K1     = c;
         this.k1SCC = k1SCC;
 
     }
@@ -29,17 +29,24 @@ public class CrackOrderOde implements FirstOrderDifferentialEquations {
 
     public void computeDerivatives(double t, double[] y, double[] yDot) throws DerivativeException {
         //throw new UnsupportedOperationException("Not supported yet.");
+        //
         yDot[0] = 1.1 * Math.pow(10, -7.0)
                 * Math.pow((2.5 * Math.pow(10.0, 10.0)
                 * Math.exp(
-                (-(3 * Math.pow(10.0, -19.0) - 1.5 * Math.pow(10.0, -20.0) * Math.pow((k1[0] - k1SCC), (1 / 3)))
+                (-(3 * Math.pow(10.0, -19.0) - 1.5 * Math.pow(10.0, -20.0) * Math.pow((K1[0] - k1SCC), (1 / 3)))
                 / 7.74 * Math.pow(10.0, -21.0)))), 0.443);
         yDot[1] = 1.1 * Math.pow(10, -7.0)
                 * Math.pow((2.5 * Math.pow(10.0, 10.0)
                 * Math.exp(
-                (-(3 * Math.pow(10.0, -19.0) - 1.5 * Math.pow(10.0, -20.0) * Math.pow((k1[1] - k1SCC), (1 / 3)))
+                (-(3 * Math.pow(10.0, -19.0) - 1.5 * Math.pow(10.0, -20.0) * Math.pow((K1[1] - k1SCC), (1 / 3)))
                 / 7.74 * Math.pow(10.0, -21.0)))), 0.443);
 
+    }
+
+    double [] K1array(double[] y){
+        double [] result = y;
+
+        return result;
     }
 
     /**

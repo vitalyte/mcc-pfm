@@ -4,6 +4,13 @@
  */
 package probabilistic.gui;
 
+import integration.CrackOrderOde;
+import org.apache.commons.math.ode.DerivativeException;
+import org.apache.commons.math.ode.FirstOrderDifferentialEquations;
+import org.apache.commons.math.ode.FirstOrderIntegrator;
+import org.apache.commons.math.ode.IntegratorException;
+import org.apache.commons.math.ode.nonstiff.DormandPrince54Integrator;
+
 /**
  *
  * @author Vitaly
@@ -22,6 +29,8 @@ public class SemiellipticalCrack {
     private Point leftTip;
     int timeIndex;
     private double sigma, sigmaYS, k;
+    
+    private double k1SCC = 2;
 
 //
 //    public SemiellipticalCrack(SurfaceArea surface, double pointX, double pointY) {
@@ -31,18 +40,19 @@ public class SemiellipticalCrack {
 //        crackPoint = new Point(pointX, pointY);
 //    }
     public SemiellipticalCrack(SurfaceArea surface, double pointX, double pointY,
-            double length2a, double depthB, int timeIndex) {
+            double length2a, double depthB, int timeIndex, double initiationTimeObj) {
         surfaceAreaObj = surface;
         crackPoint = new Point(pointX, pointY);
         this.length2a = length2a;
         this.depthB = depthB;
-        aspectRatio = depthB/length2a/2;
+        aspectRatio = depthB / length2a / 2;
         this.timeIndex = timeIndex;
         rightTip = new Point((crackPoint.getX() + length2a / 2), crackPoint.getY());
         leftTip = new Point((crackPoint.getX() - length2a / 2), crackPoint.getY());
         sigma = surfaceAreaObj.getSigma();
         sigmaYS = surfaceAreaObj.getYieldStress();
         k = surfaceAreaObj.getParametrK();
+        this.initiationTimeObj = initiationTimeObj;
     }
 
     public SemiellipticalCrack(SemiellipticalCrack obj1, SemiellipticalCrack obj2, int timeIndex) {
@@ -52,14 +62,14 @@ public class SemiellipticalCrack {
         rightTip = new Point((crackPoint.getX() + length2a / 2), crackPoint.getY());
         leftTip = new Point((crackPoint.getX() - length2a / 2), crackPoint.getY());
         this.depthB = Math.max(obj1.getDepthB(), obj2.getDepthB());
-        aspectRatio = depthB/length2a/2;
+        aspectRatio = depthB / length2a / 2;
         this.timeIndex = timeIndex;
         sigma = surfaceAreaObj.getSigma();
         sigmaYS = surfaceAreaObj.getYieldStress();
         k = surfaceAreaObj.getParametrK();
     }
 
-    public double SIF_A() {
+    private double SIF_A() {
         double result = 0;
         double KIA = 0;
         double lambda = 2 * depthB / length2a;
@@ -68,13 +78,13 @@ public class SemiellipticalCrack {
         final double b2 = -0.19862;
         final double b3 = 0.02754;
         final double b4 = 0.00137;
-        KIA = b0 + b1 * lambda + b2 * lambda * lambda
+         KIA = b0 + b1 * lambda + b2 * lambda * lambda
                 + b3 * Math.pow(lambda, 3) + b4 * Math.pow(lambda, 4);
         result = sigma * Math.sqrt(Math.PI * length2a / 2) * KIA;
         return result;
     }
 
-    public double SIF_B() {
+    private double SIF_B() {
         double result = 0;
         double KIB = 0;
         double lambda = 2 * depthB / length2a;
@@ -93,41 +103,39 @@ public class SemiellipticalCrack {
         return RC;
     }
 
-//    public static SemiellipticalCrack CrackCoalescence(SemiellipticalCrack cr1, SemiellipticalCrack cr2) {
-//        if (CanCoalescence(cr1, cr2)) {
-//            //визначимо початок тріщини зліва
-//            if ((cr1.getCrackPoint().getX() - cr1.getLength2a()/2) -
-//                    (cr2.getCrackPoint().getX() - cr2.getLength2a()/2))
-//            double newLength2A = cr1.getLength2a() + cr2.getLength2a();
-//            double newDepthB = Math.max(cr1.getDepthB(), cr2.getDepthB());
-//            double newAspectRatio = 2 * newDepthB / newLength2A;
-//
-//            SemiellipticalCrack newCrack = new SemiellipticalCrack(surfaceAreaObj, 10, 10,
-//                    newLength2A, newDepthB, cr1.getTimeIndex());
-//            newCrack.setAspectRatio(newAspectRatio);
-//            //Подумати, де будуть siteX і SiteY
-//            return newCrack;
-//        }
-//        return null;
-//
-//    }
-//    public static boolean CanCoalescence(SemiellipticalCrack cr1, SemiellipticalCrack cr2) {
-//        boolean result = false;
-//        // Додати перевірку об"єднання двох тріщин
-//        double
-//        if (result) {
-//
-//        }
-//        return result;
-//    }
+    public boolean integrate(double currentTime) throws DerivativeException, IntegratorException {
+        boolean result = false;
+        double beforeGrowthLength = length2a;
+        double beforeGrowthDepth = depthB;
+        FirstOrderIntegrator dp853 = new DormandPrince54Integrator(1.0e-8, 100.0, 1.0e-10, 1.0e-10);
+        FirstOrderDifferentialEquations ode = new CrackOrderOde(new double[]{0, 0}, k1SCC);
+        double[] y = new double[]{0.0, 0.0}; // initial state
+        double stopTime = dp853.integrate(ode, 0.0, y, currentTime, y); // now y contains final state at time t=16.0
+        setLength2a(y[0]);
+        setDepthB(y[1]);
+        if (beforeGrowthLength != length2a
+                || beforeGrowthDepth != depthB) {
+            result = true;
+            System.out.println("stopTime=\t" + stopTime);
+            System.out.println("currentTime=\t" + currentTime);
+            System.out.println("y[0]= " + y[0]);
+//                                System.out.println("y[1]= " + y[1]);
+//            System.out.println("da_dtKIrate\t" + da_dtKIrate(KIA));
+            System.out.println("ellipticalCrack.get(j).getLength2a() - beforeGrowthLength = " + (length2a - beforeGrowthLength));
+
+        }
+
+
+        return result;
+    }
+
     public double da_dtKIrate(double K1) {
         double result = 0;
-        result = 1.1*Math.pow(10, -7.0)
+        result = 1.1 * Math.pow(10, -7.0)
                 * Math.pow((2.5 * Math.pow(10.0, 10.0)
                 * Math.exp(
-                (-(3 * Math.pow(10.0, -19.0) - 1.5 * Math.pow(10.0, -20.0) * Math.pow((K1 - 2), (1 / 3)))
-                /7.74 * Math.pow(10.0, -21.0))
-                )), 0.443);
+                (-(3 * Math.pow(10.0, -19.0) - 1.5 * Math.pow(10.0, -20.0) * Math.pow((K1 - k1SCC), (1 / 3)))
+                / 7.74 * Math.pow(10.0, -21.0)))), 0.443);
         return result;
     }
 
@@ -250,4 +258,7 @@ public class SemiellipticalCrack {
     public Point getRightTip() {
         return rightTip;
     }
+
+
+
 }

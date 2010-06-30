@@ -5,17 +5,13 @@
 package probabilistic.gui;
 
 //import sorting.CrackSorterRTip;
-import integration.CrackOrderOde;
 import java.util.ArrayList;
 //import java.util.Collections;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 import org.apache.commons.math.ode.DerivativeException;
-import org.apache.commons.math.ode.FirstOrderDifferentialEquations;
-import org.apache.commons.math.ode.FirstOrderIntegrator;
 import org.apache.commons.math.ode.IntegratorException;
-import org.apache.commons.math.ode.nonstiff.DormandPrince853Integrator;
 import probabilistic.*;
 import sorting.CrackSorterRTip;
 
@@ -100,15 +96,16 @@ public class SurfaceArea {
                     //потягнути з панелі
                     double length2A = NormalDistribution.PPF(RNG.Ran2(seed), length2AMean, length2AScale);
                     double depth = NormalDistribution.PPF(RNG.Ran2(seed), depthMean, depthScale);
-                    ellipticalCrack.add(new SemiellipticalCrack(this, rndX, rndY, length2A, depth, i));
+                    ellipticalCrack.add(new SemiellipticalCrack(this, rndX, rndY, length2A, depth, i, timeObj.getInitTime().get(i)));
                     double currentTime = timeObj.getInitTime().get(i);
-//                    double previousTime = timeObj.getInitTime().get(i);
                     if (i > 0) {
                         deltaT = timeObj.getInitTime().get(i) - timeObj.getInitTime().get(i - 1);
 //                        previousTime = timeObj.getInitTime().get(i - 1);
                     } else {
                         deltaT = timeObj.getInitTime().get(i);
                     }
+
+
 
 //                    boolean coalescence = true;
                     boolean growth = true;
@@ -130,31 +127,11 @@ public class SurfaceArea {
                         //підростання тріщин
                         growth = false;
                         for (int j = 0; j < ellipticalCrack.size(); j++) {
-                            double beforeGrowthLength = ellipticalCrack.get(j).getLength2a();
-                            double beforeGrowthDepth = ellipticalCrack.get(j).getDepthB();
-                            FirstOrderIntegrator dp853 = new DormandPrince853Integrator(1.0e-8, 100.0, 1.0e-10, 1.0e-10);
-                            FirstOrderDifferentialEquations ode = new CrackOrderOde(new double[]{ellipticalCrack.get(j).SIF_A(), ellipticalCrack.get(j).SIF_B()}, k1SCC);
-                            double[] y = new double[]{0.0, 0.0}; // initial state
-                            dp853.integrate(ode, 0.0, y, currentTime, y); // now y contains final state at time t=16.0
-                            ellipticalCrack.get(j).setLength2a(y[0]);
-                            ellipticalCrack.get(j).setDepthB(y[1]);
-                            if (beforeGrowthLength != ellipticalCrack.get(j).getLength2a()
-                                    || beforeGrowthDepth != ellipticalCrack.get(j).getDepthB()) {
-                                growth = true;
-                            }
+                            growth = ellipticalCrack.get(j).integrate(currentTime);
+
+
                         }
                     }
-
-
-
-
-
-
-
-
-
-
-
                     i++;
                 }
             }
