@@ -41,7 +41,7 @@ public class InitiationTime {
         this(100, 0.3, 34.54);
     }
 
-    public static void SortInitTime(ArrayList tmp) {
+    public static void SortInitTime(ArrayList<Double> tmp) {
         Collections.sort(tmp);
     }
 

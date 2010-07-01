@@ -211,6 +211,9 @@ public class SemiellipticalCrack {
      */
     public void setLength2a(double crackLength) {
         this.length2a = crackLength;
+        rightTip = new Point((crackPoint.getX() + length2a / 2), crackPoint.getY());
+        leftTip = new Point((crackPoint.getX() - length2a / 2), crackPoint.getY());
+
     }
 
     /**
