@@ -77,7 +77,7 @@ public class SurfaceArea {
         }
     }
 
-    void FillRandomCracks(double length2AMean, double length2AScale,
+    ArrayList<SemiellipticalCrack> FillRandomCracks(double length2AMean, double length2AScale,
             double depthMean, double depthScale) throws DerivativeException, IntegratorException {
         if (isFilleddCkracks() == false) {
             int i = 0;
@@ -144,6 +144,7 @@ public class SurfaceArea {
 
 //        print(ellipticalCrack);
 //        print(crackSortedByRightTip);
+        return ellipticalCrack;
 
     }
 
@@ -347,9 +348,9 @@ public class SurfaceArea {
         return ellipticalCrack;
     }
 
-    public void setEllipticalCrack(ArrayList ellipticalCrack) {
-        this.ellipticalCrack = ellipticalCrack;
-    }
+//    public void setEllipticalCrack(ArrayList ellipticalCrack) {
+//        this.ellipticalCrack = ellipticalCrack;
+//    }
 
     public double getParametrK() {
         return parametrK;
