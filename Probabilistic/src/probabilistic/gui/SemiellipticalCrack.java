@@ -5,6 +5,7 @@
 package probabilistic.gui;
 
 import integration.CrackOrderOde;
+import java.util.ArrayList;
 import org.apache.commons.math.ode.DerivativeException;
 import org.apache.commons.math.ode.FirstOrderDifferentialEquations;
 import org.apache.commons.math.ode.FirstOrderIntegrator;
@@ -20,8 +21,8 @@ public class SemiellipticalCrack {
     private double initiationTimeObj;
 //    private double siteXPoint;
 //    private double siteYPoint;
-    private double length2a = 10;
-    private double depthB;
+    private double length2a, initLength2a;
+    private double depthB, initDepthB;
     private double aspectRatio;
     private static SurfaceArea surfaceAreaObj;
     private Point crackPoint;
@@ -29,8 +30,8 @@ public class SemiellipticalCrack {
     private Point leftTip;
     int timeIndex;
     private double sigma, sigmaYS, k;
-    
     private double k1SCC = 2;
+    static private ArrayList historyOfCrack;
 
 //
 //    public SemiellipticalCrack(SurfaceArea surface, double pointX, double pointY) {
@@ -40,11 +41,13 @@ public class SemiellipticalCrack {
 //        crackPoint = new Point(pointX, pointY);
 //    }
     public SemiellipticalCrack(SurfaceArea surface, double pointX, double pointY,
-            double length2a, double depthB, int timeIndex, double initiationTimeObj) {
+            double length2a, double depthB, int timeIndex) {
         surfaceAreaObj = surface;
         crackPoint = new Point(pointX, pointY);
         this.length2a = length2a;
+        initLength2a = length2a;
         this.depthB = depthB;
+        initDepthB = depthB;
         aspectRatio = depthB / length2a / 2;
         this.timeIndex = timeIndex;
         rightTip = new Point((crackPoint.getX() + length2a / 2), crackPoint.getY());
@@ -52,7 +55,7 @@ public class SemiellipticalCrack {
         sigma = surfaceAreaObj.getSigma();
         sigmaYS = surfaceAreaObj.getYieldStress();
         k = surfaceAreaObj.getParametrK();
-        this.initiationTimeObj = initiationTimeObj;
+        initiationTimeObj = this.getSurfaceAreaObj().getTimeObj().getInitTime().get(timeIndex);
     }
 
     public SemiellipticalCrack(SemiellipticalCrack obj1, SemiellipticalCrack obj2, int timeIndex) {
@@ -67,6 +70,7 @@ public class SemiellipticalCrack {
         sigma = surfaceAreaObj.getSigma();
         sigmaYS = surfaceAreaObj.getYieldStress();
         k = surfaceAreaObj.getParametrK();
+        initiationTimeObj = obj1.getSurfaceAreaObj().getTimeObj().getInitTime().get(timeIndex);
     }
 
     private double SIF_A() {
@@ -78,7 +82,7 @@ public class SemiellipticalCrack {
         final double b2 = -0.19862;
         final double b3 = 0.02754;
         final double b4 = 0.00137;
-         KIA = b0 + b1 * lambda + b2 * lambda * lambda
+        KIA = b0 + b1 * lambda + b2 * lambda * lambda
                 + b3 * Math.pow(lambda, 3) + b4 * Math.pow(lambda, 4);
         result = sigma * Math.sqrt(Math.PI * length2a / 2) * KIA;
         return result;
@@ -103,27 +107,24 @@ public class SemiellipticalCrack {
         return RC;
     }
 
-    public boolean integrate(double currentTime) throws DerivativeException, IntegratorException {
+    public boolean integrate(double currentTime, double deltaT) throws DerivativeException, IntegratorException {
         boolean result = false;
         double beforeGrowthLength = length2a;
         double beforeGrowthDepth = depthB;
         FirstOrderIntegrator dp853 = new DormandPrince54Integrator(1.0e-8, 100.0, 1.0e-10, 1.0e-10);
-        FirstOrderDifferentialEquations ode = new CrackOrderOde(new double[]{0, 0}, k1SCC);
-        double[] y = new double[]{0.0, 0.0}; // initial state
-        double stopTime = dp853.integrate(ode, 0.0, y, currentTime, y); // now y contains final state at time t=16.0
-        setLength2a(y[0]);
-        setDepthB(y[1]);
-        if (beforeGrowthLength != length2a
-                || beforeGrowthDepth != depthB) {
-            result = true;
-            System.out.println("stopTime=\t" + stopTime);
-            System.out.println("currentTime=\t" + currentTime);
-            System.out.println("y[0]= " + y[0]);
-//                                System.out.println("y[1]= " + y[1]);
-//            System.out.println("da_dtKIrate\t" + da_dtKIrate(KIA));
-            System.out.println("ellipticalCrack.get(j).getLength2a() - beforeGrowthLength = " + (length2a - beforeGrowthLength));
+        FirstOrderDifferentialEquations ode = new CrackOrderOde(new double[]{0, 0}, k1SCC, this);
+        double[] y = new double[]{initLength2a, initDepthB}; // initial state
+        double startTime = currentTime - deltaT;
+        double stopTime = dp853.integrate(ode, startTime, y, currentTime, y); // now y contains final state at time t=16.0
+        setLength2a(beforeGrowthLength + y[0]);
+        setDepthB(beforeGrowthDepth + y[1]);
 
-        }
+        System.out.println("\n\nTimeIndex=\t" + this.getTimeIndex());
+        System.out.println("currentTime=\t" + currentTime);
+        System.out.println("deltaT=\t" + deltaT);
+        System.out.println("підростання довжини = " + (y[0]));
+        System.out.println("підростання глибини = " + (y[1]));
+
 
 
         return result;
@@ -259,6 +260,7 @@ public class SemiellipticalCrack {
         return rightTip;
     }
 
-
-
+    public double getSigma() {
+        return sigma;
+    }
 }

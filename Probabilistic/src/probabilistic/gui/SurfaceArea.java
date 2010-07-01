@@ -96,7 +96,7 @@ public class SurfaceArea {
                     //потягнути з панелі
                     double length2A = NormalDistribution.PPF(RNG.Ran2(seed), length2AMean, length2AScale);
                     double depth = NormalDistribution.PPF(RNG.Ran2(seed), depthMean, depthScale);
-                    ellipticalCrack.add(new SemiellipticalCrack(this, rndX, rndY, length2A, depth, i, timeObj.getInitTime().get(i)));
+                    ellipticalCrack.add(new SemiellipticalCrack(this, rndX, rndY, length2A, depth, i));
                     double currentTime = timeObj.getInitTime().get(i);
                     if (i > 0) {
                         deltaT = timeObj.getInitTime().get(i) - timeObj.getInitTime().get(i - 1);
@@ -127,7 +127,7 @@ public class SurfaceArea {
                         //підростання тріщин
                         growth = false;
                         for (int j = 0; j < ellipticalCrack.size(); j++) {
-                            growth = ellipticalCrack.get(j).integrate(currentTime);
+                            growth = ellipticalCrack.get(j).integrate(currentTime, deltaT);
 
 
                         }
