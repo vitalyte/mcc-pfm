@@ -108,7 +108,7 @@ public class SemiellipticalCrack {
     }
 
     public boolean integrate(double currentTime, double deltaT) throws DerivativeException, IntegratorException {
-        boolean result = false;
+        boolean result = true;
         double beforeGrowthLength = length2a;
         double beforeGrowthDepth = depthB;
         FirstOrderIntegrator dp853 = new DormandPrince54Integrator(1.0e-8, 100.0, 1.0e-10, 1.0e-10);
@@ -119,11 +119,12 @@ public class SemiellipticalCrack {
         setLength2a(beforeGrowthLength + y[0]);
         setDepthB(beforeGrowthDepth + y[1]);
 
-        System.out.println("\n\nTimeIndex=\t" + this.getTimeIndex());
-        System.out.println("currentTime=\t" + currentTime);
-        System.out.println("deltaT=\t" + deltaT);
-        System.out.println("підростання довжини = " + (y[0]));
-        System.out.println("підростання глибини = " + (y[1]));
+//        System.out.println("\n\nObject=\t" + this.toString());
+//        System.out.println("TimeIndex=\t" + this.getTimeIndex());
+//        System.out.println("currentTime=\t" + currentTime);
+//        System.out.println("deltaT=\t" + deltaT);
+//        System.out.println("підростання довжини = " + (y[0]));
+//        System.out.println("підростання глибини = " + (y[1]));
 
 
 

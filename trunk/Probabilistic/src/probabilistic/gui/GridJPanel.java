@@ -59,20 +59,22 @@ public class GridJPanel extends javax.swing.JPanel {
     @Override
     public void paintComponent(Graphics g) {
         if (surface != null) {
-            width = surface.getWidth();
-            height = surface.getHeight();
-            grainWidth = surface.getGrainWidth();
-            grainHeight = surface.getGrainHeight();
+            int k = surface.getVisualKValue();
+//            k =100;
+            width = (int) (k * surface.getWidth());
+            height = (int) (k * surface.getHeight());
+            grainWidth = (int) (k * surface.getGrainWidth());
+            grainHeight = (int) (k * surface.getGrainHeight());
             super.paintComponent(g);
-            this.setSize(surface.getWidth(), surface.getHeight());
-            int widthWindow = surface.getWidth();
-            int heightWindow = surface.getHeight();
-            for (int i = 0; i <= widthWindow; i += grainWidth) {
-                g.drawLine(i, 0, i, heightWindow);
-            }
-            for (int j = 0; j <= heightWindow; j += grainHeight) {
-                g.drawLine(0, j, widthWindow, j);
-            }
+            this.setSize(width, height);
+            int widthWindow = width;
+            int heightWindow = height;
+//            for (int i = 0; i <= widthWindow; i += grainWidth) {
+//                g.drawLine(i, 0, i, heightWindow);
+//            }
+//            for (int j = 0; j <= heightWindow; j += grainHeight) {
+//                g.drawLine(0, j, widthWindow, j);
+//            }
 //        for (int i = 0; i < surface.getNumColumns(); i++) {
 //            for (int j = 0; j < surface.getNumRows(); j++) {
 //                g.drawLine((int) surface.getMatPointsX()[i][j] - (int) crack.getLength2a() / 2,
@@ -82,18 +84,27 @@ public class GridJPanel extends javax.swing.JPanel {
 //            }
 //        }
 
+
+
+//                SemiellipticalCrack crack = surface.getEllipticalCrack().get(0);
+//                g.drawLine((int) (k * crack.getLeftTip().getX()), (int) (k * crack.getLeftTip().getY()),
+//                        (int) (k * crack.getRightTip().getX()), (int) (k * crack.getRightTip().getY()));
+//                System.out.println("Length of cracks = " + crack.getLength2a());
+//                System.out.println("cracks = " + crack.toString());
+//                System.out.println("cracks = " + surface.getEllipticalCrack().size());
+
             for (int i = 0; i < surface.getEllipticalCrack().size(); i++) {
-                SemiellipticalCrack crack = (SemiellipticalCrack) surface.getEllipticalCrack().get(i);
-                g.drawLine((int) crack.getLeftTip().getX(), (int) crack.getLeftTip().getY(),
-                        (int) crack.getRightTip().getX(), (int) crack.getRightTip().getY());
+                SemiellipticalCrack crack = surface.getEllipticalCrack().get(i);
+                g.drawLine((int) (k * crack.getLeftTip().getX()), (int) (k * crack.getLeftTip().getY()),
+                        (int) (k * crack.getRightTip().getX()), (int) (k * crack.getRightTip().getY()));
 
             }
         } else {
             super.paintComponent(g);
-            int a = 100;
+//            int a = 100;
 //            this.setSize(a, a);
-                
-            
+
+
 
         }
 
