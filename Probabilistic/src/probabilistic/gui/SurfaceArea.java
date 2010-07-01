@@ -21,35 +21,35 @@ import sorting.CrackSorterRTip;
  */
 public class SurfaceArea {
 
-    private int height = 400;
-    private int width = 400;
-    private int grainHeight = 200;
-    private int grainWidth = 200;
-    private int[][] matPointsX;
-    private int[][] matPointsY;
     private int Nmax;
+    private InitiationTime timeObj;
+    private double height;
+    private double width;
+    private double grainHeight;
+    private double grainWidth;
+    private double[][] matPointsX;
+    private double[][] matPointsY;
     private int numColumns;
     private int numRows;
     double parametrK, yieldStress, sigma;
     private Integer seed;
     private boolean[][] matrix;
-//    private ArrayList pointObjList;
     boolean filledCkracks = false;
-    private InitiationTime timeObj;
     private ArrayList<SemiellipticalCrack> ellipticalCrack;
     private ArrayList<SemiellipticalCrack> crackSortedByRightTip;
     double maxCrackLength;
     double k1SCC = 2;
+    int visualKValue;
 
-    public SurfaceArea(int height, int width, int grainHeight, int grainWidth,
+    public SurfaceArea(double height, double width, double grainHeight, double grainWidth,
             double meanInitiationTime, double scaleInitiationTime, double sigma, double yieldStress, double parametrK) {
         this.width = width;
         this.height = height;
         this.grainHeight = grainHeight;
         this.grainWidth = grainWidth;
-        Nmax = (width * height) / (grainWidth * grainHeight);
-        numColumns = this.width / this.grainWidth;
-        numRows = this.height / this.grainHeight;
+        Nmax = (int) ((width * height) / (grainWidth * grainHeight));
+        numColumns = (int) (this.width / this.grainWidth);
+        numRows = (int) (this.height / this.grainHeight);
         initMatrix(height, width, grainHeight, grainWidth);
         timeObj = new InitiationTime(Nmax, meanInitiationTime, scaleInitiationTime);
         ellipticalCrack = new ArrayList<SemiellipticalCrack>();
@@ -63,12 +63,12 @@ public class SurfaceArea {
      *
      * @param matrix new value of matrix
      */
-    public void initMatrix(int height, int width, int grainHeight, int garinWidth) {
+    public void initMatrix(double height, double width, double grainHeight, double garinWidth) {
         Random rnd = new Random();
         int s = -rnd.nextInt(1000000) + 1;
         seed = new Integer(s);
-        matPointsX = new int[numColumns][numRows];
-        matPointsY = new int[numColumns][numRows];
+        matPointsX = new double[numColumns][numRows];
+        matPointsY = new double[numColumns][numRows];
         matrix = new boolean[numColumns][numRows];
         for (int i = 0; i < numColumns; i++) {
             for (int j = 0; j < numRows; j++) {
@@ -81,69 +81,76 @@ public class SurfaceArea {
             double depthMean, double depthScale) throws DerivativeException, IntegratorException {
         if (isFilleddCkracks() == false) {
             int i = 0;
+            
+            exitMaxCondition:
             while (i < Nmax) {
+
                 //ввести ще один цикл перевірки координати точки!!!
                 double rndX = UniformDistribution.PPF(RNG.Ran2(seed), 0, width);
                 double rndY = UniformDistribution.PPF(RNG.Ran2(seed), 0, height);
-                int rndI = (int) rndX / grainWidth;
-                int rndJ = (int) rndY / grainHeight;
+                int rndI = (int) (rndX / grainWidth);
+                int rndJ = (int) (rndY / grainHeight);
                 double deltaT;
                 if (isSquareEmpty(matrix, rndI, rndJ)) {
                     // точку кинули в порожню клітину
-                    matPointsX[rndI][rndJ] = (int) rndX;
-                    matPointsY[rndI][rndJ] = (int) rndY;
+                    matPointsX[rndI][rndJ] = rndX;
+                    matPointsY[rndI][rndJ] = rndY;
                     matrix[rndI][rndJ] = true;
                     //потягнути з панелі
                     double length2A = NormalDistribution.PPF(RNG.Ran2(seed), length2AMean, length2AScale);
                     double depth = NormalDistribution.PPF(RNG.Ran2(seed), depthMean, depthScale);
-                    ellipticalCrack.add(new SemiellipticalCrack(this, rndX, rndY, length2A, depth, i));
+                    SemiellipticalCrack newCrack = new SemiellipticalCrack(this, rndX, rndY, length2A, depth, i);
+                    ellipticalCrack.add(newCrack);
                     double currentTime = timeObj.getInitTime().get(i);
                     if (i > 0) {
                         deltaT = timeObj.getInitTime().get(i) - timeObj.getInitTime().get(i - 1);
-//                        previousTime = timeObj.getInitTime().get(i - 1);
                     } else {
                         deltaT = timeObj.getInitTime().get(i);
                     }
 
-
-
-//                    boolean coalescence = true;
-                    boolean growth = true;
-                    while (growth) {
-
+                    
+                    if ((newCrack.getLength2a() >= maxCrackLength)) {
+                        break exitMaxCondition;
+                    }
+                    boolean coalescence = true;
+                    int iCoalescenceGrowth = 0;
+                    while (coalescence) {
                         //об'єднання тріщин
                         crackSortedByRightTip = new ArrayList<SemiellipticalCrack>(ellipticalCrack);
                         Collections.sort(crackSortedByRightTip, new CrackSorterRTip());
+                        if (iCoalescenceGrowth > 0 & !SortedPair.createPairs(crackSortedByRightTip)) {
+                            break;
+                        }
                         while (SortedPair.createPairs(crackSortedByRightTip)) {
                             //додати умову максимальної довжини тріщини
-                            ellipticalCrack.add(new SemiellipticalCrack(SortedPair.getCoalescencePair().getCrackObj1(), SortedPair.getCoalescencePair().getCrackObj2(), i));
+                            newCrack = new SemiellipticalCrack(SortedPair.getCoalescencePair().getCrackObj1(),
+                                    SortedPair.getCoalescencePair().getCrackObj2(), i);
+
+                            ellipticalCrack.add(newCrack);
                             ellipticalCrack.remove(SortedPair.getCoalescencePair().getCrackObj1());
                             ellipticalCrack.remove(SortedPair.getCoalescencePair().getCrackObj2());
                             crackSortedByRightTip = new ArrayList<SemiellipticalCrack>(ellipticalCrack);
                             Collections.sort(crackSortedByRightTip, new CrackSorterRTip());
-//                        pairObj = new SortedPair(ellipticalCrack);
-                        }
+                            if (newCrack.getLength2a() >= maxCrackLength) {                                
+                                break exitMaxCondition;
+                            }
+                        }                    
 
                         //підростання тріщин
-                        growth = false;
                         for (int j = 0; j < ellipticalCrack.size(); j++) {
-                            growth = ellipticalCrack.get(j).integrate(currentTime, deltaT);
-
-
+                            ellipticalCrack.get(j).integrate(currentTime, deltaT);
+                            if (ellipticalCrack.get(j).getLength2a() >= maxCrackLength) {
+                                break exitMaxCondition;
+                            }
                         }
+                        iCoalescenceGrowth++;
                     }
                     i++;
                 }
+
             }
             filledCkracks = true;
         }
-        ////відладка
-//        Collections.sort(crackSortedByRightTip);
-//        Collections.copy(crackSortedByRightTip, ellipticalCrack);
-//        Collections.sort(ellipticalCrack);
-
-//        print(ellipticalCrack);
-//        print(crackSortedByRightTip);
         return ellipticalCrack;
 
     }
@@ -236,7 +243,7 @@ public class SurfaceArea {
      *
      * @return the value of matPointsY
      */
-    public int[][] getMatPointsY() {
+    public double[][] getMatPointsY() {
         return matPointsY;
     }
 
@@ -245,7 +252,7 @@ public class SurfaceArea {
      *
      * @return the value of matPointsX
      */
-    public int[][] getMatPointsX() {
+    public double[][] getMatPointsX() {
         return matPointsX;
     }
 
@@ -254,7 +261,7 @@ public class SurfaceArea {
      *
      * @return the value of grainWidth
      */
-    public int getGrainWidth() {
+    public double getGrainWidth() {
         return grainWidth;
     }
 
@@ -272,7 +279,7 @@ public class SurfaceArea {
      *
      * @return the value of grainHeight
      */
-    public int getGrainHeight() {
+    public double getGrainHeight() {
         return grainHeight;
     }
 
@@ -290,7 +297,7 @@ public class SurfaceArea {
      *
      * @return the value of height
      */
-    public int getHeight() {
+    public double getHeight() {
         return height;
     }
 
@@ -308,7 +315,7 @@ public class SurfaceArea {
      *
      * @return the value of width
      */
-    public int getWidth() {
+    public double getWidth() {
         return width;
     }
 
@@ -344,14 +351,13 @@ public class SurfaceArea {
         this.timeObj = timeObj;
     }
 
-    public ArrayList getEllipticalCrack() {
+    public ArrayList<SemiellipticalCrack> getEllipticalCrack() {
         return ellipticalCrack;
     }
 
 //    public void setEllipticalCrack(ArrayList ellipticalCrack) {
 //        this.ellipticalCrack = ellipticalCrack;
 //    }
-
     public double getParametrK() {
         return parametrK;
     }
@@ -362,5 +368,21 @@ public class SurfaceArea {
 
     public double getYieldStress() {
         return yieldStress;
+    }
+
+    public int getVisualKValue() {
+        return visualKValue;
+    }
+
+    public void setVisualKValue(int visualKValue) {
+        this.visualKValue = visualKValue;
+    }
+
+    public double getMaxCrackLength() {
+        return maxCrackLength;
+    }
+
+    public void setMaxCrackLength(double maxCrackLength) {
+        this.maxCrackLength = maxCrackLength;
     }
 }
