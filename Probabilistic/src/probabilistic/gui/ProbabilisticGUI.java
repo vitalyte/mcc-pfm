@@ -823,13 +823,20 @@ public class ProbabilisticGUI extends javax.swing.JFrame {
                 + gridJPanel1.getSurface().getWidth() + " " + "grain=" + gridJPanel1.getSurface().getGrainHeight() + "x"
                 + gridJPanel1.getSurface().getGrainWidth());
 
-            for (int i = 0; i < gridJPanel1.getSurface().getEllipticalCrack().size(); i++) {
-                SemiellipticalCrack crack = gridJPanel1.getSurface().getEllipticalCrack().get(i);
+//            for (int i = 0; i < gridJPanel1.getSurface().getEllipticalCrack().size(); i++) {
+//                SemiellipticalCrack crack = gridJPanel1.getSurface().getEllipticalCrack().get(i);
+//
+//                System.out.println("Length of cracks = " + crack.getLength2a());
+//                System.out.println("cracks = " + crack.toString());
+//                System.out.println("cracks = " + gridJPanel1.getSurface().getEllipticalCrack().size());
+//            }
 
-                System.out.println("Length of cracks = " + crack.getLength2a());
-                System.out.println("cracks = " + crack.toString());
-                System.out.println("cracks = " + gridJPanel1.getSurface().getEllipticalCrack().size());
-            }
+        for (int i = 0; i < gridJPanel1.getSurface().getCrackHistoryArray()[0].size(); i++) {
+            SemiellipticalCrack crack = gridJPanel1.getSurface().getCrackHistoryArray()[0].get(i);
+            System.out.println("cracks = " + crack.toString());
+            System.out.println("Length of cracks = " + crack.getLength2a());
+            System.out.println("cracks = " + gridJPanel1.getSurface().getEllipticalCrack().size());
+        }
 
 //        gridJPanel1.validate();
 //        gridJPanel1.invalidate();

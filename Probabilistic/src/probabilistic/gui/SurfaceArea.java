@@ -40,6 +40,7 @@ public class SurfaceArea {
     double maxCrackLength;
     double k1SCC = 2;
     int visualKValue;
+    private ArrayList<SemiellipticalCrack>[] crackHistoryArray;
 
     public SurfaceArea(double height, double width, double grainHeight, double grainWidth,
             double meanInitiationTime, double scaleInitiationTime, double sigma, double yieldStress, double parametrK) {
@@ -56,6 +57,7 @@ public class SurfaceArea {
         this.parametrK = parametrK;
         this.yieldStress = yieldStress;
         this.sigma = sigma;
+        crackHistoryArray = new ArrayList[Nmax];
     }
 
     /**
@@ -84,6 +86,7 @@ public class SurfaceArea {
             exitMaxCondition:
             {
                 while (i < Nmax) {
+                    crackHistoryArray[i] = new ArrayList<SemiellipticalCrack>();
 
                     //ввести ще один цикл перевірки координати точки!!!
                     double rndX = UniformDistribution.PPF(RNG.Ran2(seed), 0, width);
@@ -153,7 +156,7 @@ public class SurfaceArea {
                             if (ellipticalCrack.get(j).getLength2a() >= maxCrackLength) {
                                 break exitMaxCondition;
                             }
-                        }
+                        }                        
                         i++;
                     }
 
@@ -396,4 +399,13 @@ public class SurfaceArea {
     public void setMaxCrackLength(double maxCrackLength) {
         this.maxCrackLength = maxCrackLength;
     }
+
+    public ArrayList<SemiellipticalCrack>[] getCrackHistoryArray() {
+        return crackHistoryArray;
+    }
+
+    public void setCrackHistoryArray(ArrayList<SemiellipticalCrack>[] crackHistoryArray) {
+        this.crackHistoryArray = crackHistoryArray;
+    }
+    
 }
