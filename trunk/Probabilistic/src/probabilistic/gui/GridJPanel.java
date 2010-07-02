@@ -98,6 +98,7 @@ public class GridJPanel extends javax.swing.JPanel {
                 g.drawLine((int) (k * crack.getLeftTip().getX()), (int) (k * crack.getLeftTip().getY()),
                         (int) (k * crack.getRightTip().getX()), (int) (k * crack.getRightTip().getY()));
 
+
             }
         } else {
             super.paintComponent(g);

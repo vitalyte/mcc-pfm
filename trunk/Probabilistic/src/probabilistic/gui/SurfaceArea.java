@@ -81,77 +81,88 @@ public class SurfaceArea {
             double depthMean, double depthScale) throws DerivativeException, IntegratorException {
         if (isFilleddCkracks() == false) {
             int i = 0;
-            
             exitMaxCondition:
-            while (i < Nmax) {
+            {
+                while (i < Nmax) {
 
-                //ввести ще один цикл перевірки координати точки!!!
-                double rndX = UniformDistribution.PPF(RNG.Ran2(seed), 0, width);
-                double rndY = UniformDistribution.PPF(RNG.Ran2(seed), 0, height);
-                int rndI = (int) (rndX / grainWidth);
-                int rndJ = (int) (rndY / grainHeight);
-                double deltaT;
-                if (isSquareEmpty(matrix, rndI, rndJ)) {
-                    // точку кинули в порожню клітину
-                    matPointsX[rndI][rndJ] = rndX;
-                    matPointsY[rndI][rndJ] = rndY;
-                    matrix[rndI][rndJ] = true;
-                    //потягнути з панелі
-                    double length2A = NormalDistribution.PPF(RNG.Ran2(seed), length2AMean, length2AScale);
-                    double depth = NormalDistribution.PPF(RNG.Ran2(seed), depthMean, depthScale);
-                    SemiellipticalCrack newCrack = new SemiellipticalCrack(this, rndX, rndY, length2A, depth, i);
-                    ellipticalCrack.add(newCrack);
-                    double currentTime = timeObj.getInitTime().get(i);
-                    if (i > 0) {
-                        deltaT = timeObj.getInitTime().get(i) - timeObj.getInitTime().get(i - 1);
-                    } else {
-                        deltaT = timeObj.getInitTime().get(i);
-                    }
-
-                    
-                    if ((newCrack.getLength2a() >= maxCrackLength)) {
-                        break exitMaxCondition;
-                    }
-                    boolean coalescence = true;
-                    int iCoalescenceGrowth = 0;
-                    while (coalescence) {
-                        //об'єднання тріщин
-                        crackSortedByRightTip = new ArrayList<SemiellipticalCrack>(ellipticalCrack);
-                        Collections.sort(crackSortedByRightTip, new CrackSorterRTip());
-                        if (iCoalescenceGrowth > 0 & !SortedPair.createPairs(crackSortedByRightTip)) {
-                            break;
+                    //ввести ще один цикл перевірки координати точки!!!
+                    double rndX = UniformDistribution.PPF(RNG.Ran2(seed), 0, width);
+                    double rndY = UniformDistribution.PPF(RNG.Ran2(seed), 0, height);
+                    int rndI = (int) (rndX / grainWidth);
+                    int rndJ = (int) (rndY / grainHeight);
+                    double deltaT;
+                    if (isSquareEmpty(matrix, rndI, rndJ)) {
+                        // точку кинули в порожню клітину
+                        matPointsX[rndI][rndJ] = rndX;
+                        matPointsY[rndI][rndJ] = rndY;
+                        matrix[rndI][rndJ] = true;
+                        //потягнути з панелі
+                        double length2A = NormalDistribution.PPF(RNG.Ran2(seed), length2AMean, length2AScale);
+                        double depth = NormalDistribution.PPF(RNG.Ran2(seed), depthMean, depthScale);
+                        SemiellipticalCrack newCrack = new SemiellipticalCrack(this, rndX, rndY, length2A, depth, i);
+                        ellipticalCrack.add(newCrack);
+                        double currentTime = timeObj.getInitTime().get(i);
+                        if (i > 0) {
+                            deltaT = timeObj.getInitTime().get(i + 1) - timeObj.getInitTime().get(i);
+                        } else {
+                            deltaT = timeObj.getInitTime().get(i);
                         }
-                        while (SortedPair.createPairs(crackSortedByRightTip)) {
-                            //додати умову максимальної довжини тріщини
-                            newCrack = new SemiellipticalCrack(SortedPair.getCoalescencePair().getCrackObj1(),
-                                    SortedPair.getCoalescencePair().getCrackObj2(), i);
 
-                            ellipticalCrack.add(newCrack);
-                            ellipticalCrack.remove(SortedPair.getCoalescencePair().getCrackObj1());
-                            ellipticalCrack.remove(SortedPair.getCoalescencePair().getCrackObj2());
+//                        if ((newCrack.getLength2a() >= maxCrackLength)) {
+//                            break exitMaxCondition;
+//                        }
+
+                        boolean coalescence = true;
+                        boolean growth = false;
+                        int iCoalescenceGrowth = 0;
+                        //об'єднання тріщин
+                        coalescenceOfCrack:
+                        while (coalescence) {
                             crackSortedByRightTip = new ArrayList<SemiellipticalCrack>(ellipticalCrack);
                             Collections.sort(crackSortedByRightTip, new CrackSorterRTip());
-                            if (newCrack.getLength2a() >= maxCrackLength) {                                
-                                break exitMaxCondition;
+                            if (iCoalescenceGrowth > 0 & !SortedPair.createPairs(crackSortedByRightTip)) {
+                                break;
                             }
-                        }                    
+                            while (SortedPair.createPairs(crackSortedByRightTip)) {
+                                //додати умову максимальної довжини тріщини
+                                newCrack = new SemiellipticalCrack(SortedPair.getCoalescencePair().getCrackObj1(),
+                                        SortedPair.getCoalescencePair().getCrackObj2(), i);
+                                ellipticalCrack.add(newCrack);
+                                ellipticalCrack.remove(SortedPair.getCoalescencePair().getCrackObj1());
+                                ellipticalCrack.remove(SortedPair.getCoalescencePair().getCrackObj2());
+                                crackSortedByRightTip = new ArrayList<SemiellipticalCrack>(ellipticalCrack);
+                                Collections.sort(crackSortedByRightTip, new CrackSorterRTip());
+//                                if (newCrack.getLength2a() >= maxCrackLength) {
+//                                    break exitMaxCondition;
+//                                }
+                            }
+                            //підростання тріщин
+                            if (!growth) {
+                                for (int j = 0; j < ellipticalCrack.size(); j++) {
+                                    ellipticalCrack.get(j).integrate(currentTime, deltaT);
+//                                    if (ellipticalCrack.get(j).getLength2a() >= maxCrackLength) {
+//                                        break exitMaxCondition;
+//                                    }
+                                }
+                            }
 
-                        //підростання тріщин
+                            growth = true;
+                            iCoalescenceGrowth++;
+                        }
                         for (int j = 0; j < ellipticalCrack.size(); j++) {
-                            ellipticalCrack.get(j).integrate(currentTime, deltaT);
                             if (ellipticalCrack.get(j).getLength2a() >= maxCrackLength) {
                                 break exitMaxCondition;
                             }
                         }
-                        iCoalescenceGrowth++;
+                        i++;
                     }
-                    i++;
-                }
 
+                }
             }
             filledCkracks = true;
         }
         return ellipticalCrack;
+
 
     }
 

@@ -114,8 +114,8 @@ public class SemiellipticalCrack {
         FirstOrderIntegrator dp853 = new DormandPrince54Integrator(1.0e-8, 100.0, 1.0e-10, 1.0e-10);
         FirstOrderDifferentialEquations ode = new CrackOrderOde(new double[]{0, 0}, k1SCC, this);
         double[] y = new double[]{initLength2a, initDepthB}; // initial state
-        double startTime = currentTime - deltaT;
-        double stopTime = dp853.integrate(ode, startTime, y, currentTime, y); // now y contains final state at time t=16.0
+        double nextTime = currentTime + deltaT;
+        double stopTime = dp853.integrate(ode, currentTime, y, nextTime, y); // now y contains final state at time t=16.0
         setLength2a(beforeGrowthLength + y[0]);
         setDepthB(beforeGrowthDepth + y[1]);
 
