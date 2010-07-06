@@ -37,10 +37,12 @@ public class SurfaceArea {
     boolean filledCkracks = false;
     private ArrayList<SemiellipticalCrack> ellipticalCrack;
     private ArrayList<SemiellipticalCrack> crackSortedByRightTip;
+    private ArrayList<SemiellipticalCrack> cracksRemoved;
     double maxCrackLength;
     double k1SCC = 2;
     int visualKValue;
-    private ArrayList<SemiellipticalCrack>[] crackHistoryArray;
+    private ArrayList<ArrayList> cracksHistoryList;
+    private int timeIndex = 0;
 
     public SurfaceArea(double height, double width, double grainHeight, double grainWidth,
             double meanInitiationTime, double scaleInitiationTime, double sigma, double yieldStress, double parametrK) {
@@ -54,10 +56,11 @@ public class SurfaceArea {
         initMatrix(height, width, grainHeight, grainWidth);
         timeObj = new InitiationTime(Nmax, meanInitiationTime, scaleInitiationTime);
         ellipticalCrack = new ArrayList<SemiellipticalCrack>();
+        cracksRemoved = new ArrayList<SemiellipticalCrack>();
         this.parametrK = parametrK;
         this.yieldStress = yieldStress;
         this.sigma = sigma;
-        crackHistoryArray = new ArrayList[Nmax];
+        cracksHistoryList = new ArrayList<ArrayList>();
     }
 
     /**
@@ -86,8 +89,7 @@ public class SurfaceArea {
             exitMaxCondition:
             {
                 while (i < Nmax) {
-                    crackHistoryArray[i] = new ArrayList<SemiellipticalCrack>();
-
+                    timeIndex = i;
                     //ввести ще один цикл перевірки координати точки!!!
                     double rndX = UniformDistribution.PPF(RNG.Ran2(seed), 0, width);
                     double rndY = UniformDistribution.PPF(RNG.Ran2(seed), 0, height);
@@ -131,6 +133,8 @@ public class SurfaceArea {
                                 newCrack = new SemiellipticalCrack(SortedPair.getCoalescencePair().getCrackObj1(),
                                         SortedPair.getCoalescencePair().getCrackObj2(), i);
                                 ellipticalCrack.add(newCrack);
+                                cracksRemoved.add(SortedPair.getCoalescencePair().getCrackObj1());
+                                cracksRemoved.add(SortedPair.getCoalescencePair().getCrackObj2());
                                 ellipticalCrack.remove(SortedPair.getCoalescencePair().getCrackObj1());
                                 ellipticalCrack.remove(SortedPair.getCoalescencePair().getCrackObj2());
                                 crackSortedByRightTip = new ArrayList<SemiellipticalCrack>(ellipticalCrack);
@@ -152,11 +156,16 @@ public class SurfaceArea {
                             growth = true;
                             iCoalescenceGrowth++;
                         }
+                        boolean maxLengthCondition = false;
                         for (int j = 0; j < ellipticalCrack.size(); j++) {
                             if (ellipticalCrack.get(j).getLength2a() >= maxCrackLength) {
-                                break exitMaxCondition;
+                                maxLengthCondition = true;
+                                ellipticalCrack.get(j).setMaxLength(true);
                             }
-                        }                        
+                        }
+                        if (maxLengthCondition) {
+                            break exitMaxCondition;
+                        }
                         i++;
                     }
 
@@ -400,12 +409,27 @@ public class SurfaceArea {
         this.maxCrackLength = maxCrackLength;
     }
 
-    public ArrayList<SemiellipticalCrack>[] getCrackHistoryArray() {
-        return crackHistoryArray;
+    public ArrayList<ArrayList> getCracksHistoryList() {
+        return cracksHistoryList;
     }
 
-    public void setCrackHistoryArray(ArrayList<SemiellipticalCrack>[] crackHistoryArray) {
-        this.crackHistoryArray = crackHistoryArray;
+    public void setCracksHistoryList(ArrayList<ArrayList> cracksHistoryArray) {
+        this.cracksHistoryList = cracksHistoryArray;
     }
-    
+
+    public ArrayList<SemiellipticalCrack> getCracksRemoved() {
+        return cracksRemoved;
+    }
+
+    public void setCracksRemoved(ArrayList<SemiellipticalCrack> cracksRemoved) {
+        this.cracksRemoved = cracksRemoved;
+    }
+
+    public int getTimeIndex() {
+        return timeIndex;
+    }
+
+    public void setTimeIndex(int timeIndex) {
+        this.timeIndex = timeIndex;
+    }
 }
