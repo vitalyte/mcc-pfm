@@ -2,7 +2,6 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package probabilistic.gui;
 
 /**
@@ -10,14 +9,17 @@ package probabilistic.gui;
  * @author Vitaly
  */
 public class CrackHistory extends SemiellipticalCrack {
+
     double currentTime;
     boolean criticalCreack = false;
     boolean beforeGenereateNewCrack = false;
-        public CrackHistory(SemiellipticalCrack obj1, int timeI, boolean beforeGenereateNewCrack) {
+
+    public CrackHistory(SemiellipticalCrack obj1, int timeI, boolean beforeGenereateNewCrack) {
         super(obj1);
         this.beforeGenereateNewCrack = beforeGenereateNewCrack;
         currentTime = obj1.getSurfaceAreaObj().getTimeObj().getInitTime().get(timeI);
-        if ((obj1.getLength2a() >= obj1.getSurfaceAreaObj().getMaxCrackLength()) & beforeGenereateNewCrack) {
+        timeIndex = timeI;
+        if ((this.getLength2a() >= obj1.getSurfaceAreaObj().getMaxCrackLength()) & beforeGenereateNewCrack) {
             criticalCreack = true;
         }
     }
@@ -25,12 +27,17 @@ public class CrackHistory extends SemiellipticalCrack {
     public CrackHistory(SemiellipticalCrack obj1, int timeI) {
         super(obj1);
         currentTime = obj1.getSurfaceAreaObj().getTimeObj().getInitTime().get(timeI);
+        timeIndex = timeI;
         if ((obj1.getLength2a() >= obj1.getSurfaceAreaObj().getMaxCrackLength()) & beforeGenereateNewCrack) {
             criticalCreack = true;
         }
     }
 
-
+    public double getCurrentTime() {
+        return currentTime;
     }
+
+
+}
 
 

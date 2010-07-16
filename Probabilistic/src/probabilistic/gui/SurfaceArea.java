@@ -41,8 +41,10 @@ public class SurfaceArea {
     double maxCrackLength;
     double k1SCC = 2;
     int visualKValue;
+    //cracks history General array
     private ArrayList<ArrayList> cracksHistoryList;
     private int timeIndex = 0;
+    private ArrayList<? extends SemiellipticalCrack> paintedCracks;
 
     public SurfaceArea(double height, double width, double grainHeight, double grainWidth,
             double meanInitiationTime, double scaleInitiationTime, double sigma, double yieldStress, double parametrK) {
@@ -61,6 +63,7 @@ public class SurfaceArea {
         this.yieldStress = yieldStress;
         this.sigma = sigma;
         cracksHistoryList = new ArrayList<ArrayList>();
+
     }
 
     /**
@@ -84,7 +87,7 @@ public class SurfaceArea {
 
     ArrayList<SemiellipticalCrack> FillRandomCracks(double length2AMean, double length2AScale,
             double depthMean, double depthScale) throws DerivativeException, IntegratorException {
-        if (isFilleddCkracks() == false) {
+        if (isFilledCkracks() == false) {
             int i = 0;
             exitMaxCondition:
             {
@@ -173,6 +176,7 @@ public class SurfaceArea {
             }
             filledCkracks = true;
         }
+        paintedCracks = ellipticalCrack;
         return ellipticalCrack;
 
 
@@ -191,6 +195,22 @@ public class SurfaceArea {
         System.out.println("\n\n");
     }
 //**********************
+
+    public ArrayList<? extends SemiellipticalCrack> displayHistory(int timeIndex){
+        ArrayList<CrackHistory> dispHistList = new ArrayList<CrackHistory>();
+        for (int i = 0; i < cracksHistoryList.size(); i++) {
+            ArrayList historyOfCrack = cracksHistoryList.get(i);
+            for (int j = 0; j < historyOfCrack.size(); j++) {
+                CrackHistory historyInstance = (CrackHistory)historyOfCrack.get(j);
+                if (timeIndex == historyInstance.getTimeIndex()) {
+                    dispHistList.add(historyInstance);
+                }
+            }
+        }
+        paintedCracks = dispHistList;
+        return paintedCracks;
+
+    }
 
     /*
      * Сортує тріщини по координаті правої вершини
@@ -358,7 +378,7 @@ public class SurfaceArea {
 //    public void setPointObjList(ArrayList pointObjList) {
 //        this.pointObjList = pointObjList;
 //    }
-    public boolean isFilleddCkracks() {
+    public boolean isFilledCkracks() {
         return filledCkracks;
     }
 
@@ -374,9 +394,9 @@ public class SurfaceArea {
         this.timeObj = timeObj;
     }
 
-    public ArrayList<SemiellipticalCrack> getEllipticalCrack() {
-        return ellipticalCrack;
-    }
+//    public ArrayList<SemiellipticalCrack> getEllipticalCrack() {
+//        return ellipticalCrack;
+//    }
 
 //    public void setEllipticalCrack(ArrayList ellipticalCrack) {
 //        this.ellipticalCrack = ellipticalCrack;
@@ -413,8 +433,8 @@ public class SurfaceArea {
         return cracksHistoryList;
     }
 
-    public void setCracksHistoryList(ArrayList<ArrayList> cracksHistoryArray) {
-        this.cracksHistoryList = cracksHistoryArray;
+    public void setCracksHistoryList(ArrayList<ArrayList> cracksHistoryList) {
+        this.cracksHistoryList = cracksHistoryList;
     }
 
     public ArrayList<SemiellipticalCrack> getCracksRemoved() {
@@ -432,4 +452,14 @@ public class SurfaceArea {
     public void setTimeIndex(int timeIndex) {
         this.timeIndex = timeIndex;
     }
+
+    public ArrayList<? extends SemiellipticalCrack> getPaintedCracks() {
+        return paintedCracks;
+    }
+
+    public void setPaintedCracks(ArrayList<SemiellipticalCrack> paintedCracks) {
+        this.paintedCracks = paintedCracks;
+    }
+
+
 }
