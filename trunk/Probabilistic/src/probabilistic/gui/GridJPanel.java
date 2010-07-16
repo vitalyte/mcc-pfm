@@ -67,8 +67,8 @@ public class GridJPanel extends javax.swing.JPanel {
             grainHeight = (int) (k * surface.getGrainHeight());
             super.paintComponent(g);
             this.setSize(width, height);
-            int widthWindow = width;
-            int heightWindow = height;
+//            int widthWindow = width;
+//            int heightWindow = height;
 //            for (int i = 0; i <= widthWindow; i += grainWidth) {
 //                g.drawLine(i, 0, i, heightWindow);
 //            }
@@ -93,8 +93,8 @@ public class GridJPanel extends javax.swing.JPanel {
 //                System.out.println("cracks = " + crack.toString());
 //                System.out.println("cracks = " + surface.getEllipticalCrack().size());
 
-            for (int i = 0; i < surface.getEllipticalCrack().size(); i++) {
-                SemiellipticalCrack crack = surface.getEllipticalCrack().get(i);
+            for (int i = 0; i < surface.getPaintedCracks().size(); i++) {
+                SemiellipticalCrack crack = surface.getPaintedCracks().get(i);
                 g.drawLine((int) (k * crack.getLeftTip().getX()), (int) (k * crack.getLeftTip().getY()),
                         (int) (k * crack.getRightTip().getX()), (int) (k * crack.getRightTip().getY()));
 

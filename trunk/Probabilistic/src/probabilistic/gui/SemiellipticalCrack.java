@@ -32,6 +32,7 @@ public class SemiellipticalCrack {
     private double sigma, sigmaYS, k;
     private double k1SCC = 2;
     private boolean maxLength = false;
+    //list changes of cracks states
     private ArrayList<CrackHistory> historyOfCrack;
 
     public SemiellipticalCrack() {
