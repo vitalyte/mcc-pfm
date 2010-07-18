@@ -32,7 +32,8 @@ public class ProbabilisticGUI extends javax.swing.JFrame {
     double valueSigma;
     String textLabel;
     int visualKValue;
-    double maxCrackLengt;
+    double maxCrackLength;
+    int timeIndexMax;
 
     /** Creates new form ProbabilisticGUI */
     public ProbabilisticGUI() {
@@ -105,8 +106,15 @@ public class ProbabilisticGUI extends javax.swing.JFrame {
         jLabel28 = new javax.swing.JLabel();
         timeIndexHistory = new javax.swing.JTextField();
         jButton1 = new javax.swing.JButton();
+        jLabel29 = new javax.swing.JLabel();
+        maxTIndex = new javax.swing.JLabel();
+        timeValue = new javax.swing.JLabel();
+        jLabel31 = new javax.swing.JLabel();
+        jSeparator1 = new javax.swing.JSeparator();
         submitCrack1 = new javax.swing.JButton();
         surfaceGeometry = new javax.swing.JLabel();
+        jInternalFrame1 = new javax.swing.JInternalFrame();
+        jScrollPane1 = new javax.swing.JScrollPane();
         gridJPanel1 = new probabilistic.gui.GridJPanel();
         menuBar = new javax.swing.JMenuBar();
         fileMenu = new javax.swing.JMenu();
@@ -178,6 +186,11 @@ public class ProbabilisticGUI extends javax.swing.JFrame {
         jLabel25.setText("Visual scale:");
 
         visualK.setText("400");
+        visualK.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                visualKActionPerformed(evt);
+            }
+        });
 
         jLabel19.setFont(new java.awt.Font("Tahoma", 1, 11));
         jLabel19.setText("max crack length:");
@@ -230,7 +243,7 @@ public class ProbabilisticGUI extends javax.swing.JFrame {
                             .addGroup(SurfaceAreaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                                 .addComponent(jLabel23)
                                 .addComponent(jLabel24)))))
-                .addContainerGap(107, Short.MAX_VALUE))
+                .addContainerGap(139, Short.MAX_VALUE))
         );
         SurfaceAreaLayout.setVerticalGroup(
             SurfaceAreaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -268,7 +281,7 @@ public class ProbabilisticGUI extends javax.swing.JFrame {
                     .addComponent(jLabel19)
                     .addComponent(maxLength, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel27))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 57, Short.MAX_VALUE)
                 .addGroup(SurfaceAreaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel25)
                     .addComponent(visualK, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -317,7 +330,7 @@ public class ProbabilisticGUI extends javax.swing.JFrame {
                             .addComponent(timeMean, javax.swing.GroupLayout.PREFERRED_SIZE, 64, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(TimeLayout.createSequentialGroup()
                         .addComponent(jLabel12)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 114, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 146, Short.MAX_VALUE)
                         .addComponent(jLabel16)))
                 .addContainerGap())
         );
@@ -336,7 +349,7 @@ public class ProbabilisticGUI extends javax.swing.JFrame {
                 .addGroup(TimeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel7)
                     .addComponent(timeScale))
-                .addGap(191, 191, 191))
+                .addGap(228, 228, 228))
         );
 
         Geometry.addTab("Time", Time);
@@ -450,7 +463,7 @@ public class ProbabilisticGUI extends javax.swing.JFrame {
                 .addGroup(CrackLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel11)
                     .addComponent(crackDepthSkale, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(69, Short.MAX_VALUE))
+                .addContainerGap(122, Short.MAX_VALUE))
         );
 
         Geometry.addTab("Crack", Crack);
@@ -477,7 +490,7 @@ public class ProbabilisticGUI extends javax.swing.JFrame {
                 .addComponent(sigma, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel20)
-                .addContainerGap(110, Short.MAX_VALUE))
+                .addContainerGap(142, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -487,7 +500,7 @@ public class ProbabilisticGUI extends javax.swing.JFrame {
                     .addComponent(jLabel18)
                     .addComponent(sigma, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel20))
-                .addContainerGap(209, Short.MAX_VALUE))
+                .addContainerGap(262, Short.MAX_VALUE))
         );
 
         Geometry.addTab("Loading", jPanel1);
@@ -519,7 +532,7 @@ public class ProbabilisticGUI extends javax.swing.JFrame {
                         .addComponent(yieldStress, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jLabel26)))
-                .addContainerGap(124, Short.MAX_VALUE))
+                .addContainerGap(156, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -533,7 +546,7 @@ public class ProbabilisticGUI extends javax.swing.JFrame {
                     .addComponent(jLabel17)
                     .addComponent(yieldStress, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel26))
-                .addContainerGap(190, Short.MAX_VALUE))
+                .addContainerGap(243, Short.MAX_VALUE))
         );
 
         Geometry.addTab("Material properties", jPanel2);
@@ -553,29 +566,66 @@ public class ProbabilisticGUI extends javax.swing.JFrame {
             }
         });
 
+        jLabel29.setText("max TimeIndex:");
+
+        maxTIndex.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        maxTIndex.setForeground(new java.awt.Color(255, 0, 0));
+
+        jLabel31.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jLabel31.setText("s");
+
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel28)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jButton1)
-                    .addComponent(timeIndexHistory, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(144, Short.MAX_VALUE))
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addComponent(jLabel29)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(maxTIndex, javax.swing.GroupLayout.DEFAULT_SIZE, 62, Short.MAX_VALUE)
+                        .addGap(154, 154, 154))
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(jPanel3Layout.createSequentialGroup()
+                                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addGroup(jPanel3Layout.createSequentialGroup()
+                                        .addComponent(timeValue, javax.swing.GroupLayout.DEFAULT_SIZE, 172, Short.MAX_VALUE)
+                                        .addGap(5, 5, 5))
+                                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel3Layout.createSequentialGroup()
+                                        .addComponent(jLabel28)
+                                        .addGap(14, 14, 14)
+                                        .addComponent(timeIndexHistory, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(jPanel3Layout.createSequentialGroup()
+                                        .addGap(67, 67, 67)
+                                        .addComponent(jButton1))
+                                    .addGroup(jPanel3Layout.createSequentialGroup()
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addComponent(jLabel31))))
+                            .addComponent(jSeparator1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 245, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addContainerGap())))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addGap(17, 17, 17)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel28)
-                    .addComponent(timeIndexHistory, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel29)
+                    .addComponent(maxTIndex, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jButton1)
-                .addContainerGap(181, Short.MAX_VALUE))
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(timeIndexHistory, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel28)
+                    .addComponent(jButton1))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(timeValue, javax.swing.GroupLayout.PREFERRED_SIZE, 18, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel31))
+                .addGap(102, 102, 102))
         );
 
         Geometry.addTab("History", jPanel3);
@@ -589,6 +639,12 @@ public class ProbabilisticGUI extends javax.swing.JFrame {
 
         surfaceGeometry.setText(textLabel);
 
+        jInternalFrame1.setMaximizable(true);
+        jInternalFrame1.setResizable(true);
+        jInternalFrame1.setVisible(true);
+
+        jScrollPane1.setDoubleBuffered(true);
+
         gridJPanel1.setBackground(new java.awt.Color(244, 237, 237));
         gridJPanel1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 153)));
 
@@ -596,11 +652,30 @@ public class ProbabilisticGUI extends javax.swing.JFrame {
         gridJPanel1.setLayout(gridJPanel1Layout);
         gridJPanel1Layout.setHorizontalGroup(
             gridJPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 303, Short.MAX_VALUE)
+            .addGap(0, 554, Short.MAX_VALUE)
         );
         gridJPanel1Layout.setVerticalGroup(
             gridJPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 323, Short.MAX_VALUE)
+            .addGap(0, 465, Short.MAX_VALUE)
+        );
+
+        jScrollPane1.setViewportView(gridJPanel1);
+
+        javax.swing.GroupLayout jInternalFrame1Layout = new javax.swing.GroupLayout(jInternalFrame1.getContentPane());
+        jInternalFrame1.getContentPane().setLayout(jInternalFrame1Layout);
+        jInternalFrame1Layout.setHorizontalGroup(
+            jInternalFrame1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jInternalFrame1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 376, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+        jInternalFrame1Layout.setVerticalGroup(
+            jInternalFrame1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jInternalFrame1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 339, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         fileMenu.setText("File");
@@ -658,29 +733,27 @@ public class ProbabilisticGUI extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
+                .addComponent(jInternalFrame1)
+                .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(gridJPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(305, 305, 305)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(submitCrack1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(Geometry, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 282, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(submitCrack1, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(Geometry, javax.swing.GroupLayout.PREFERRED_SIZE, 314, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(surfaceGeometry))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(Geometry, javax.swing.GroupLayout.PREFERRED_SIZE, 296, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(12, 12, 12)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addComponent(jInternalFrame1, javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                        .addComponent(Geometry, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(submitCrack1))
-                    .addComponent(gridJPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGap(102, 102, 102)
+                        .addComponent(submitCrack1)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(surfaceGeometry)
-                .addContainerGap(319, Short.MAX_VALUE))
+                .addContainerGap())
         );
 
         pack();
@@ -748,9 +821,23 @@ public class ProbabilisticGUI extends javax.swing.JFrame {
         // TODO add your handling code here:
         int timeIndexHistoryValue = visualKValue = (Integer.parseInt(timeIndexHistory.getText()));
         gridJPanel1.getSurface().displayHistory(timeIndexHistoryValue);
+        timeValue.setText(gridJPanel1.getSurface().getTimeObj().getInitTime().get(timeIndexHistoryValue).toString());
         gridJPanel1.paintComponent(gridJPanel1.getGraphics());
         gridJPanel1.repaint();
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void visualKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_visualKActionPerformed
+        // TODO add your handling code here:
+        visualKValue = (Integer.parseInt(visualK.getText()));
+        gridJPanel1.getSurface().setVisualKValue(visualKValue);
+        gridJPanel1.paintComponent(gridJPanel1.getGraphics());
+        jInternalFrame1.validate();
+        jScrollPane1.validate();
+//        gridJPanel1.invalidate();
+//        //this.validateTree();
+        jScrollPane1.repaint();
+        jInternalFrame1.repaint();
+    }//GEN-LAST:event_visualKActionPerformed
 
     /**
      * @param args the command line arguments
@@ -789,6 +876,7 @@ public class ProbabilisticGUI extends javax.swing.JFrame {
     private javax.swing.JLabel height;
     private javax.swing.JMenu helpMenu;
     private javax.swing.JButton jButton1;
+    private javax.swing.JInternalFrame jInternalFrame1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
@@ -810,7 +898,9 @@ public class ProbabilisticGUI extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel26;
     private javax.swing.JLabel jLabel27;
     private javax.swing.JLabel jLabel28;
+    private javax.swing.JLabel jLabel29;
     private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel31;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
@@ -820,8 +910,11 @@ public class ProbabilisticGUI extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JSeparator jSeparator1;
     private javax.swing.JLabel lengthjLabel;
     private javax.swing.JTextField maxLength;
+    private javax.swing.JLabel maxTIndex;
     private javax.swing.JMenuBar menuBar;
     private javax.swing.JMenuItem openMenuItem;
     private javax.swing.JTextField parametrK;
@@ -836,13 +929,14 @@ public class ProbabilisticGUI extends javax.swing.JFrame {
     private javax.swing.JTextField timeIndexHistory;
     private javax.swing.JTextField timeMean;
     private javax.swing.JTextField timeScale;
+    private javax.swing.JLabel timeValue;
     private javax.swing.JTextField visualK;
     private javax.swing.JLabel width;
     private javax.swing.JTextField yieldStress;
     // End of variables declaration//GEN-END:variables
 
     void getParametrsForGridJPanel1() {
-        maxCrackLengt = (Double.parseDouble(maxLength.getText()));
+        maxCrackLength = (Double.parseDouble(maxLength.getText()));
         visualKValue = (Integer.parseInt(visualK.getText()));
         HeightValue = (Double.parseDouble(surfaceHeight.getText()));
         WidthValue = (Double.parseDouble(surfaceWidth.getText()));
@@ -859,7 +953,7 @@ public class ProbabilisticGUI extends javax.swing.JFrame {
         valueSigma = Double.parseDouble(sigma.getText());
         surfaceObj = new SurfaceArea(HeightValue, WidthValue, gHeightValue, gWidthValue, timeMeanValue, timeScaleValue, valueSigma, valueYieldStress, valueParametrK);
         surfaceObj.setVisualKValue(visualKValue);
-        surfaceObj.setMaxCrackLength(maxCrackLengt);
+        surfaceObj.setMaxCrackLength(maxCrackLength);
         try {
             surfaceObj.FillRandomCracks(lengthMean, lengthScale, depthMean, depthScale);
         } catch (DerivativeException e) {
@@ -888,12 +982,20 @@ public class ProbabilisticGUI extends javax.swing.JFrame {
 
 
 
-        for (int i = 0; i < gridJPanel1.getSurface().getCracksHistoryList().get(0).size(); i++) {
-            CrackHistory crack = (CrackHistory)gridJPanel1.getSurface().getCracksHistoryList().get(0).get(i);
-            System.out.println("cracks = " + crack.toString());
-            System.out.println("Length of cracks = " + crack.getLength2a());
-//            System.out.println("cracks = " + gridJPanel1.getSurface().getEllipticalCrack().size());
-        }
+//        for (int i = 0; i < gridJPanel1.getSurface().getCracksHistoryList().get(0).size(); i++) {
+//            CrackHistory crack = (CrackHistory) gridJPanel1.getSurface().getCracksHistoryList().get(0).get(i);
+//            System.out.println("cracks = " + crack.toString());
+//            System.out.println("Length of cracks = " + crack.getLength2a());
+////            System.out.println("cracks = " + gridJPanel1.getSurface().getEllipticalCrack().size());
+//        }
+        timeIndexHistory.setText(gridJPanel1.getSurface().getMaxCrackLengthTimeIndexS());
+        maxTIndex.setText(gridJPanel1.getSurface().getMaxCrackLengthTimeIndexS());
+        timeValue.setText(gridJPanel1.getSurface().getTimeObj().getInitTime().get(gridJPanel1.getSurface().getMaxCrackLengthTimeIndex()).toString());
+//        jSlider1.setMaximum(gridJPanel1.getSurface().getMaxCrackLengthTimeIndex());
+        jScrollPane1.setViewportView(gridJPanel1);
+        jScrollPane1.repaint();
+
+//        jSpinnerHistory.setText(gridJPanel1.getSurface().getMaxCrackLengthTimeIndexS());
 
 //        gridJPanel1.validate();
 //        gridJPanel1.invalidate();

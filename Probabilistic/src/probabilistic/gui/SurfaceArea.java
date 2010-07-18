@@ -45,6 +45,7 @@ public class SurfaceArea {
     private ArrayList<ArrayList> cracksHistoryList;
     private int timeIndex = 0;
     private ArrayList<? extends SemiellipticalCrack> paintedCracks;
+    private int maxCrackLengthTimeIndex;
 
     public SurfaceArea(double height, double width, double grainHeight, double grainWidth,
             double meanInitiationTime, double scaleInitiationTime, double sigma, double yieldStress, double parametrK) {
@@ -52,9 +53,15 @@ public class SurfaceArea {
         this.height = height;
         this.grainHeight = grainHeight;
         this.grainWidth = grainWidth;
-        Nmax = (int) ((width * height) / (grainWidth * grainHeight));
+//        Nmax = (int) ((width * height) / (grainWidth * grainHeight));
         numColumns = (int) (this.width / this.grainWidth);
         numRows = (int) (this.height / this.grainHeight);
+
+        //визначення кратних параметрів
+        Nmax = numColumns * numRows;
+        this.width = numColumns *this.grainWidth;
+        this.height = numRows * this.grainHeight;
+
         initMatrix(height, width, grainHeight, grainWidth);
         timeObj = new InitiationTime(Nmax, meanInitiationTime, scaleInitiationTime);
         ellipticalCrack = new ArrayList<SemiellipticalCrack>();
@@ -110,7 +117,12 @@ public class SurfaceArea {
                         SemiellipticalCrack newCrack = new SemiellipticalCrack(this, rndX, rndY, length2A, depth, i);
                         ellipticalCrack.add(newCrack);
                         double currentTime = timeObj.getInitTime().get(i);
-                        if (i > 0) {
+//                        System.out.print("iMax = " + timeObj.getInitTime().size());
+//                        System.out.println("i = " + i);
+
+                        if (i == timeObj.getInitTime().size()-1) {
+                            break exitMaxCondition;
+                        }else if (i > 0) {
                             deltaT = timeObj.getInitTime().get(i + 1) - timeObj.getInitTime().get(i);
                         } else {
                             deltaT = timeObj.getInitTime().get(i);
@@ -167,6 +179,7 @@ public class SurfaceArea {
                             }
                         }
                         if (maxLengthCondition) {
+                            maxCrackLengthTimeIndex = i;
                             break exitMaxCondition;
                         }
                         i++;
@@ -196,12 +209,12 @@ public class SurfaceArea {
     }
 //**********************
 
-    public ArrayList<? extends SemiellipticalCrack> displayHistory(int timeIndex){
+    public ArrayList<? extends SemiellipticalCrack> displayHistory(int timeIndex) {
         ArrayList<CrackHistory> dispHistList = new ArrayList<CrackHistory>();
         for (int i = 0; i < cracksHistoryList.size(); i++) {
             ArrayList historyOfCrack = cracksHistoryList.get(i);
             for (int j = 0; j < historyOfCrack.size(); j++) {
-                CrackHistory historyInstance = (CrackHistory)historyOfCrack.get(j);
+                CrackHistory historyInstance = (CrackHistory) historyOfCrack.get(j);
                 if (timeIndex == historyInstance.getTimeIndex()) {
                     dispHistList.add(historyInstance);
                 }
@@ -397,7 +410,6 @@ public class SurfaceArea {
 //    public ArrayList<SemiellipticalCrack> getEllipticalCrack() {
 //        return ellipticalCrack;
 //    }
-
 //    public void setEllipticalCrack(ArrayList ellipticalCrack) {
 //        this.ellipticalCrack = ellipticalCrack;
 //    }
@@ -461,5 +473,18 @@ public class SurfaceArea {
         this.paintedCracks = paintedCracks;
     }
 
+    public Double[] getMaxCrackTimeIndexArray() {
+        timeObj.getInitTime().toArray();
+        Double[] crackTimeIndexArray = timeObj.getInitTime().toArray(new Double[maxCrackLengthTimeIndex]);
 
+        return crackTimeIndexArray;
+    }
+
+    public int getMaxCrackLengthTimeIndex() {
+        return maxCrackLengthTimeIndex;
+    }
+
+    public String getMaxCrackLengthTimeIndexS() {
+        return (new Integer(maxCrackLengthTimeIndex)).toString();
+    }
 }
