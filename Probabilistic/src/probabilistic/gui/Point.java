@@ -52,5 +52,15 @@ public class Point {
                 Math.pow(p1.getY()-p2.getY(),2));
         return distance;
     }
+    public Point mostLeftP(Point obj2){
+        Point left;
+        double lefttX = Math.min(this.getX(),obj2.getX());
+        if (this.getX() <= lefttX ) {
+            left = this;
+        }else{
+            left = obj2;
+        }
+        return left;
+    }
 
 }

@@ -10,6 +10,7 @@
  */
 package probabilistic.gui;
 
+import java.awt.Color;
 import java.awt.Graphics;
 //import java.util.ArrayList;
 //import java.util.Random;
@@ -58,6 +59,7 @@ public class GridJPanel extends javax.swing.JPanel {
     //paint grid
     @Override
     public void paintComponent(Graphics g) {
+        super.paintComponent(g);
         if (surface != null) {
             int k = surface.getVisualKValue();
 //            k =100;
@@ -65,49 +67,41 @@ public class GridJPanel extends javax.swing.JPanel {
             height = (int) (k * surface.getHeight());
             grainWidth = (int) (k * surface.getGrainWidth());
             grainHeight = (int) (k * surface.getGrainHeight());
-            super.paintComponent(g);
             this.setSize(width, height);
-//            int widthWindow = width;
-//            int heightWindow = height;
-//            for (int i = 0; i <= widthWindow; i += grainWidth) {
-//                g.drawLine(i, 0, i, heightWindow);
-//            }
-//            for (int j = 0; j <= heightWindow; j += grainHeight) {
-//                g.drawLine(0, j, widthWindow, j);
-//            }
-//        for (int i = 0; i < surface.getNumColumns(); i++) {
-//            for (int j = 0; j < surface.getNumRows(); j++) {
-//                g.drawLine((int) surface.getMatPointsX()[i][j] - (int) crack.getLength2a() / 2,
-//                        surface.getMatPointsY()[i][j],
-//                        surface.getMatPointsX()[i][j] + (int) crack.getLength2a() / 2,
-//                        surface.getMatPointsY()[i][j]);
-//            }
-//        }
-
-
-
-//                SemiellipticalCrack crack = surface.getEllipticalCrack().get(0);
-//                g.drawLine((int) (k * crack.getLeftTip().getX()), (int) (k * crack.getLeftTip().getY()),
-//                        (int) (k * crack.getRightTip().getX()), (int) (k * crack.getRightTip().getY()));
-//                System.out.println("Length of cracks = " + crack.getLength2a());
-//                System.out.println("cracks = " + crack.toString());
-//                System.out.println("cracks = " + surface.getEllipticalCrack().size());
+//            System.out.println("\n\n1");
 
             for (int i = 0; i < surface.getPaintedCracks().size(); i++) {
-                SemiellipticalCrack crack = surface.getPaintedCracks().get(i);
+                CrackHistory crack = surface.getPaintedCracks().get(i);
+                if (!crack.isCriticalCreack()) {
+                    g.setColor(Color.GREEN);
+                }
+                if (crack.isCoalescenced()) {
+                    g.setColor(Color.BLUE);
+
+                }
+                if (crack.isCriticalCreack()) {
+                    g.setColor(Color.red);
+                }
+//          //                super.paintComponent(g);
+//                g.drawLine((int) (k * crack.getLeftTip().getX()), (int) (k * crack.getLeftTip().getY()),
+//                        (int) (k * crack.getRightTip().getX()), (int) (k * crack.getRightTip().getY()));
+                g.drawPolyline(crack.getArrayPololine(k)[0], crack.getArrayPololine(k)[1], crack.getCrackTip().size());
+                g.setColor(Color.BLACK);
                 g.drawLine((int) (k * crack.getLeftTip().getX()), (int) (k * crack.getLeftTip().getY()),
-                        (int) (k * crack.getRightTip().getX()), (int) (k * crack.getRightTip().getY()));
+                        (int) (k * crack.getRightTip().getX()), (int) (k * crack.getLeftTip().getY()));
+
 
 
             }
-        } else {
-            super.paintComponent(g);
-//            int a = 100;
-//            this.setSize(a, a);
-
-
-
         }
+//        else         {
+//            super.paintComponent(g);
+////            int a = 100;
+////            this.setSize(a, a);
+//
+//
+//
+//        }
 
 
 
