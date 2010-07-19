@@ -21,6 +21,7 @@ import sorting.CrackSorterRTip;
  */
 public class SurfaceArea {
 
+//    private static final double E10P3 = 0.001;
     private int Nmax;
     private InitiationTime timeObj;
     private double height;
@@ -44,7 +45,7 @@ public class SurfaceArea {
     //cracks history General array
     private ArrayList<ArrayList> cracksHistoryList;
     private int timeIndex = 0;
-    private ArrayList<? extends SemiellipticalCrack> paintedCracks;
+    private ArrayList<CrackHistory> paintedCracks;
     private int maxCrackLengthTimeIndex;
 
     public SurfaceArea(double height, double width, double grainHeight, double grainWidth,
@@ -59,7 +60,7 @@ public class SurfaceArea {
 
         //визначення кратних параметрів
         Nmax = numColumns * numRows;
-        this.width = numColumns *this.grainWidth;
+        this.width = numColumns * this.grainWidth;
         this.height = numRows * this.grainHeight;
 
         initMatrix(height, width, grainHeight, grainWidth);
@@ -94,8 +95,8 @@ public class SurfaceArea {
 
     ArrayList<SemiellipticalCrack> FillRandomCracks(double length2AMean, double length2AScale,
             double depthMean, double depthScale) throws DerivativeException, IntegratorException {
+        int i = 0;
         if (isFilledCkracks() == false) {
-            int i = 0;
             exitMaxCondition:
             {
                 while (i < Nmax) {
@@ -120,13 +121,14 @@ public class SurfaceArea {
 //                        System.out.print("iMax = " + timeObj.getInitTime().size());
 //                        System.out.println("i = " + i);
 
-                        if (i == timeObj.getInitTime().size()-1) {
+                        if (i == timeObj.getInitTime().size() - 1) {
                             break exitMaxCondition;
-                        }else if (i > 0) {
-                            deltaT = timeObj.getInitTime().get(i + 1) - timeObj.getInitTime().get(i);
                         } else {
-                            deltaT = timeObj.getInitTime().get(i);
+                            deltaT = timeObj.getInitTime().get(i + 1) - timeObj.getInitTime().get(i);
                         }
+//                        else {
+//                            deltaT = timeObj.getInitTime().get(i);
+//                        }
 
 //                        if ((newCrack.getLength2a() >= maxCrackLength)) {
 //                            break exitMaxCondition;
@@ -189,7 +191,8 @@ public class SurfaceArea {
             }
             filledCkracks = true;
         }
-        paintedCracks = ellipticalCrack;
+        getPaintedCracks(i);
+//        paintedCracks = ellipticalCrack;
         return ellipticalCrack;
 
 
@@ -209,7 +212,7 @@ public class SurfaceArea {
     }
 //**********************
 
-    public ArrayList<? extends SemiellipticalCrack> displayHistory(int timeIndex) {
+    public ArrayList<CrackHistory> displayHistory(int timeIndex) {
         ArrayList<CrackHistory> dispHistList = new ArrayList<CrackHistory>();
         for (int i = 0; i < cracksHistoryList.size(); i++) {
             ArrayList historyOfCrack = cracksHistoryList.get(i);
@@ -465,11 +468,15 @@ public class SurfaceArea {
         this.timeIndex = timeIndex;
     }
 
-    public ArrayList<? extends SemiellipticalCrack> getPaintedCracks() {
+    public ArrayList<CrackHistory> getPaintedCracks() {
         return paintedCracks;
     }
 
-    public void setPaintedCracks(ArrayList<SemiellipticalCrack> paintedCracks) {
+    public ArrayList<CrackHistory> getPaintedCracks(int timeIndx) {
+        return displayHistory(timeIndex);
+    }
+
+    public void setPaintedCracks(ArrayList<CrackHistory> paintedCracks) {
         this.paintedCracks = paintedCracks;
     }
 

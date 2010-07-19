@@ -41,7 +41,7 @@ public class SortedPair {
         for (int j = 0; j < sourceListParametr.size(); j++) {
             for (int i = j + 1; i < sourceListParametr.size(); i++) {
                 if ((j + i) < sourceListParametr.size()) {
-                    if (sourceListParametr.get(j) != null && sourceListParametr.get(i) != null && !sourceListParametr.get(j).equals(sourceListParametr.get(i))) {
+                    if (sourceListParametr.get(j+1) != null && sourceListParametr.get(j) != null && sourceListParametr.get(i) != null && !sourceListParametr.get(j).equals(sourceListParametr.get(i))) {
                         pair = new CrackPair(sourceListParametr.get(j), sourceListParametr.get(j + i));
                         if (pair.entersTheRadius) {
                             listOfPair.add(pair);

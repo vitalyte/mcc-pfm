@@ -28,7 +28,7 @@ public class CrackHistory extends SemiellipticalCrack {
         super(obj1);
         currentTime = obj1.getSurfaceAreaObj().getTimeObj().getInitTime().get(timeI);
         timeIndex = timeI;
-        if ((obj1.getLength2a() >= obj1.getSurfaceAreaObj().getMaxCrackLength()) & beforeGenereateNewCrack) {
+        if ((obj1.getLength2a() >= obj1.getSurfaceAreaObj().getMaxCrackLength()) ) {
             criticalCreack = true;
         }
     }
@@ -37,7 +37,7 @@ public class CrackHistory extends SemiellipticalCrack {
         return currentTime;
     }
 
-
+    public boolean isCriticalCreack() {
+        return criticalCreack;
+    }
 }
-
-

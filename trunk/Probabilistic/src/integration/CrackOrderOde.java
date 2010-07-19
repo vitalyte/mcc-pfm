@@ -14,12 +14,20 @@ import probabilistic.gui.SemiellipticalCrack;
  */
 public class CrackOrderOde implements FirstOrderDifferentialEquations {
 
-    private double[] K1;
-    private double k1SCC =2;
+    private static final double E10P_7 = 0.0000001;
+    private static final double E10P_19 = 0.0000000000000000001;
+    private static final double E10P_20 = 0.00000000000000000001;
+    private static final double E10P_21 = 0.000000000000000000001;
+    private static final double E10P10 = 10000000000.0;
+    private double[] K1 = new double[2];
+    private double k1SCC = 2;
+//            *Math.pow(10, 6);
     private double sigma;
 
-    public CrackOrderOde(double[] c, double k1SCC, SemiellipticalCrack crack) {
-        this.K1     = c;
+    public CrackOrderOde(double k1SCC, SemiellipticalCrack crack) {
+        this.K1[0] = crack.SIF_A();
+        this.K1[1] = crack.SIF_B();
+        //this.K1     = c;
         this.k1SCC = k1SCC;
         sigma = crack.getSigma();
 
@@ -45,12 +53,13 @@ public class CrackOrderOde implements FirstOrderDifferentialEquations {
                 / 7.74 * Math.pow(10.0, -21.0)))), 0.443);
 
     }
-/*
- *  y[0] - length2a
- * y[1] - depth
- */
-    private double [] K1array(double[] y){
-        double [] result = {k1_A(y), k1_B(y)};
+    /*
+     *  y[0] - length2a
+     * y[1] - depth
+     */
+
+    private double[] K1array(double[] y) {
+        double[] result = {k1_A(y), k1_B(y)};
 
         return result;
     }
@@ -64,7 +73,7 @@ public class CrackOrderOde implements FirstOrderDifferentialEquations {
         final double b2 = -0.19862;
         final double b3 = 0.02754;
         final double b4 = 0.00137;
-         KIA = b0 + b1 * lambda + b2 * lambda * lambda
+        KIA = b0 + b1 * lambda + b2 * lambda * lambda
                 + b3 * Math.pow(lambda, 3) + b4 * Math.pow(lambda, 4);
         result = sigma * Math.sqrt(Math.PI * y[0] / 2) * KIA;
         return result;
