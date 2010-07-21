@@ -14,19 +14,19 @@ import probabilistic.gui.SemiellipticalCrack;
  */
 public class CrackOrderOde implements FirstOrderDifferentialEquations {
 
-    private static final double E10P_7 = 0.0000001;
-    private static final double E10P_19 = 0.0000000000000000001;
-    private static final double E10P_20 = 0.00000000000000000001;
-    private static final double E10P_21 = 0.000000000000000000001;
-    private static final double E10P10 = 10000000000.0;
-    private double[] K1 = new double[2];
+    private static final double E10P_7 = 1.0e-7;
+    private static final double E10P_19 = 1.0e-19;
+    private static final double E10P_20 = 1.0e-20;
+    private static final double E10P_21 = 1.0e-21;
+    private static final double E10P10 = 1.0e10;
+//    private double[] K1 = new double[2];
     private double k1SCC = 2;
 //            *Math.pow(10, 6);
     private double sigma;
 
     public CrackOrderOde(double k1SCC, SemiellipticalCrack crack) {
-        this.K1[0] = crack.SIF_A();
-        this.K1[1] = crack.SIF_B();
+//        this.K1[0] = crack.SIF_A();
+//        this.K1[1] = crack.SIF_B();
         //this.K1     = c;
         this.k1SCC = k1SCC;
         sigma = crack.getSigma();
@@ -37,30 +37,29 @@ public class CrackOrderOde implements FirstOrderDifferentialEquations {
         //throw new UnsupportedOperationException("Not supported yet.");
         return 2;
     }
-
-    public void computeDerivatives(double t, double[] y, double[] yDot) throws DerivativeException {
-        //throw new UnsupportedOperationException("Not supported yet.");
-        //
-        yDot[0] = 1.1 * Math.pow(10, -7.0)
-                * Math.pow((2.5 * Math.pow(10.0, 10.0)
-                * Math.exp(
-                (-(3 * Math.pow(10.0, -19.0) - 1.5 * Math.pow(10.0, -20.0) * Math.pow((K1array(y)[0] - k1SCC), (1 / 3)))
-                / 7.74 * Math.pow(10.0, -21.0)))), 0.443);
-        yDot[1] = 1.1 * Math.pow(10, -7.0)
-                * Math.pow((2.5 * Math.pow(10.0, 10.0)
-                * Math.exp(
-                (-(3 * Math.pow(10.0, -19.0) - 1.5 * Math.pow(10.0, -20.0) * Math.pow((K1array(y)[1] - k1SCC), (1 / 3)))
-                / 7.74 * Math.pow(10.0, -21.0)))), 0.443);
-
-    }
     /*
      *  y[0] - length2a
      * y[1] - depth
      */
 
+    public void computeDerivatives(double t, double[] y, double[] yDot) throws DerivativeException {
+        //throw new UnsupportedOperationException("Not supported yet.");
+        //
+        yDot[0] = 1.1 * E10P_7
+                * Math.pow((2.5 * E10P10
+                * Math.exp(
+                (-(3 * E10P_19 - 1.5 * E10P_20 * Math.pow((K1array(y)[0] - k1SCC), (1 / 3)))
+                / 7.74 * E10P_21))), 0.443);
+        yDot[1] = 1.1 * E10P_7
+                * Math.pow((2.5 * E10P10
+                * Math.exp(
+                (-(3 * E10P_19 - 1.5 * E10P_20 * Math.pow((K1array(y)[1] - k1SCC), (1 / 3)))
+                / 7.74 * E10P_21))), 0.443);
+
+    }
+
     private double[] K1array(double[] y) {
         double[] result = {k1_A(y), k1_B(y)};
-
         return result;
     }
 

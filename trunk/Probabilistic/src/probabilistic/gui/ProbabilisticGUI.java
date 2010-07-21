@@ -21,8 +21,8 @@ import org.apache.commons.math.ode.IntegratorException;
  */
 public class ProbabilisticGUI extends javax.swing.JFrame {
 
-    private static final double E10P_3 = 0.001;
-    private static final double E10P6 = 1000000;
+    private static final double E10P_3 = 1.0e-3;
+    private static final double E10P6 = 1.0e6;
     SurfaceArea surfaceObj;
     Double HeightValue, WidthValue, gWidthValue, gHeightValue;
     double timeMeanValue;
@@ -992,9 +992,9 @@ public class ProbabilisticGUI extends javax.swing.JFrame {
         lengthScale = Double.parseDouble(crackLengthSkale.getText()) * E10P_3;
         depthMean = Double.parseDouble(crackDepthMean.getText()) * E10P_3;
         depthScale = Double.parseDouble(crackDepthSkale.getText()) * E10P_3;
-        valueParametrK = Double.parseDouble(parametrK.getText());
-        valueYieldStress = Double.parseDouble(yieldStress.getText()) ;
-        valueSigma = Double.parseDouble(sigma.getText()) ;
+        valueParametrK = Double.parseDouble(parametrK.getText()) ;
+        valueYieldStress = Double.parseDouble(yieldStress.getText()) * E10P6;
+        valueSigma = Double.parseDouble(sigma.getText())* E10P6;
         surfaceObj = new SurfaceArea(HeightValue, WidthValue, gHeightValue, gWidthValue, timeMeanValue, timeScaleValue, valueSigma, valueYieldStress, valueParametrK);
         surfaceObj.setVisualKValue(visualKValue);
         surfaceObj.setMaxCrackLength(maxCrackLength);

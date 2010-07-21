@@ -86,9 +86,9 @@ public class GridJPanel extends javax.swing.JPanel {
 //                g.drawLine((int) (k * crack.getLeftTip().getX()), (int) (k * crack.getLeftTip().getY()),
 //                        (int) (k * crack.getRightTip().getX()), (int) (k * crack.getRightTip().getY()));
                 g.drawPolyline(crack.getArrayPololine(k)[0], crack.getArrayPololine(k)[1], crack.getCrackTip().size());
-                g.setColor(Color.BLACK);
-                g.drawLine((int) (k * crack.getLeftTip().getX()), (int) (k * crack.getLeftTip().getY()),
-                        (int) (k * crack.getRightTip().getX()), (int) (k * crack.getLeftTip().getY()));
+//                g.setColor(Color.BLACK);
+//                g.drawLine((int) (k * crack.getLeftTip().getX()), (int) (k * crack.getLeftTip().getY()),
+//                        (int) (k * crack.getRightTip().getX()), (int) (k * crack.getLeftTip().getY()));
 
 
 
