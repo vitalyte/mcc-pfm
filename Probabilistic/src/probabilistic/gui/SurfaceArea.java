@@ -64,7 +64,7 @@ public class SurfaceArea {
         this.height = numRows * this.grainHeight;
 
         initMatrix(height, width, grainHeight, grainWidth);
-        timeObj = new InitiationTime(Nmax, meanInitiationTime, scaleInitiationTime);
+        timeObj = new InitiationTime(Nmax+1, meanInitiationTime, scaleInitiationTime);
         ellipticalCrack = new ArrayList<SemiellipticalCrack>();
         cracksRemoved = new ArrayList<SemiellipticalCrack>();
         this.parametrK = parametrK;
@@ -121,10 +121,10 @@ public class SurfaceArea {
 //                        System.out.print("iMax = " + timeObj.getInitTime().size());
 //                        System.out.println("i = " + i);
 
-                        if (i == timeObj.getInitTime().size() - 1) {
+                        if (i == timeObj.getInitTime().size()) {
                             break exitMaxCondition;
                         } else {
-                            deltaT = timeObj.getInitTime().get(i + 1) - timeObj.getInitTime().get(i);
+                            deltaT = timeObj.getInitTime().get(i +1) - timeObj.getInitTime().get(i);
                         }
 //                        else {
 //                            deltaT = timeObj.getInitTime().get(i);
@@ -190,6 +190,7 @@ public class SurfaceArea {
                 }
             }
             filledCkracks = true;
+            maxCrackLengthTimeIndex = i;
         }
         getPaintedCracks(i);
 //        paintedCracks = ellipticalCrack;
@@ -208,7 +209,7 @@ public class SurfaceArea {
                     + "\tCoordinate of right tip : " + objectCrack.getRightTip().getX() + " x "
                     + objectCrack.getCrackPoint().getY());
         }
-        System.out.println("\n\n");
+////        System.out.println("\n\n");
     }
 //**********************
 

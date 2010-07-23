@@ -38,7 +38,7 @@ public class SortedPair {
         boolean result = false;
         listOfPair = new ArrayList<CrackPair>();
 //        sourceList = sourceListParametr;
-        for (int j = 0; j < sourceListParametr.size(); j++) {
+        for (int j = 0; j < sourceListParametr.size()-1; j++) {
             for (int i = j + 1; i < sourceListParametr.size(); i++) {
                 if ((j + i) < sourceListParametr.size()) {
                     if (sourceListParametr.get(j+1) != null && sourceListParametr.get(j) != null && sourceListParametr.get(i) != null && !sourceListParametr.get(j).equals(sourceListParametr.get(i))) {
@@ -57,6 +57,7 @@ public class SortedPair {
         }
         if (result == true) {
             result = sortPairsRatio();
+//            System.out.println("listOfPair = " + listOfPair.size());
         } else {
             result = false;
         }

@@ -27,6 +27,10 @@ public class CrackPair {
         ratioDistanceToRC = distanceBetweenTips / CriticalRadius;
         centerOfRC = new Point(crackObj1.getRightTip().getX()+CriticalRadius/2, crackObj1.getRightTip().getY());
         entersTheRadius = new Circle(centerOfRC, CriticalRadius).IsPointInsideCircle(crackObj2.getLeftTip());
+        if(entersTheRadius){
+//            System.out.println("\n\nCriticalRadius = " + CriticalRadius +" "+ entersTheRadius);
+        }
+        
     }
 
     public Double getDistanceBetweenTips() {
