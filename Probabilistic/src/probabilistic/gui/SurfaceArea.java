@@ -141,7 +141,9 @@ public class SurfaceArea {
                         coalescenceOfCrack:
                         while (coalescence) {
                             crackSortedByRightTip = new ArrayList<SemiellipticalCrack>(ellipticalCrack);
-                            Collections.sort(crackSortedByRightTip, new CrackSorterRTip());
+//                            Collections.sort(crackSortedByRightTip, new CrackSorterRTip());
+                            // without sorting by right tip
+                            
                             if (iCoalescenceGrowth > 0 & !SortedPair.createPairs(crackSortedByRightTip)) {
                                 break;
                             }
