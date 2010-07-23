@@ -57,7 +57,7 @@ public class SortedPair {
         }
         if (result == true) {
             result = sortPairsRatio();
-//            System.out.println("listOfPair = " + listOfPair.size());
+            System.out.println("listOfPair = " + listOfPair.size());
         } else {
             result = false;
         }

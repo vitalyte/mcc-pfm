@@ -19,9 +19,17 @@ public class CrackOrderOde implements FirstOrderDifferentialEquations {
     private static final double E10P_20 = 1.0e-20;
     private static final double E10P_21 = 1.0e-21;
     private static final double E10P10 = 1.0e10;
+
+    private static final double k1_A_b0 = 0.23153;
+    private static final double k1_A_b1 = 0.61945;
+    private static final double k1_A_b2 = -0.19862;
+    private static final double k1_A_b3 = 0.02754;
+    private static final double k1_A_b4 = 0.00137;
+    private static final double k1_B_b0 = 1.15713;
+    private static final double k1_B_b1 = -0.7302;
+    private static final double k1_B_b2 = 0.20827;
 //    private double[] K1 = new double[2];
-    private double k1SCC = 2;
-//            *Math.pow(10, 6);
+    private double k1SCC;
     private double sigma;
 
     public CrackOrderOde(double k1SCC, SemiellipticalCrack crack) {
@@ -67,13 +75,13 @@ public class CrackOrderOde implements FirstOrderDifferentialEquations {
         double result = 0;
         double KIA = 0;
         double lambda = 2 * y[1] / y[0];
-        final double b0 = 0.23153;
-        final double b1 = 0.61945;
-        final double b2 = -0.19862;
-        final double b3 = 0.02754;
-        final double b4 = 0.00137;
-        KIA = b0 + b1 * lambda + b2 * lambda * lambda
-                + b3 * Math.pow(lambda, 3) + b4 * Math.pow(lambda, 4);
+//        final double k1_A_b0 = 0.23153;
+//        final double k1_A_b1 = 0.61945;
+//        final double k1_A_b2 = -0.19862;
+//        final double k1_A_b3 = 0.02754;
+//        final double k1_A_b4 = 0.00137;
+        KIA = k1_A_b0 + k1_A_b1 * lambda + k1_A_b2 * lambda * lambda
+                + k1_A_b3 * Math.pow(lambda, 3) + k1_A_b4 * Math.pow(lambda, 4);
         result = sigma * Math.sqrt(Math.PI * y[0] / 2) * KIA;
         return result;
     }
@@ -82,10 +90,10 @@ public class CrackOrderOde implements FirstOrderDifferentialEquations {
         double result = 0;
         double KIB = 0;
         double lambda = 2 * y[1] / y[0];
-        final double b0 = 1.15713;
-        final double b1 = -0.7302;
-        final double b2 = 0.20827;
-        KIB = b0 + b1 * lambda + b2 * lambda * lambda;
+//        final double k1_B_b0 = 1.15713;
+//        final double k1_B_b1 = -0.7302;
+//        final double k1_B_b2 = 0.20827;
+        KIB = k1_B_b0 + k1_B_b1 * lambda + k1_B_b2 * lambda * lambda;
         result = sigma * Math.sqrt(Math.PI * y[1]) * KIB;
         return result;
     }
