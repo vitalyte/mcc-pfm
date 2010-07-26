@@ -12,8 +12,8 @@ of stainless steel in high temperature water
  */
 package probabilistic.gui;
 
-import org.apache.commons.math.ode.DerivativeException;
-import org.apache.commons.math.ode.IntegratorException;
+import probabilistic.SurfaceArea;
+import probabilistic.Simulation;
 
 /**
  *
@@ -24,6 +24,7 @@ public class ProbabilisticGUI extends javax.swing.JFrame {
     private static final double E10P_3 = 1.0e-3;
     private static final double E10P6 = 1.0e6;
     SurfaceArea surfaceObj;
+    Simulation simuleObj;
     Double HeightValue, WidthValue, gWidthValue, gHeightValue;
     double timeMeanValue;
     double timeScaleValue;
@@ -859,8 +860,8 @@ public class ProbabilisticGUI extends javax.swing.JFrame {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
         int timeIndexHistoryValue = (Integer.parseInt(timeIndexHistory.getText()));
-        gridJPanel1.getSurface().displayHistory(timeIndexHistoryValue);
-        timeValue.setText(gridJPanel1.getSurface().getTimeObj().getInitTime().get(timeIndexHistoryValue).toString());
+        gridJPanel1.getSimulObj().getPaintedCracks(timeIndexHistoryValue);
+        timeValue.setText(gridJPanel1.getSimulObj().getTime().getInitTime().get(timeIndexHistoryValue).toString());
         gridJPanel1.paintComponent(gridJPanel1.getGraphics());
         gridJPanel1.repaint();
     }//GEN-LAST:event_jButton1ActionPerformed
@@ -868,7 +869,7 @@ public class ProbabilisticGUI extends javax.swing.JFrame {
     private void visualKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_visualKActionPerformed
         // TODO add your handling code here:
         visualKValue = (Integer.parseInt(visualK.getText()));
-        gridJPanel1.getSurface().setVisualKValue(visualKValue);
+        gridJPanel1.getSimulObj().setVisualScale(visualKValue);
         gridJPanel1.paintComponent(gridJPanel1.getGraphics());
         jInternalFrame1.validate();
 //        jScrollPane1.validate();
@@ -995,22 +996,23 @@ public class ProbabilisticGUI extends javax.swing.JFrame {
         valueParametrK = Double.parseDouble(parametrK.getText()) ;
         valueYieldStress = Double.parseDouble(yieldStress.getText()) * E10P6;
         valueSigma = Double.parseDouble(sigma.getText())* E10P6;
-        surfaceObj = new SurfaceArea(HeightValue, WidthValue, gHeightValue, gWidthValue, timeMeanValue, timeScaleValue, valueSigma, valueYieldStress, valueParametrK);
-        surfaceObj.setVisualKValue(visualKValue);
-        surfaceObj.setMaxCrackLength(maxCrackLength);
-        try {
-            surfaceObj.FillRandomCracks(lengthMean, lengthScale, depthMean, depthScale);
-        } catch (DerivativeException e) {
-        } catch (IntegratorException e1) {
-        }
+//        surfaceObj = new SurfaceArea(HeightValue, WidthValue, gHeightValue, gWidthValue, timeMeanValue, timeScaleValue, valueSigma, valueYieldStress, valueParametrK);
+//        surfaceObj.setVisualKValue(visualKValue);
+//        surfaceObj.setMaxCrackLength(maxCrackLength);
+        simuleObj = new Simulation(HeightValue, WidthValue, gHeightValue,
+                gWidthValue, timeMeanValue, timeScaleValue, valueSigma,
+                valueYieldStress, valueParametrK, maxCrackLength, visualKValue);
+        
+            simuleObj.FillRandomCracks(lengthMean, lengthScale, depthMean, depthScale);
+        
 
-        gridJPanel1.setSurface(surfaceObj);
+        gridJPanel1.setSimulObj(simuleObj);
         gridJPanel1.paintComponent(gridJPanel1.getGraphics());
 //        gridJPanel1 = new GridJPanel(surfaceObj);
 
-        surfaceGeometry.setText("hxw surface=" + gridJPanel1.getSurface().getHeight() + "x"
-                + gridJPanel1.getSurface().getWidth() + " " + "grain=" + gridJPanel1.getSurface().getGrainHeight() + "x"
-                + gridJPanel1.getSurface().getGrainWidth()+" Nmax ="+surfaceObj.getNmax());
+//        surfaceGeometry.setText("hxw surface=" + gridJPanel1.getSurface().getHeight() + "x"
+//                + gridJPanel1.getSurface().getWidth() + " " + "grain=" + gridJPanel1.getSurface().getGrainHeight() + "x"
+//                + gridJPanel1.getSurface().getGrainWidth()+" Nmax ="+surfaceObj.getNmax());
 
 //            for (int i = 0; i < gridJPanel1.getSurface().getEllipticalCrack().size(); i++) {
 //                SemiellipticalCrack crack = gridJPanel1.getSurface().getEllipticalCrack().get(i);
@@ -1028,9 +1030,9 @@ public class ProbabilisticGUI extends javax.swing.JFrame {
 //            System.out.println("Length of cracks = " + crack.getLength2a());
 ////            System.out.println("cracks = " + gridJPanel1.getSurface().getEllipticalCrack().size());
 //        }
-        timeIndexHistory.setText(gridJPanel1.getSurface().getMaxCrackLengthTimeIndexS());
-        maxTIndex.setText(gridJPanel1.getSurface().getMaxCrackLengthTimeIndexS());
-        timeValue.setText(gridJPanel1.getSurface().getTimeObj().getInitTime().get(gridJPanel1.getSurface().getMaxCrackLengthTimeIndex()).toString());
+        timeIndexHistory.setText(gridJPanel1.getSimulObj().getMaxTimeIndxS());
+        maxTIndex.setText(gridJPanel1.getSimulObj().getMaxTimeIndxS());
+        timeValue.setText(gridJPanel1.getSimulObj().getTime().getInitTime().get(gridJPanel1.getSimulObj().getMaxTimeIndx()).toString());
 //        jSlider1.setMaximum(gridJPanel1.getSurface().getMaxCrackLengthTimeIndex());
 //        jScrollPane1.setViewportView(gridJPanel1);
 //        jScrollPane1.repaint();
