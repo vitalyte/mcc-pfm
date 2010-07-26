@@ -97,7 +97,7 @@ public class Simulation {
                         while (coalescence) {
                             
                             //об’єднання тріщин
-                            coalescence(i);
+//                            coalescence(i);
                             if (growth) {
                                 break coalescenceGrowthCycle;
                             }
@@ -118,7 +118,7 @@ public class Simulation {
                         for (int j = 0; j < ellipticalCrack.size(); j++) {
                             if (ellipticalCrack.get(j).getLength2a() >= maxCrackLength) {
                                 maxLengthCondition = true;
-                                ellipticalCrack.get(j).setMaxLength(true);
+//                                ellipticalCrack.get(j).setMaxLength(true);
                             }
                         }
                         if (maxLengthCondition) {

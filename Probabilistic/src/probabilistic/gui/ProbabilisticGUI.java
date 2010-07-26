@@ -23,7 +23,7 @@ public class ProbabilisticGUI extends javax.swing.JFrame {
 
     private static final double E10P_3 = 1.0e-3;
     private static final double E10P6 = 1.0e6;
-    SurfaceArea surfaceObj;
+//    SurfaceArea surfaceObj;
     Simulation simuleObj;
     Double HeightValue, WidthValue, gWidthValue, gHeightValue;
     double timeMeanValue;
@@ -1010,9 +1010,9 @@ public class ProbabilisticGUI extends javax.swing.JFrame {
         gridJPanel1.paintComponent(gridJPanel1.getGraphics());
 //        gridJPanel1 = new GridJPanel(surfaceObj);
 
-//        surfaceGeometry.setText("hxw surface=" + gridJPanel1.getSurface().getHeight() + "x"
-//                + gridJPanel1.getSurface().getWidth() + " " + "grain=" + gridJPanel1.getSurface().getGrainHeight() + "x"
-//                + gridJPanel1.getSurface().getGrainWidth()+" Nmax ="+surfaceObj.getNmax());
+        surfaceGeometry.setText("hxw surface=" + gridJPanel1.getSurface().getHeight() + "x"
+                + gridJPanel1.getSurface().getWidth() + " " + "grain=" + gridJPanel1.getSurface().getGrainHeight() + "x"
+                + gridJPanel1.getSurface().getGrainWidth()+" Nmax ="+gridJPanel1.getSurface().getNmax());
 
 //            for (int i = 0; i < gridJPanel1.getSurface().getEllipticalCrack().size(); i++) {
 //                SemiellipticalCrack crack = gridJPanel1.getSurface().getEllipticalCrack().get(i);

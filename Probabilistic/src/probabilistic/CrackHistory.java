@@ -13,6 +13,7 @@ public class CrackHistory extends SemiellipticalCrack {
 //    double currentTime;
     boolean criticalCreack = false;
     boolean beforeGenereateNewCrack = false;
+    private int timeIndex;
 
 //    public CrackHistory(SemiellipticalCrack obj1, int timeI, boolean beforeGenereateNewCrack) {
 //        super(obj1);
@@ -39,5 +40,12 @@ public class CrackHistory extends SemiellipticalCrack {
 
     public boolean isCriticalCreack() {
         return criticalCreack;
+    }
+
+    /**
+     * @return the timeIndex
+     */
+    public int getTimeIndex() {
+        return timeIndex;
     }
 }
