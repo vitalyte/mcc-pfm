@@ -10,8 +10,11 @@
  */
 package probabilistic.gui;
 
+import probabilistic.CrackHistory;
+import probabilistic.SurfaceArea;
 import java.awt.Color;
 import java.awt.Graphics;
+import probabilistic.Simulation;
 //import java.util.ArrayList;
 //import java.util.Random;
 //import probabilistic.*;
@@ -28,7 +31,7 @@ public class GridJPanel extends javax.swing.JPanel {
     private int width;
     private int grainHeight;
     private int grainWidth;
-    private SurfaceArea surface;
+    private Simulation simulObj;
 //    private SemiellipticalCrack crack;
 //    private InitiationTime time;
 
@@ -39,9 +42,9 @@ public class GridJPanel extends javax.swing.JPanel {
 //        surface.FillRandomCracks(10, 8, 10, 8);
     }
 
-    public GridJPanel(SurfaceArea surface) {
+    public GridJPanel(Simulation simulObj) {
         initComponents();
-        this.surface = surface;
+        this.simulObj = simulObj;
 //        surface.FillRandomCracks(10, 8, 10, 8);
     }
 
@@ -60,9 +63,9 @@ public class GridJPanel extends javax.swing.JPanel {
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
-        if (surface != null) {
-            int k = surface.getVisualKValue();
-//            k =100;
+        if (simulObj != null) {
+            int k = (int) simulObj.getVisualScale();
+            SurfaceArea surface = simulObj.getSurface();
             width = (int) (k * surface.getWidth());
             height = (int) (k * surface.getHeight());
             grainWidth = (int) (k * surface.getGrainWidth());
@@ -70,8 +73,8 @@ public class GridJPanel extends javax.swing.JPanel {
             this.setSize(width, height);
 //            System.out.println("\n\n1");
 
-            for (int i = 0; i < surface.getPaintedCracks().size(); i++) {
-                CrackHistory crack = surface.getPaintedCracks().get(i);
+            for (int i = 0; i < simulObj.getPainted().size(); i++) {
+                CrackHistory crack = simulObj.getPainted().get(i);
                 if (!crack.isCriticalCreack()) {
                     g.setColor(Color.GREEN);
                 }
@@ -108,107 +111,22 @@ public class GridJPanel extends javax.swing.JPanel {
 
     }
 
-//    boolean isSquareEmpty(boolean[][] matrix, int i, int j) {
-//        if (matrix[i][j] == false) {
-//            return true;
-//        }
-//        return false;
-//    }
-//    void FillRandomCracks() {
-//        this.FillRandomCracks(this.height, this.width, this.grainHeight, this.grainWidth);
-//    }
-//
-//    void FillRandomCracks(int height, int width, int grainHeight, int grainWidth) {
-//
-//        if (surface.isFilleddCkracks() == false) {
-//            Integer seed = surface.getSeed();
-//            int i = 0;
-//            while (i < surface.getNmax()) {
-//                //ввести ще один цикл перевірки координати точки!!!
-//                double rndX = UniformDistribution.PPF(RNG.Ran2(seed), 0, surface.getWidth());
-//                double rndY = UniformDistribution.PPF(RNG.Ran2(seed), 0, surface.getHeight());
-//                int rndI = (int) rndX / surface.getGrainWidth();
-//                int rndJ = (int) rndY / surface.getGrainHeight();
-//                if (surface.isSquareEmpty(surface.getMatrix(), rndI, rndJ)) {
-//                     //потягнути з панелі
-//                    double length2A = NormalDistribution.PPF(RNG.Ran2(seed),10,1 );
-//                    double depth = NormalDistribution.PPF(RNG.Ran2(seed), 2,1);
-//                    crack = new SemiellipticalCrack(surface, rndX, rndY, length2A, depth, i);
-//                    Double crackTime = (Double) surface.getTimeObj().getInitTime().get(i);
-//
-//                    // точку кинули в порожню клітину
-//                    crack.setSiteX((int) rndX);
-//                    surface.setMatPointsX(rndI, rndJ, crack.getSiteX());
-//                    crack.setSiteY((int) rndY);
-//                    surface.setMatPointsY(rndI, rndJ, crack.getSiteY());
-//                    surface.setMatrix(rndI, rndJ, true);
-//                    surface.getEllipticalCrack().add(crack);
-//                    i++;
-//                }
-//            }
-//            surface.setFilleddCkracks(true);
-//        }
-//        ////відладка
-//        print(surface.getEllipticalCrack());
-//
-//    }
-//
-// //   ****************
-//    //відладка
-//    public void print(ArrayList lst) {
-//        lst = surface.getEllipticalCrack();
-//        for (int i = 0; i < lst.size(); i++) {
-//            SemiellipticalCrack objectCrack = (SemiellipticalCrack) lst.get(i);
-//            System.out.println("Initiation Time: " + objectCrack.getInitiationTime()
-//                    + "\tCoordinate : " + objectCrack.getCrackPoint().getX() + " x "
-//                    + objectCrack.getCrackPoint().getY());
-//        }
-//        System.out.println("\n\n");
-//    }
-////**********************
-//    public InitiationTime getTime() {
-//        return time;
-//    }
-//
-//    public void setTime(InitiationTime time) {
-//        this.time = time;
-//    }
-//
-//
-//    public SemiellipticalCrack getCrack() {
-//        return crack;
-//    }
+    public Simulation getSimulObj() {
+        return simulObj;
+    }
+
+    public void setSimulObj(Simulation simulObj) {
+        this.simulObj = simulObj;
+    }
+
+
     public SurfaceArea getSurface() {
-        return surface;
+        return simulObj.getSurface();
     }
-
-    public void setSurface(SurfaceArea surface) {
-        this.surface = surface;
-    }
-
-    public void setGrainHeight(int grainHeight) {
-        this.grainHeight = grainHeight;
-    }
-
-    public void setGrainWidth(int grainWidth) {
-        this.grainWidth = grainWidth;
-    }
-
-    public void setHeight(int height) {
-        this.height = height;
-    }
-
-    public void setWidth(int width) {
-        this.width = width;
-    }
-
-    public int getGrainHeight() {
-        return grainHeight;
-    }
-
-    public int getGrainWidth() {
-        return grainWidth;
-    }
+//
+//    public void setSurface(SurfaceArea surface) {
+//        this.surface = surface;
+//    }
 
     /** This method is called from within the constructor to
      * initialize the form.
