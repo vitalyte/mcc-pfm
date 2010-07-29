@@ -20,13 +20,13 @@ public class Simulation {
     private boolean[][] matrix;
     private double[][] matPointsX;
     private double[][] matPointsY;
-    private Integer seed;
+    private int seed;
     boolean filledCkracks = false;
 
     private static double maxCrackLength, visualScale,
     parametrK, yieldStress, sigma;
 
-    private SurfaceArea surface;
+    private static SurfaceArea surface;
     
     private InitiationTime timeObj;
     private int maxTimeIndx;
@@ -55,7 +55,7 @@ public class Simulation {
     private void initMatrix(SurfaceArea surface) {
         Random rnd = new Random();
         int s = -rnd.nextInt(1000000) + 1;
-        seed = new Integer(s);
+        seed = s;
         matPointsX = new double[surface.getNumColumns()][surface.getNumRows()];
         matPointsY = new double[surface.getNumColumns()][surface.getNumRows()];
         matrix = new boolean[surface.getNumColumns()][surface.getNumRows()];
@@ -82,7 +82,7 @@ public class Simulation {
                     int rndJ = (int) (rndY / surface.getGrainHeight());
                     double deltaT;
                     if (isSquareEmpty(matrix, rndI, rndJ)) {
-                        // точку кинули в порожню клітину
+//                         точку кинули в порожню клітину
                         generNewCrack(i, rndX, rndY, rndI, rndJ, length2AMean, length2AScale, depthMean, depthScale);
                         double currentTime = timeObj.getInitTime().get(i);
                         if (i == timeObj.getInitTime().size()) {
@@ -90,37 +90,36 @@ public class Simulation {
                         } else {
                             deltaT = timeObj.getInitTime().get(i + 1) - timeObj.getInitTime().get(i);
                         }
-                        boolean coalescence = true;
                         boolean growth = false;
-                        int iCoalescenceGrowth = 0;
+//                        int iCoalescenceGrowth = 0;
                         coalescenceGrowthCycle:
-                        while (coalescence) {
-                            
+                        while (true) {
+
                             //об’єднання тріщин
-//                            coalescence(i);
+                            coalescence(i);
                             if (growth) {
                                 break coalescenceGrowthCycle;
                             }
                             //підростання тріщин
-                            if (!growth) {
-                                try {
-                                    growth(i, currentTime, deltaT);
-                                } catch (DerivativeException ex) {
-                                    Logger.getLogger(Simulation.class.getName()).log(Level.SEVERE, null, ex);
-                                } catch (IntegratorException ex) {
-                                    Logger.getLogger(Simulation.class.getName()).log(Level.SEVERE, null, ex);
-                                }
-                            }
+//                            if (!growth) {
+//                                try {
+//                                    growth(i, currentTime, deltaT);
+//                                } catch (DerivativeException ex) {
+//                                    Logger.getLogger(Simulation.class.getName()).log(Level.SEVERE, null, ex);
+//                                } catch (IntegratorException ex) {
+//                                    Logger.getLogger(Simulation.class.getName()).log(Level.SEVERE, null, ex);
+//                                }
+//                            }
                             growth = true;
 //                            iCoalescenceGrowth++;
                         }
                         boolean maxLengthCondition = false;
-                        for (int j = 0; j < ellipticalCrack.size(); j++) {
-                            if (ellipticalCrack.get(j).getLength2a() >= maxCrackLength) {
-                                maxLengthCondition = true;
-//                                ellipticalCrack.get(j).setMaxLength(true);
-                            }
-                        }
+//                        for (int j = 0; j < ellipticalCrack.size(); j++) {
+//                            if (ellipticalCrack.get(j).getLength2a() >= maxCrackLength) {
+//                                maxLengthCondition = true;
+////                                ellipticalCrack.get(j).setMaxLength(true);
+//                            }
+//                        }
                         if (maxLengthCondition) {
                             maxTimeIndx = i;
                             break exitMaxCondition;
@@ -158,12 +157,12 @@ public class Simulation {
      *
      */
     private void coalescence(int i) {
-        while (SortedPair.createPairs(ellipticalCrack)) {
-            newCrack = new SemiellipticalCrack(SortedPair.getCoalescencePair().getCrackObj1(),
-                    SortedPair.getCoalescencePair().getCrackObj2(), i);
+        while (Pair.createPairs(ellipticalCrack)) {
+            newCrack = new SemiellipticalCrack(Pair.getCoalescencePair().getCrackObj1(),
+                    Pair.getCoalescencePair().getCrackObj2(), i);
             ellipticalCrack.add(newCrack);
-            ellipticalCrack.remove(SortedPair.getCoalescencePair().getCrackObj1());
-            ellipticalCrack.remove(SortedPair.getCoalescencePair().getCrackObj2());
+            ellipticalCrack.remove(Pair.getCoalescencePair().getCrackObj1());
+            ellipticalCrack.remove(Pair.getCoalescencePair().getCrackObj2());
         }
     }
 
@@ -256,18 +255,18 @@ public class Simulation {
      *
      * @return the value of surface
      */
-    public SurfaceArea getSurface() {
+    public static SurfaceArea getSurface() {
         return surface;
     }
 
-    /**
-     * Set the value of surface
-     *
-     * @param surface new value of surface
-     */
-    public void setSurface(SurfaceArea surface) {
-        this.surface = surface;
-    }
+//    /**
+//     * Set the value of surface
+//     *
+//     * @param surface new value of surface
+//     */
+//    public void setSurface(SurfaceArea surface) {
+//        this.surface = surface;
+//    }
 
     public double getVisualScale() {
         return visualScale;

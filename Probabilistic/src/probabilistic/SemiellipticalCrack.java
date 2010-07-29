@@ -18,12 +18,9 @@ import org.apache.commons.math.ode.nonstiff.DormandPrince54Integrator;
  */
 public class SemiellipticalCrack {
 
-
-
     private double length2a, initLength2a;
     private double depthB, initDepthB;
     private double aspectRatio;
-
     private Point crackPoint;
     private Point rightTip;
     private ArrayList<Point> crackTip;
@@ -31,15 +28,6 @@ public class SemiellipticalCrack {
     private boolean coalescenced = false;
     //list changes of cracks states
     private ArrayList<CrackHistory> historyOfCrack;
-
-
-    //    private SurfaceArea Simulation;
-    //    private double initiationTimeObj;
-//    private double siteXPoint;
-//    private double siteYPoint;
-//    int timeIndex;
-    //    private double sigma, sigmaYS, k;
-//    private boolean maxLength = false;
 
     public SemiellipticalCrack() {
         historyOfCrack = new ArrayList<CrackHistory>();
@@ -167,13 +155,25 @@ public class SemiellipticalCrack {
 
         double nextTime = currentTime + deltaT;
         double stopTime = dp54.integrate(ode, currentTime, y, nextTime, afterIntegr); // now y contains final state at time t=16.0
-        double changeofLength = afterIntegr[0] - y[0];
+//        double changeofLength = afterIntegr[0] - y[0];
+//        System.out.println("\nchangeofLength=\t" + changeofLength);
 
 
-        afterIntegr[0] = beforeGrowthLength + 1.0e-6;
-        afterIntegr[1] = beforeGrowthDepth + 1.0e-6;
-        crackTip.get(0).setX(crackTip.get(0).getX() - (afterIntegr[0] - y[0]) / 2);
-        crackTip.get(crackTip.size() - 1).setX(crackTip.get(crackTip.size() - 1).getX() + (afterIntegr[0] - y[0]) / 2);
+//        afterIntegr[0] = beforeGrowthLength + 1.0e-6;
+//        afterIntegr[1] = beforeGrowthDepth + 1.0e-6;
+        double growthX = afterIntegr[0] - y[0];
+        double depth = afterIntegr[1];
+        double xLeft = crackTip.get(0).getX() - growthX / 2;
+        double xRight = crackTip.get(crackTip.size() - 1).getX() + growthX / 2;
+        if (xLeft < 0) {
+            xLeft = 0;
+        }
+        if (xRight > Simulation.getSurface().getWidth()) {
+            xRight = Simulation.getSurface().getWidth();
+        }
+
+        crackTip.get(0).setX(xLeft);
+        crackTip.get(crackTip.size() - 1).setX(xRight);
         setDepthB(afterIntegr[1]);
 
 //        crackTip.get(0).setX(crackTip.get(0).getX());
@@ -366,7 +366,6 @@ public class SemiellipticalCrack {
 //    public void setMaxLength(boolean maxLength) {
 //        this.maxLength = maxLength;
 //    }
-
     public boolean isCoalescenced() {
         return coalescenced;
     }

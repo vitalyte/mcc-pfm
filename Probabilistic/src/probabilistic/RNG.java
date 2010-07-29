@@ -36,7 +36,7 @@ public class RNG {
      * @return  a uniform random deviate between 0 and 1.0
      * (exclusive of the endpolong values).
      */
-    public static double Ran2(Integer idum) {
+    public static double Ran2(int idum) {
         final int IM1 = 2147483563;
         final int IM2 = 2147483399;
         final int IA1 = 40014, IA2 = 40692, IQ1 = 53668, IQ2 = 52774;
