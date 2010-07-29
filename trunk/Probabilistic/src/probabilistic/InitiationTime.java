@@ -25,10 +25,10 @@ public class InitiationTime {
         this.Nmax = Nmax;
         this.mean = mean;
         this.scale = scale;
-        Integer seed = -1;
+        int seed = -1;
         Random rnd = new Random();
         int s = -rnd.nextInt(1000000) + 1;
-        seed = new Integer(s);
+        seed = s;
         for (int i = 0; i < Nmax; i++) {
             double p = RNG.Ran2(seed);//ExponentialDistribution.PPF(i, seed, s)
             double time = ExponentialDistribution.PPF(p, mean, scale);

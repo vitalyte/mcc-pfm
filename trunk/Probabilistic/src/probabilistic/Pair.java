@@ -5,26 +5,24 @@
 package probabilistic;
 
 import java.util.ArrayList;
-import java.util.Collections;
 
 //import sorting.SortPairRC;
-import probabilistic.sort.SortPairRatio;
 
 /**
  *
  * @author Vitaly
  */
-public class SortedPair {
+public class Pair {
 
 //    private ArrayList<SemiellipticalCrack> sourceList;
-    private static ArrayList<CrackPair> listOfPair;
+//    private static ArrayList<CrackPair> listOfPair;
 //    private ArrayList<CrackPair> sortedListOfPair = new ArrayList<CrackPair>();
     private static CrackPair coalescencePair;
     private SemiellipticalCrack resultCrack;
     private static boolean canCoalescence = false;
     static CrackPair pair;
 
-    public SortedPair(ArrayList<SemiellipticalCrack> sourceList) {
+    public Pair(ArrayList<SemiellipticalCrack> sourceList) {
 //        this.sourceList = sourceList;
 //        if (createPairs(sourceList)) {
 //            canCoalescence = sortPairsRatio();
@@ -36,21 +34,23 @@ public class SortedPair {
 
     public static boolean createPairs(ArrayList<SemiellipticalCrack> sourceListParametr) {
         boolean result = false;
-        listOfPair = new ArrayList<CrackPair>();
+//        listOfPair = new ArrayList<CrackPair>();
 //        sourceList = sourceListParametr;
         for (int j = 0; j < sourceListParametr.size()-1; j++) {
             for (int i = j + 1; i < sourceListParametr.size(); i++) {
                 if ((j + i) < sourceListParametr.size()) {
-                    if (sourceListParametr.get(j+1) != null && sourceListParametr.get(j) != null && sourceListParametr.get(i) != null && !sourceListParametr.get(j).equals(sourceListParametr.get(i))) {
-                      pair = new CrackPair(sourceListParametr.get(j), sourceListParametr.get(j + i));
-                        if (pair.entersTheRadius) {
+                    if (sourceListParametr.get(j+1) != null && sourceListParametr.get(j) != null && sourceListParametr.get(i) != null ) {
+                      
+                        if (CrackPair.isEntersTheRadiusS(sourceListParametr.get(j), sourceListParametr.get(j + i))) {
                             if(coalescencePair == null){
+                                pair = new CrackPair(sourceListParametr.get(j), sourceListParametr.get(j + i));
                                 coalescencePair = pair;
                             }else
-                            if (coalescencePair.getRatioDistanceToRC() > pair.getRatioDistanceToRC()){
+                            if (coalescencePair.getRatioDistanceToRC() > CrackPair.getRatioDistanceToRC_(sourceListParametr.get(j), sourceListParametr.get(j + i))){
+                                pair = new CrackPair(sourceListParametr.get(j), sourceListParametr.get(j + i));
                                 coalescencePair = pair;
                             }
-                            listOfPair.add(pair);
+//                            listOfPair.add(pair);
                             result = true;
                         } else {
                             break;
