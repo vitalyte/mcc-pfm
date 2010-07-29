@@ -101,15 +101,15 @@ public class Simulation {
                                 break coalescenceGrowthCycle;
                             }
                             //підростання тріщин
-//                            if (!growth) {
-//                                try {
-//                                    growth(i, currentTime, deltaT);
-//                                } catch (DerivativeException ex) {
-//                                    Logger.getLogger(Simulation.class.getName()).log(Level.SEVERE, null, ex);
-//                                } catch (IntegratorException ex) {
-//                                    Logger.getLogger(Simulation.class.getName()).log(Level.SEVERE, null, ex);
-//                                }
-//                            }
+                            if (!growth) {
+                                try {
+                                    growth(i, currentTime, deltaT);
+                                } catch (DerivativeException ex) {
+                                    Logger.getLogger(Simulation.class.getName()).log(Level.SEVERE, null, ex);
+                                } catch (IntegratorException ex) {
+                                    Logger.getLogger(Simulation.class.getName()).log(Level.SEVERE, null, ex);
+                                }
+                            }
                             growth = true;
 //                            iCoalescenceGrowth++;
                         }
