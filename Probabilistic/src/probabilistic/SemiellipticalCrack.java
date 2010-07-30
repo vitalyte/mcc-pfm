@@ -111,7 +111,7 @@ public class SemiellipticalCrack {
 //        System.out.println("depthB / length2a = " + 2 * depthB / length2a);
 //        System.out.println("crack2.SIF_A() = " + crack2.SIF_A());
 //        System.out.println("crack2.depthB / crack2.length2a = " + 2 * crack2.depthB / crack2.length2a);
-//        RC = 1.0e-6;
+        RC = 1.0e-6;
         return RC;
     }
 //визначив чіткий приріст тріщини
@@ -123,21 +123,21 @@ public class SemiellipticalCrack {
 //        double maxStep = deltaT;
 //        deltaT = 1.0e-4;
 
-        FirstOrderIntegrator dp54 = new DormandPrince54Integrator(deltaT * 0.9, deltaT, 1.0e-10, 1.0e-10);
+//        FirstOrderIntegrator dp54 = new DormandPrince54Integrator(deltaT, deltaT, 1.0e-10, 1.0e-10);
 //        FirstOrderIntegrator dp853 = new DormandPrince54Integrator(1.0e-8, 100.0, 1.0e-10, 1.0e-10);
-        FirstOrderDifferentialEquations ode = new CrackOrderOde(Const.k1SCC, this);
+//        FirstOrderDifferentialEquations ode = new CrackOrderOde(Const.k1SCC, this);
         double[] y = new double[]{beforeGrowthLength, beforeGrowthDepth}; // initial state
         double[] afterIntegr = new double[2]; // initial state
 
         double nextTime = currentTime + deltaT;
-        double stopTime = dp54.integrate(ode, currentTime, y, nextTime, afterIntegr); // now y contains final state at time t=16.0
+//        double stopTime = dp54.integrate(ode, currentTime, y, nextTime, afterIntegr); // now y contains final state at time t=16.0
         double changeofLength = afterIntegr[0] - y[0];
-        System.out.println("\ndeltaT=\t" + deltaT);
-        System.out.println("changeofLength=\t" + changeofLength);
+//        System.out.println("\ndeltaT=\t" + deltaT);
+//        System.out.println("changeofLength=\t" + changeofLength);
 
 
-//        afterIntegr[0] = beforeGrowthLength + 1.0e-6;
-//        afterIntegr[1] = beforeGrowthDepth + 1.0e-6;
+        afterIntegr[0] = beforeGrowthLength + 1.0e-6;
+        afterIntegr[1] = beforeGrowthDepth + 1.0e-6;
         double growthX = afterIntegr[0] - y[0];
         double depth = afterIntegr[1];
         double xLeft = crackTip.get(0).getX() - growthX / 2;
@@ -153,21 +153,11 @@ public class SemiellipticalCrack {
         crackTip.get(crackTip.size() - 1).setX(xRight);
         setDepthB(afterIntegr[1]);
 
-//        crackTip.get(0).setX(crackTip.get(0).getX());
-//        crackTip.get(crackTip.size() - 1).setX(crackTip.get(crackTip.size() - 1).getX());
-//        setDepthB(y[1]);
-
         this.length2a = crackTip.get(crackTip.size() - 1).getX() - crackTip.get(0).getX();
-//        timeIndex = timeIndex + 1;
         historyOfCrack.add(new CrackHistory(this, tIndx + 1));
 
 
-//        System.out.println("\n\nObject=\t" + this.toString());
-//        System.out.println("TimeIndex=\t" + this.getTimeIndex());
-//        System.out.println("currentTime=\t" + currentTime);
-//        System.out.println("deltaT=\t" + deltaT);
-//        System.out.println("підростання довжини = " + (y[0]));
-//        System.out.println("підростання глибини = " + (y[1]));
+
 
 
 
