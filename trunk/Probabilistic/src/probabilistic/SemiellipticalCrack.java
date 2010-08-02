@@ -4,6 +4,11 @@
  */
 package probabilistic;
 
+import java.io.Externalizable;
+import java.io.IOException;
+import java.io.ObjectInput;
+import java.io.ObjectOutput;
+import java.io.Serializable;
 import probabilistic.integration.CrackOrderOde;
 import java.util.ArrayList;
 import org.apache.commons.math.ode.DerivativeException;
@@ -16,72 +21,73 @@ import org.apache.commons.math.ode.nonstiff.DormandPrince54Integrator;
  *
  * @author Vitaly
  */
-public class SemiellipticalCrack {
+public class SemiellipticalCrack implements Externalizable {
 
-    private double length2a, initLength2a;
-    private double depthB, initDepthB;
+//private static final long serialVersionUID;
+    private double length2a;
+    private double depthB;
     private double aspectRatio;
     private Point crackPoint;
-    private Point rightTip;
+//    private Point leftTip;
+//    private Point rightTip;
     private ArrayList<Point> crackTip;
-    private Point leftTip;
     private boolean coalescenced = false;
     //list changes of cracks states
-    private ArrayList<CrackHistory> historyOfCrack;
+//    private ArrayList<CrackHistory> historyOfCrack;
 
     public SemiellipticalCrack() {
-        historyOfCrack = new ArrayList<CrackHistory>();
-        crackTip = new ArrayList<Point>();
+        this(0, 0, 0, 0, 0);
+
     }
 
     public SemiellipticalCrack(double pointX, double pointY,
             double length2a, double depthB, int timeIndex) {
-        this();
+//        this();
+        crackTip = new ArrayList<Point>();
         crackPoint = new Point(pointX, pointY);
-        leftTip = new Point((crackPoint.getX() - length2a / 2), crackPoint.getY());
-        rightTip = new Point((crackPoint.getX() + length2a / 2), crackPoint.getY());
-        crackTip.add(leftTip);
-        crackTip.add(rightTip);
+        crackTip.add(new Point((crackPoint.getX() - length2a / 2), crackPoint.getY()));
+        crackTip.add(new Point((crackPoint.getX() + length2a / 2), crackPoint.getY()));
+//        crackTip.add(leftTip);
+//        crackTip.add(rightTip);
         this.depthB = depthB;
         this.length2a = length2a;
-        initLength2a = length2a;
-        initDepthB = depthB;
+
         aspectRatio = depthB / length2a / 2;
+        //        initLength2a = length2a;
+//        initDepthB = depthB;
 //        aspectRatio = 1;
-        historyOfCrack.add(new CrackHistory(this, timeIndex));
-        Simulation.getCracksHistoryList().add(historyOfCrack);
+//        historyOfCrack.add(new CrackHistory(this, timeIndex));
+//        Simulation.getCracksHistoryList().add(historyOfCrack);
 
     }
 
     public SemiellipticalCrack(SemiellipticalCrack obj1, SemiellipticalCrack obj2, int timeIndex) {
-        this();
+//        this();
+        crackTip = new ArrayList<Point>();
         crackTip = new ArrayList<Point>();
         crackTip.addAll(obj1.getCrackTip());
         crackTip.addAll(obj2.getCrackTip());
-        leftTip = crackTip.get(0);
-        rightTip = crackTip.get(crackTip.size() - 1);
+//        leftTip = crackTip.get(0);
+//        rightTip = crackTip.get(crackTip.size() - 1);
         this.length2a = crackTip.get(crackTip.size() - 1).getX() - crackTip.get(0).getX();
         this.depthB = Math.max(obj1.getDepthB(), obj2.getDepthB());
         aspectRatio = depthB / length2a / 2;
         coalescenced = true;
-        historyOfCrack.add(new CrackHistory(this, timeIndex));
-        Simulation.getCracksHistoryList().add(historyOfCrack);
+//        historyOfCrack.add(new CrackHistory(this, timeIndex));
+//        Simulation.getCracksHistoryList().add(historyOfCrack);
     }
 
-    public SemiellipticalCrack(SemiellipticalCrack obj1) {
-        crackPoint = obj1.getCrackPoint();
-        this.crackTip = obj1.crackTip;
-        this.length2a = obj1.getLength2a();
-        initLength2a = obj1.getInitLength2a();
-        this.depthB = obj1.getDepthB();
-        initDepthB = obj1.getInitDepthB();
-        aspectRatio = obj1.getAspectRatio();
-        rightTip = obj1.getRightTip();
-        leftTip = obj1.leftTip;
-
-
-    }
-
+//    public SemiellipticalCrack(SemiellipticalCrack obj1) {
+//        crackPoint = obj1.getCrackPoint();
+//        this.crackTip = obj1.crackTip;
+//        this.length2a = obj1.getLength2a();
+//        this.depthB = obj1.getDepthB();
+//        aspectRatio = obj1.getAspectRatio();
+//        rightTip = obj1.getRightTip();
+//        leftTip = obj1.leftTip;
+////        initDepthB = obj1.getInitDepthB();
+////        initLength2a = obj1.getInitLength2a();
+//    }
     public double SIF_A() {
         double result = 0;
         double KIA = 0;
@@ -111,7 +117,7 @@ public class SemiellipticalCrack {
 //        System.out.println("depthB / length2a = " + 2 * depthB / length2a);
 //        System.out.println("crack2.SIF_A() = " + crack2.SIF_A());
 //        System.out.println("crack2.depthB / crack2.length2a = " + 2 * crack2.depthB / crack2.length2a);
-        RC = 1.0e-6;
+//        RC = 1.0e-6;
         return RC;
     }
 //визначив чіткий приріст тріщини
@@ -123,21 +129,21 @@ public class SemiellipticalCrack {
 //        double maxStep = deltaT;
 //        deltaT = 1.0e-4;
 
-//        FirstOrderIntegrator dp54 = new DormandPrince54Integrator(deltaT, deltaT, 1.0e-10, 1.0e-10);
+        FirstOrderIntegrator dp54 = new DormandPrince54Integrator(deltaT * 0.1, deltaT, 1.0e-10, 1.0e-10);
 //        FirstOrderIntegrator dp853 = new DormandPrince54Integrator(1.0e-8, 100.0, 1.0e-10, 1.0e-10);
-//        FirstOrderDifferentialEquations ode = new CrackOrderOde(Const.k1SCC, this);
+        FirstOrderDifferentialEquations ode = new CrackOrderOde(Const.k1SCC, this);
         double[] y = new double[]{beforeGrowthLength, beforeGrowthDepth}; // initial state
         double[] afterIntegr = new double[2]; // initial state
 
         double nextTime = currentTime + deltaT;
-//        double stopTime = dp54.integrate(ode, currentTime, y, nextTime, afterIntegr); // now y contains final state at time t=16.0
+        double stopTime = dp54.integrate(ode, currentTime, y, nextTime, afterIntegr); // now y contains final state at time t=16.0
         double changeofLength = afterIntegr[0] - y[0];
 //        System.out.println("\ndeltaT=\t" + deltaT);
 //        System.out.println("changeofLength=\t" + changeofLength);
 
 
-        afterIntegr[0] = beforeGrowthLength + 1.0e-6;
-        afterIntegr[1] = beforeGrowthDepth + 1.0e-6;
+//        afterIntegr[0] = beforeGrowthLength + 1.0e-6;
+//        afterIntegr[1] = beforeGrowthDepth + 1.0e-6;
         double growthX = afterIntegr[0] - y[0];
         double depth = afterIntegr[1];
         double xLeft = crackTip.get(0).getX() - growthX / 2;
@@ -154,7 +160,7 @@ public class SemiellipticalCrack {
         setDepthB(afterIntegr[1]);
 
         this.length2a = crackTip.get(crackTip.size() - 1).getX() - crackTip.get(0).getX();
-        historyOfCrack.add(new CrackHistory(this, tIndx + 1));
+//        historyOfCrack.add(new CrackHistory(this, tIndx + 1));
 
 
 
@@ -227,6 +233,7 @@ public class SemiellipticalCrack {
 //    public SurfaceArea getSurfaceAreaObj() {
 //        return Simulation;
 //    }
+
     /**
      * Get the value of aspectRatio
      *
@@ -290,11 +297,11 @@ public class SemiellipticalCrack {
 //    }
 
     public Point getLeftTip() {
-        return leftTip;
+        return crackTip.get(0);
     }
 
     public Point getRightTip() {
-        return rightTip;
+        return crackTip.get(crackTip.size()-1);
     }
 //
 //    public double getSigma() {
@@ -308,22 +315,21 @@ public class SemiellipticalCrack {
 //    public static void setHistoryOfCrack(ArrayList historyOfCrack) {
 //        SemiellipticalCrack.historyOfCrack = historyOfCrack;
 //    }
-    public double getInitDepthB() {
-        return initDepthB;
-    }
-
-    public void setInitDepthB(double initDepthB) {
-        this.initDepthB = initDepthB;
-    }
-
-    public double getInitLength2a() {
-        return initLength2a;
-    }
-
-    public void setInitLength2a(double initLength2a) {
-        this.initLength2a = initLength2a;
-    }
-
+//    public double getInitDepthB() {
+//        return initDepthB;
+//    }
+//
+//    public void setInitDepthB(double initDepthB) {
+//        this.initDepthB = initDepthB;
+//    }
+//
+//    public double getInitLength2a() {
+//        return initLength2a;
+//    }
+//
+//    public void setInitLength2a(double initLength2a) {
+//        this.initLength2a = initLength2a;
+//    }
 //    public boolean isMaxLength() {
 //        return maxLength;
 //    }
@@ -337,5 +343,37 @@ public class SemiellipticalCrack {
 
     public ArrayList<Point> getCrackTip() {
         return crackTip;
+    }
+
+    public void writeExternal(ObjectOutput oo) throws IOException {
+//        throw new UnsupportedOperationException("Not supported yet.");
+        oo.writeDouble(length2a);
+        oo.writeDouble(depthB);
+        oo.writeDouble(aspectRatio);
+//        crackPoint.writeExternal(oo);
+//        leftTip.writeExternal(oo);
+//        rightTip.writeExternal(oo);
+        oo.writeInt(crackTip.size());
+        for (Externalizable ext : crackTip) {
+            ext.writeExternal(oo);
+        }
+        oo.writeBoolean(coalescenced);
+    }
+
+    public void readExternal(ObjectInput oi) throws IOException, ClassNotFoundException {
+//        throw new UnsupportedOperationException("Not supported yet.");
+        length2a = oi.readDouble();
+        depthB = oi.readDouble();
+        aspectRatio = oi.readDouble();
+//        crackPoint.readExternal(oi);
+//        leftTip.readExternal(oi);
+//        rightTip.readExternal(oi);
+        int count = oi.readInt();
+
+        for (int i = 0; i < count; i++) {
+            Point ext = new Point();
+            ext.readExternal(oi);
+            crackTip.add(ext);
+        }
     }
 }

@@ -4,11 +4,13 @@
  */
 package probabilistic;
 
+import java.io.Serializable;
+
 /**
  *
  * @author Vitaly
  */
-public class CrackHistory extends SemiellipticalCrack {
+public class CrackHistory extends SemiellipticalCrack implements Serializable{
 
 //    double currentTime;
     boolean criticalCreack = false;
@@ -26,7 +28,7 @@ public class CrackHistory extends SemiellipticalCrack {
 //    }
 
     public CrackHistory(SemiellipticalCrack obj1, int timeI) {
-        super(obj1);
+//        super(obj1);
 //        currentTime = obj1.getSurfaceAreaObj().getTimeObj().getInitTime().get(timeI);
         timeIndex = timeI;
 //        if ((obj1.getLength2a() >= obj1.getSurfaceAreaObj().getMaxCrackLength()) ) {
