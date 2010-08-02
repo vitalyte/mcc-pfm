@@ -153,13 +153,13 @@ public class Simulation {
                     new FileOutputStream(filePath+timeIndx+".ser")));
             out.writeObject(ellipticalCrack);
         } catch (IOException ex) {
-            ex.printStackTrace();
+//            ex.printStackTrace();
         } finally {
             if (out != null) {
                 try {
                     out.close();
                 } catch (IOException ex) {
-                    ex.printStackTrace();
+//                    ex.printStackTrace();
                 }
             }
         }
@@ -177,15 +177,15 @@ public class Simulation {
                                        new FileInputStream(filePath+timeIndx+".ser")));
             paintedCracks = (ArrayList<SemiellipticalCrack>)in.readObject();
         } catch ( IOException ex ) {
-            ex.printStackTrace();
+//            ex.printStackTrace();
         } catch ( Exception ex ) {
-            ex.printStackTrace();
+//            ex.printStackTrace();
         } finally {
              if ( in != null )
                  try {
                      in.close();
                  } catch ( IOException ex ) {
-                     ex.printStackTrace();
+//                     ex.printStackTrace();
                  }
         }
 
