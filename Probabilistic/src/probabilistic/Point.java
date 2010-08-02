@@ -5,15 +5,23 @@
 
 package probabilistic;
 
+import java.io.Externalizable;
+import java.io.IOException;
+import java.io.ObjectInput;
+import java.io.ObjectOutput;
+import java.io.Serializable;
+
 /**
  *
  * @author Alximik
  */
-public class Point {
+public class Point implements Externalizable{
     private double x;
     private double y;
 
     public Point() {
+        x = 0;
+        y = 0;
     }
     public Point(Point p){
         this.x = p.x;
@@ -61,6 +69,19 @@ public class Point {
             left = obj2;
         }
         return left;
+    }
+
+    public void writeExternal(ObjectOutput oo) throws IOException {
+//        throw new UnsupportedOperationException("Not supported yet.");
+        oo.writeDouble(x);
+        oo.writeDouble(y);
+    }
+
+    public void readExternal(ObjectInput oi) throws IOException, ClassNotFoundException {
+//        throw new UnsupportedOperationException("Not supported yet.");
+        x= oi.readDouble();
+        y= oi.readDouble();
+
     }
 
 }

@@ -4,6 +4,14 @@
  */
 package probabilistic;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.logging.Level;
@@ -16,25 +24,23 @@ import org.apache.commons.math.ode.IntegratorException;
  * @author vitaly
  */
 public class Simulation {
+    String filePath = "."+File.separator+"Serializable"+File.separator;
 
     private boolean[][] matrix;
     private double[][] matPointsX;
     private double[][] matPointsY;
     private int seed;
     boolean filledCkracks = false;
-
     private static double maxCrackLength, visualScale,
-    parametrK, yieldStress, sigma;
-
+            parametrK, yieldStress, sigma;
     private static SurfaceArea surface;
-    
     private InitiationTime timeObj;
     private int maxTimeIndx;
     private int timeIndx = 0;
     private SemiellipticalCrack newCrack;
     private ArrayList<SemiellipticalCrack> ellipticalCrack;
     private static ArrayList<ArrayList> cracksHistoryList;
-    private ArrayList<CrackHistory> paintedCracks;
+    private ArrayList<SemiellipticalCrack> paintedCracks;
 
     public Simulation(double height, double width, double grainHeight, double grainWidth,
             double meanInitiationTime, double scaleInitiationTime, double sigma, double yieldStress, double parametrK, double maxCrackLength, double visualKValue) {
@@ -46,7 +52,7 @@ public class Simulation {
         ellipticalCrack = new ArrayList<SemiellipticalCrack>();
         cracksHistoryList = new ArrayList<ArrayList>();
         Simulation.parametrK = parametrK;
-        
+
         Simulation.maxCrackLength = maxCrackLength;
         Simulation.visualScale = visualKValue;
 
@@ -100,6 +106,7 @@ public class Simulation {
                             if (growth) {
                                 break coalescenceGrowthCycle;
                             }
+                            outputToFile(i);
                             //підростання тріщин
                             if (!growth) {
                                 try {
@@ -126,12 +133,63 @@ public class Simulation {
                         }
                         i++;
                     }
+                    outputToFile(i);
                 }
             }
             filledCkracks = true;
             maxTimeIndx = i;
         }
         getPaintedCracks(i);
+    }
+
+    /**
+     * output to file
+     */
+    private void outputToFile(int timeIndx) {
+        ObjectOutputStream out = null;
+        
+        try {
+            out = new ObjectOutputStream(new BufferedOutputStream(
+                    new FileOutputStream(filePath+timeIndx+".ser")));
+            out.writeObject(ellipticalCrack);
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        } finally {
+            if (out != null) {
+                try {
+                    out.close();
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
+            }
+        }
+
+    }
+
+
+        /**
+     * input file
+     */
+    private void inputFromFile(int timeIndx) {
+        ObjectInputStream in = null;
+        try {
+            in = new ObjectInputStream(new BufferedInputStream(
+                                       new FileInputStream(filePath+timeIndx+".ser")));
+            paintedCracks = (ArrayList<SemiellipticalCrack>)in.readObject();
+        } catch ( IOException ex ) {
+            ex.printStackTrace();
+        } catch ( Exception ex ) {
+            ex.printStackTrace();
+        } finally {
+             if ( in != null )
+                 try {
+                     in.close();
+                 } catch ( IOException ex ) {
+                     ex.printStackTrace();
+                 }
+        }
+
+
     }
 
     /**
@@ -170,7 +228,7 @@ public class Simulation {
      * Growth all cracks of ellipticalCrack List array
      *
      */
-    private void growth(int tIndx,double currentTime, double deltaT) throws DerivativeException, IntegratorException {
+    private void growth(int tIndx, double currentTime, double deltaT) throws DerivativeException, IntegratorException {
         for (int j = 0; j < ellipticalCrack.size(); j++) {
             ellipticalCrack.get(j).integrate(tIndx, currentTime, deltaT);
         }
@@ -192,27 +250,25 @@ public class Simulation {
         return false;
     }
 
-    public ArrayList<CrackHistory> getPaintedCracks(int timeIndx) {
-        ArrayList<CrackHistory> dispHistList = new ArrayList<CrackHistory>();
-        for (int i = 0; i < cracksHistoryList.size(); i++) {
-            ArrayList historyOfCrack = cracksHistoryList.get(i);
-            for (int j = 0; j < historyOfCrack.size(); j++) {
-                CrackHistory historyInstance = (CrackHistory) historyOfCrack.get(j);
-                if (timeIndx == historyInstance.getTimeIndex()) {
-                    dispHistList.add(historyInstance);
-                }
-            }
-        }
-        paintedCracks = dispHistList;
+    public ArrayList<SemiellipticalCrack> getPaintedCracks(int timeIndx) {
+//        ArrayList<CrackHistory> dispHistList = new ArrayList<CrackHistory>();
+        inputFromFile(timeIndx);
+//        for (int i = 0; i < paintedCracks.size(); i++) {
+//            ArrayList historyOfCrack = cracksHistoryList.get(i);
+//            for (int j = 0; j < historyOfCrack.size(); j++) {
+//                CrackHistory historyInstance = (CrackHistory) historyOfCrack.get(j);
+//                if (timeIndx == historyInstance.getTimeIndex()) {
+//                    dispHistList.add(historyInstance);
+//                }
+//            }
+//        }
+//        paintedCracks = dispHistList;
         return paintedCracks;
     }
 
-
-        public ArrayList<CrackHistory> getPainted() {
+    public ArrayList<SemiellipticalCrack> getPainted() {
         return paintedCracks;
     }
-
-
 
     /**
      * Get the value of newCrack
@@ -267,7 +323,6 @@ public class Simulation {
 //    public void setSurface(SurfaceArea surface) {
 //        this.surface = surface;
 //    }
-
     public double getVisualScale() {
         return visualScale;
     }
@@ -279,6 +334,7 @@ public class Simulation {
     public int getMaxTimeIndx() {
         return maxTimeIndx;
     }
+
     public String getMaxTimeIndxS() {
         return new Integer(maxTimeIndx).toString();
     }
@@ -298,8 +354,4 @@ public class Simulation {
     public static ArrayList<ArrayList> getCracksHistoryList() {
         return cracksHistoryList;
     }
-
-
-
-
 }

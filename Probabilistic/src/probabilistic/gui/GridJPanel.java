@@ -14,6 +14,7 @@ import probabilistic.CrackHistory;
 import probabilistic.SurfaceArea;
 import java.awt.Color;
 import java.awt.Graphics;
+import probabilistic.SemiellipticalCrack;
 import probabilistic.Simulation;
 //import java.util.ArrayList;
 //import java.util.Random;
@@ -74,17 +75,18 @@ public class GridJPanel extends javax.swing.JPanel {
 //            System.out.println("\n\n1");
 
             for (int i = 0; i < simulObj.getPainted().size(); i++) {
-                CrackHistory crack = simulObj.getPainted().get(i);
-                if (!crack.isCriticalCreack()) {
-                    g.setColor(Color.GREEN);
-                }
-                if (crack.isCoalescenced()) {
-                    g.setColor(Color.BLUE);
-
-                }
-                if (crack.isCriticalCreack()) {
-                    g.setColor(Color.red);
-                }
+                SemiellipticalCrack crack = simulObj.getPainted().get(i);
+//                if (!crack.isCriticalCreack()) {
+//                    g.setColor(Color.GREEN);
+//                }
+//                if (crack.isCoalescenced()) {
+//                    g.setColor(Color.BLUE);
+//
+//                }
+//                if (crack.isCriticalCreack()) {
+//                    g.setColor(Color.red);
+//                }
+                g.setColor(Color.GREEN);
 //          //                super.paintComponent(g);
 //                g.drawLine((int) (k * crack.getLeftTip().getX()), (int) (k * crack.getLeftTip().getY()),
 //                        (int) (k * crack.getRightTip().getX()), (int) (k * crack.getRightTip().getY()));
