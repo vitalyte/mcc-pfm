@@ -8,7 +8,7 @@ import java.io.Externalizable;
 import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
-import java.io.Serializable;
+//import java.io.Serializable;
 import probabilistic.integration.CrackOrderOde;
 import java.util.ArrayList;
 import org.apache.commons.math.ode.DerivativeException;
@@ -27,7 +27,7 @@ public class SemiellipticalCrack implements Externalizable {
     private double length2a;
     private double depthB;
     private double aspectRatio;
-    private Point crackPoint;
+//    private Point crackPoint;
 //    private Point leftTip;
 //    private Point rightTip;
     private ArrayList<Point> crackTip;
@@ -36,15 +36,22 @@ public class SemiellipticalCrack implements Externalizable {
 //    private ArrayList<CrackHistory> historyOfCrack;
 
     public SemiellipticalCrack() {
-        this(0, 0, 0, 0, 0);
-
+        this(0, 0, 0, new ArrayList<Point>());
     }
+
+    public SemiellipticalCrack(double length2a, double depthB, double aspectRatio, ArrayList<Point> crackTip) {
+        this.length2a = length2a;
+        this.depthB = depthB;
+        this.aspectRatio = aspectRatio;
+        this.crackTip = crackTip;
+    }
+
 
     public SemiellipticalCrack(double pointX, double pointY,
             double length2a, double depthB, int timeIndex) {
-//        this();
         crackTip = new ArrayList<Point>();
-        crackPoint = new Point(pointX, pointY);
+
+        Point crackPoint = new Point(pointX, pointY);
         crackTip.add(new Point((crackPoint.getX() - length2a / 2), crackPoint.getY()));
         crackTip.add(new Point((crackPoint.getX() + length2a / 2), crackPoint.getY()));
 //        crackTip.add(leftTip);
@@ -63,9 +70,8 @@ public class SemiellipticalCrack implements Externalizable {
 
     public SemiellipticalCrack(SemiellipticalCrack obj1, SemiellipticalCrack obj2, int timeIndex) {
 //        this();
-        crackTip = new ArrayList<Point>();
-        crackTip = new ArrayList<Point>();
-        crackTip.addAll(obj1.getCrackTip());
+//        crackTip = new ArrayList<Point>()
+        crackTip = obj1.getCrackTip();
         crackTip.addAll(obj2.getCrackTip());
 //        leftTip = crackTip.get(0);
 //        rightTip = crackTip.get(crackTip.size() - 1);
@@ -280,13 +286,13 @@ public class SemiellipticalCrack implements Externalizable {
         return length2a;
     }
 
-    public Point getCrackPoint() {
-        return crackPoint;
-    }
-
-    public void setCrackPoint(Point crackPoint) {
-        this.crackPoint = crackPoint;
-    }
+//    public Point getCrackPoint() {
+//        return crackPoint;
+//    }
+//
+//    public void setCrackPoint(Point crackPoint) {
+//        this.crackPoint = crackPoint;
+//    }
 //
 //    public int getTimeIndex() {
 //        return timeIndex;
@@ -295,13 +301,12 @@ public class SemiellipticalCrack implements Externalizable {
 //    public void setTimeIndex(int timeIndex) {
 //        this.timeIndex = timeIndex;
 //    }
-
     public Point getLeftTip() {
         return crackTip.get(0);
     }
 
     public Point getRightTip() {
-        return crackTip.get(crackTip.size()-1);
+        return crackTip.get(crackTip.size() - 1);
     }
 //
 //    public double getSigma() {
