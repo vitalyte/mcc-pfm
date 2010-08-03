@@ -76,17 +76,18 @@ public class GridJPanel extends javax.swing.JPanel {
 
             for (int i = 0; i < simulObj.getPainted().size(); i++) {
                 SemiellipticalCrack crack = simulObj.getPainted().get(i);
+                g.setColor(Color.GREEN);
 //                if (!crack.isCriticalCreack()) {
 //                    g.setColor(Color.GREEN);
 //                }
-//                if (crack.isCoalescenced()) {
-//                    g.setColor(Color.BLUE);
-//
-//                }
-//                if (crack.isCriticalCreack()) {
-//                    g.setColor(Color.red);
-//                }
-                g.setColor(Color.GREEN);
+                if (crack.isCoalescenced()) {
+                    g.setColor(Color.BLUE);
+
+                }
+                if (crack.isMaxLength()) {
+                    g.setColor(Color.red);
+                }
+
 //          //                super.paintComponent(g);
 //                g.drawLine((int) (k * crack.getLeftTip().getX()), (int) (k * crack.getLeftTip().getY()),
 //                        (int) (k * crack.getRightTip().getX()), (int) (k * crack.getRightTip().getY()));
@@ -120,7 +121,6 @@ public class GridJPanel extends javax.swing.JPanel {
     public void setSimulObj(Simulation simulObj) {
         this.simulObj = simulObj;
     }
-
 
     public SurfaceArea getSurface() {
         return simulObj.getSurface();

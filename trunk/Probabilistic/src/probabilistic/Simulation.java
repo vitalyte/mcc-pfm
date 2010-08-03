@@ -24,8 +24,8 @@ import org.apache.commons.math.ode.IntegratorException;
  * @author vitaly
  */
 public class Simulation {
-    String filePath = "."+File.separator+"Serializable"+File.separator;
 
+    String filePath = "." + File.separator + "Serializable" + File.separator;
     private boolean[][] matrix;
     private double[][] matPointsX;
     private double[][] matPointsY;
@@ -104,9 +104,24 @@ public class Simulation {
                             //об’єднання тріщин
                             coalescence(i);
                             if (growth) {
+                                boolean maxLengthCondition = false;
+                                for (int j = 0; j < ellipticalCrack.size(); j++) {
+                                    if (ellipticalCrack.get(j).getLength2a() >= maxCrackLength) {
+                                        maxLengthCondition = true;
+                                        ellipticalCrack.get(j).setMaxLength(true);
+                                    }
+                                }
+
+                                outputToFile(i);
+                                if (maxLengthCondition) {
+                                    maxTimeIndx = i;
+                                    break exitMaxCondition;
+                                }
                                 break coalescenceGrowthCycle;
+
+
                             }
-                            outputToFile(i);
+
                             //підростання тріщин
                             if (!growth) {
                                 try {
@@ -120,76 +135,17 @@ public class Simulation {
                             growth = true;
 //                            iCoalescenceGrowth++;
                         }
-                        boolean maxLengthCondition = false;
-//                        for (int j = 0; j < ellipticalCrack.size(); j++) {
-//                            if (ellipticalCrack.get(j).getLength2a() >= maxCrackLength) {
-//                                maxLengthCondition = true;
-////                                ellipticalCrack.get(j).setMaxLength(true);
-//                            }
-//                        }
-                        if (maxLengthCondition) {
-                            maxTimeIndx = i;
-                            break exitMaxCondition;
-                        }
+
                         i++;
                     }
-                    outputToFile(i);
+
                 }
+                outputToFile(i);
             }
             filledCkracks = true;
             maxTimeIndx = i;
         }
         getPaintedCracks(i);
-    }
-
-    /**
-     * output to file
-     */
-    private void outputToFile(int timeIndx) {
-        ObjectOutputStream out = null;
-        
-        try {
-            out = new ObjectOutputStream(new BufferedOutputStream(
-                    new FileOutputStream(filePath+timeIndx+".ser")));
-            out.writeObject(ellipticalCrack);
-        } catch (IOException ex) {
-//            ex.printStackTrace();
-        } finally {
-            if (out != null) {
-                try {
-                    out.close();
-                } catch (IOException ex) {
-//                    ex.printStackTrace();
-                }
-            }
-        }
-
-    }
-
-
-        /**
-     * input file
-     */
-    private void inputFromFile(int timeIndx) {
-        ObjectInputStream in = null;
-        try {
-            in = new ObjectInputStream(new BufferedInputStream(
-                                       new FileInputStream(filePath+timeIndx+".ser")));
-            paintedCracks = (ArrayList<SemiellipticalCrack>)in.readObject();
-        } catch ( IOException ex ) {
-//            ex.printStackTrace();
-        } catch ( Exception ex ) {
-//            ex.printStackTrace();
-        } finally {
-             if ( in != null )
-                 try {
-                     in.close();
-                 } catch ( IOException ex ) {
-//                     ex.printStackTrace();
-                 }
-        }
-
-
     }
 
     /**
@@ -253,17 +209,57 @@ public class Simulation {
     public ArrayList<SemiellipticalCrack> getPaintedCracks(int timeIndx) {
 //        ArrayList<CrackHistory> dispHistList = new ArrayList<CrackHistory>();
         inputFromFile(timeIndx);
-//        for (int i = 0; i < paintedCracks.size(); i++) {
-//            ArrayList historyOfCrack = cracksHistoryList.get(i);
-//            for (int j = 0; j < historyOfCrack.size(); j++) {
-//                CrackHistory historyInstance = (CrackHistory) historyOfCrack.get(j);
-//                if (timeIndx == historyInstance.getTimeIndex()) {
-//                    dispHistList.add(historyInstance);
-//                }
-//            }
-//        }
-//        paintedCracks = dispHistList;
         return paintedCracks;
+    }
+
+    /**
+     * output to file
+     */
+    private void outputToFile(int timeIndx) {
+        ObjectOutputStream out = null;
+
+        try {
+            out = new ObjectOutputStream(new BufferedOutputStream(
+                    new FileOutputStream(filePath + timeIndx + ".ser")));
+            out.writeObject(ellipticalCrack);
+        } catch (IOException ex) {
+//            ex.printStackTrace();
+        } finally {
+            if (out != null) {
+                try {
+                    out.close();
+                } catch (IOException ex) {
+//                    ex.printStackTrace();
+                }
+            }
+        }
+
+    }
+
+    /**
+     * input file
+     */
+    private void inputFromFile(int timeIndx) {
+        ObjectInputStream in = null;
+        try {
+            in = new ObjectInputStream(new BufferedInputStream(
+                    new FileInputStream(filePath + timeIndx + ".ser")));
+            paintedCracks = (ArrayList<SemiellipticalCrack>) in.readObject();
+        } catch (IOException ex) {
+//            ex.printStackTrace();
+        } catch (Exception ex) {
+//            ex.printStackTrace();
+        } finally {
+            if (in != null) {
+                try {
+                    in.close();
+                } catch (IOException ex) {
+//                     ex.printStackTrace();
+                }
+            }
+        }
+
+
     }
 
     public ArrayList<SemiellipticalCrack> getPainted() {
