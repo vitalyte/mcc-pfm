@@ -129,7 +129,7 @@ public class Simulation {
                         coalescenceGrowthCycle:
                         while (true) {
                             //об’єднання тріщин
-//                            coalescence(i);
+                            coalescence(i);
                             if (growth) {
 
                                 if (maxLengthCondition) {
@@ -157,11 +157,11 @@ public class Simulation {
                         step++;
                     }
 
-                }
-                outputToFile(i);
+                }                
             }
             filledCkracks = true;
             maxTimeIndx = i;
+            outputToFile(i);
         }
         getPaintedCracks(i);
     }
