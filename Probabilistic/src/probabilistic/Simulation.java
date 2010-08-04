@@ -25,7 +25,8 @@ import org.apache.commons.math.ode.IntegratorException;
  */
 public class Simulation {
 
-    String filePath = "." + File.separator + "Serializable" + File.separator;
+    String path;
+    String filePath;
     private boolean[][] matrix;
     private double[][] matPointsX;
     private double[][] matPointsY;
@@ -41,6 +42,8 @@ public class Simulation {
     private ArrayList<SemiellipticalCrack> ellipticalCrack;
     private static ArrayList<ArrayList> cracksHistoryList;
     private ArrayList<SemiellipticalCrack> paintedCracks;
+    private static boolean maxLengthCondition;
+    private static String histFolder = "Serializable";
 
     public Simulation(double height, double width, double grainHeight, double grainWidth,
             double meanInitiationTime, double scaleInitiationTime, double sigma, double yieldStress, double parametrK, double maxCrackLength, double visualKValue) {
@@ -55,6 +58,24 @@ public class Simulation {
 
         Simulation.maxCrackLength = maxCrackLength;
         Simulation.visualScale = visualKValue;
+        maxLengthCondition = false;
+        try {
+            path = new java.io.File(".").getCanonicalPath();
+        } catch (IOException ex) {
+            Logger.getLogger(Simulation.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        File folder = new File(".." + File.separator + histFolder);
+        folder.mkdir();
+        filePath = ".." + File.separator + histFolder + File.separator;
+        File[] files = folder.listFiles();
+        for (File file : files) {
+            // Delete each file
+            if (!file.delete()) {
+                // Failed to delete file
+                System.out.println("Failed to delete " + file);
+            }
+        }
+
 
     }
 
@@ -76,6 +97,7 @@ public class Simulation {
             double depthMean, double depthScale) {
 //        boolean filledCkracks = false;
         int i = 0;
+        int step = 0;
         if (isFilledCkracks() == false) {
             exitMaxCondition:
             {
@@ -90,6 +112,12 @@ public class Simulation {
                     if (isSquareEmpty(matrix, rndI, rndJ)) {
 //                         точку кинули в порожню клітину
                         generNewCrack(i, rndX, rndY, rndI, rndJ, length2AMean, length2AScale, depthMean, depthScale);
+                        //Serialization
+                        if (step == 99) {
+                            outputToFile(i);
+                            step = 0;
+                        }
+
                         double currentTime = timeObj.getInitTime().get(i);
                         if (i == timeObj.getInitTime().size()) {
                             break exitMaxCondition;
@@ -100,43 +128,33 @@ public class Simulation {
 //                        int iCoalescenceGrowth = 0;
                         coalescenceGrowthCycle:
                         while (true) {
-
                             //об’єднання тріщин
-                            coalescence(i);
+//                            coalescence(i);
                             if (growth) {
-                                boolean maxLengthCondition = false;
-                                for (int j = 0; j < ellipticalCrack.size(); j++) {
-                                    if (ellipticalCrack.get(j).getLength2a() >= maxCrackLength) {
-                                        maxLengthCondition = true;
-                                        ellipticalCrack.get(j).setMaxLength(true);
-                                    }
-                                }
 
-                                outputToFile(i);
                                 if (maxLengthCondition) {
                                     maxTimeIndx = i;
                                     break exitMaxCondition;
                                 }
                                 break coalescenceGrowthCycle;
-
-
                             }
 
                             //підростання тріщин
-                            if (!growth) {
-                                try {
-                                    growth(i, currentTime, deltaT);
-                                } catch (DerivativeException ex) {
-                                    Logger.getLogger(Simulation.class.getName()).log(Level.SEVERE, null, ex);
-                                } catch (IntegratorException ex) {
-                                    Logger.getLogger(Simulation.class.getName()).log(Level.SEVERE, null, ex);
-                                }
-                            }
+//                            if (!growth) {
+//                                try {
+//                                    growth(i, currentTime, deltaT);
+//                                } catch (DerivativeException ex) {
+//                                    Logger.getLogger(Simulation.class.getName()).log(Level.SEVERE, null, ex);
+//                                } catch (IntegratorException ex) {
+//                                    Logger.getLogger(Simulation.class.getName()).log(Level.SEVERE, null, ex);
+//                                }
+//                            }
                             growth = true;
 //                            iCoalescenceGrowth++;
                         }
 
                         i++;
+                        step++;
                     }
 
                 }
@@ -161,7 +179,18 @@ public class Simulation {
         //потягнути з панелі
         double length2A = NormalDistribution.PPF(RNG.Ran2(seed), length2AMean, length2AScale);
         double depth = NormalDistribution.PPF(RNG.Ran2(seed), depthMean, depthScale);
-        newCrack = new SemiellipticalCrack(rndX, rndY, length2A, depth, i);
+        double lX = rndX - length2A / 2;
+        double rX = rndX + length2A / 2;
+        if (lX < 0) {
+            lX = 0;
+        }
+        if (rX > surface.getWidth()) {
+            rX = surface.getWidth();
+        }
+        Point lPoint = new Point(lX, rndY);
+        Point rPoint = new Point(rX, rndY);
+        Point[] lrPoint = {lPoint, rPoint};
+        newCrack = new SemiellipticalCrack(lrPoint, depth, i);
         ellipticalCrack.add(newCrack);
     }
 
@@ -219,8 +248,9 @@ public class Simulation {
         ObjectOutputStream out = null;
 
         try {
-            out = new ObjectOutputStream(new BufferedOutputStream(
-                    new FileOutputStream(filePath + timeIndx + ".ser")));
+            out = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(filePath + timeIndx + ".ser"), Const.BUFFER_SIZE));
+//            out = new ObjectOutputStream(
+//                    new FileOutputStream(filePath + timeIndx + ".ser"));
             out.writeObject(ellipticalCrack);
         } catch (IOException ex) {
 //            ex.printStackTrace();
@@ -349,5 +379,17 @@ public class Simulation {
 
     public static ArrayList<ArrayList> getCracksHistoryList() {
         return cracksHistoryList;
+    }
+
+    public static boolean isMaxLengthCondition() {
+        return maxLengthCondition;
+    }
+
+    public static void setMaxLengthCondition(boolean maxLengthCondition) {
+        Simulation.maxLengthCondition = maxLengthCondition;
+    }
+
+    public static double getMaxCrackLength() {
+        return maxCrackLength;
     }
 }

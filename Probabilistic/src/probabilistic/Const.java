@@ -27,4 +27,6 @@ public class Const {
     public static final double k1_B_b0 = 1.15713;
     public static final double k1_B_b1 = -0.7302;
     public static final double k1_B_b2 = 0.20827;
+
+    public static final int BUFFER_SIZE = 6000*1024;
 }

@@ -80,11 +80,11 @@ public class GridJPanel extends javax.swing.JPanel {
 //                if (!crack.isCriticalCreack()) {
 //                    g.setColor(Color.GREEN);
 //                }
-                if (crack.isCoalescenced()) {
+                if (crack.getCrackTip().size() >2) {
                     g.setColor(Color.BLUE);
 
                 }
-                if (crack.isMaxLength()) {
+                if (crack.checkMaxCondition()) {
                     g.setColor(Color.red);
                 }
 
