@@ -96,7 +96,7 @@ public class Simulation {
     }
 
     public void FillRandomCracks(double length2AMean, double length2AScale,
-            double depthMean, double depthScale) {
+            double depthMean, double depthScale, double aspectRatio) {
 //        boolean filledCkracks = false;
         int i = 0;
         int step = 0;
@@ -113,7 +113,7 @@ public class Simulation {
                     double deltaT;
                     if (isSquareEmpty(matrix, rndI, rndJ)) {
 //                         точку кинули в порожню клітину
-                        generNewCrack(i, rndX, rndY, rndI, rndJ, length2AMean, length2AScale, depthMean, depthScale);
+                        generNewCrack(i, rndX, rndY, rndI, rndJ, length2AMean, length2AScale, depthMean, depthScale,aspectRatio);
                         //Serialization
                         if (step == 99) {
                             outputToFile(i);
@@ -142,15 +142,15 @@ public class Simulation {
                             }
 
                             //підростання тріщин
-//                            if (!growth) {
-//                                try {
-//                                    growth(i, currentTime, deltaT);
-//                                } catch (DerivativeException ex) {
-//                                    Logger.getLogger(Simulation.class.getName()).log(Level.SEVERE, null, ex);
-//                                } catch (IntegratorException ex) {
-//                                    Logger.getLogger(Simulation.class.getName()).log(Level.SEVERE, null, ex);
-//                                }
-//                            }
+                            if (!growth) {
+                                try {
+                                    growth(i, currentTime, deltaT);
+                                } catch (DerivativeException ex) {
+                                    Logger.getLogger(Simulation.class.getName()).log(Level.SEVERE, null, ex);
+                                } catch (IntegratorException ex) {
+                                    Logger.getLogger(Simulation.class.getName()).log(Level.SEVERE, null, ex);
+                                }
+                            }
                             growth = true;
 //                            iCoalescenceGrowth++;
                         }
@@ -174,13 +174,15 @@ public class Simulation {
      *
      */
     private void generNewCrack(int i, double rndX, double rndY, int rndI, int rndJ, double length2AMean, double length2AScale,
-            double depthMean, double depthScale) {
+            double depthMean, double depthScale, double aspectRatio) {
         matPointsX[rndI][rndJ] = rndX;
         matPointsY[rndI][rndJ] = rndY;
         matrix[rndI][rndJ] = true;
         //потягнути з панелі
         double length2A = NormalDistribution.PPF(RNG.Ran2(seed), length2AMean, length2AScale);
-        double depth = NormalDistribution.PPF(RNG.Ran2(seed), depthMean, depthScale);
+        double depth = 0;
+        
+        
         double lX = rndX - length2A / 2;
         double rX = rndX + length2A / 2;
         if (lX < 0) {
@@ -193,6 +195,13 @@ public class Simulation {
         Point rPoint = new Point(rX, rndY);
         Point[] lrPoint = {lPoint, rPoint};
         newCrack = new SemiellipticalCrack(lrPoint, depth, i);
+        if (aspectRatio > 0){
+            newCrack.setAspectRatio(aspectRatio);
+        }else{
+            depth = NormalDistribution.PPF(RNG.Ran2(seed), depthMean, depthScale);
+            newCrack.setDepthB(depth);
+        }
+        
         ellipticalCrack.add(newCrack);
     }
 

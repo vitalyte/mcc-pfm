@@ -12,7 +12,6 @@ of stainless steel in high temperature water
  */
 package probabilistic.gui;
 
-
 import probabilistic.Simulation;
 
 /**
@@ -39,6 +38,7 @@ public class ProbabilisticGUI extends javax.swing.JFrame {
     int visualKValue;
     double maxCrackLength;
     int timeIndexMax;
+    double aspectRatio;
 
     /** Creates new form ProbabilisticGUI */
     public ProbabilisticGUI() {
@@ -85,24 +85,6 @@ public class ProbabilisticGUI extends javax.swing.JFrame {
         jLabel16 = new javax.swing.JLabel();
         jLabel30 = new javax.swing.JLabel();
         jLabel32 = new javax.swing.JLabel();
-        Crack = new javax.swing.JPanel();
-        jLabel11 = new javax.swing.JLabel();
-        crackDepthMean = new javax.swing.JTextField();
-        jLabel8 = new javax.swing.JLabel();
-        dethjLabel = new javax.swing.JLabel();
-        crackLengthSkale = new javax.swing.JTextField();
-        jLabel2 = new javax.swing.JLabel();
-        lengthjLabel = new javax.swing.JLabel();
-        jLabel9 = new javax.swing.JLabel();
-        crackLengthMean = new javax.swing.JTextField();
-        jLabel10 = new javax.swing.JLabel();
-        crackDepthSkale = new javax.swing.JTextField();
-        jLabel14 = new javax.swing.JLabel();
-        jLabel15 = new javax.swing.JLabel();
-        jLabel33 = new javax.swing.JLabel();
-        jLabel34 = new javax.swing.JLabel();
-        jLabel35 = new javax.swing.JLabel();
-        jLabel36 = new javax.swing.JLabel();
         jPanel1 = new javax.swing.JPanel();
         jLabel18 = new javax.swing.JLabel();
         sigma = new javax.swing.JTextField();
@@ -122,6 +104,26 @@ public class ProbabilisticGUI extends javax.swing.JFrame {
         timeValue = new javax.swing.JLabel();
         jLabel31 = new javax.swing.JLabel();
         jSeparator1 = new javax.swing.JSeparator();
+        Crack = new javax.swing.JPanel();
+        jLabel11 = new javax.swing.JLabel();
+        crackDepthMean = new javax.swing.JTextField();
+        jLabel8 = new javax.swing.JLabel();
+        dethjLabel = new javax.swing.JLabel();
+        crackLengthSkale = new javax.swing.JTextField();
+        jLabel2 = new javax.swing.JLabel();
+        lengthjLabel = new javax.swing.JLabel();
+        jLabel9 = new javax.swing.JLabel();
+        crackLengthMean = new javax.swing.JTextField();
+        jLabel10 = new javax.swing.JLabel();
+        crackDepthSkale = new javax.swing.JTextField();
+        jLabel14 = new javax.swing.JLabel();
+        jLabel15 = new javax.swing.JLabel();
+        jLabel33 = new javax.swing.JLabel();
+        jLabel34 = new javax.swing.JLabel();
+        jLabel35 = new javax.swing.JLabel();
+        jLabel36 = new javax.swing.JLabel();
+        jLabel37 = new javax.swing.JLabel();
+        jTextFieldAspectRatio = new javax.swing.JTextField();
         submitCrack1 = new javax.swing.JButton();
         jInternalFrame1 = new javax.swing.JInternalFrame();
         gridJPanel1 = new probabilistic.gui.GridJPanel();
@@ -377,137 +379,6 @@ public class ProbabilisticGUI extends javax.swing.JFrame {
 
         Geometry.addTab("Time", Time);
 
-        jLabel11.setText("Scale:");
-
-        crackDepthMean.setText("0.08");
-        crackDepthMean.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                crackDepthMeanActionPerformed(evt);
-            }
-        });
-
-        jLabel8.setText("Mean:");
-
-        dethjLabel.setText("Depth:");
-
-        crackLengthSkale.setText("0.03");
-        crackLengthSkale.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                crackLengthSkaleActionPerformed(evt);
-            }
-        });
-
-        jLabel2.setFont(new java.awt.Font("Tahoma", 1, 11));
-        jLabel2.setText("Crack");
-
-        lengthjLabel.setText("Length:");
-
-        jLabel9.setText("Scale:");
-
-        crackLengthMean.setText("0.08");
-        crackLengthMean.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                crackLengthMeanActionPerformed(evt);
-            }
-        });
-
-        jLabel10.setText("Mean:");
-
-        crackDepthSkale.setText("0.03");
-        crackDepthSkale.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                crackDepthSkaleActionPerformed(evt);
-            }
-        });
-
-        jLabel14.setText("Normal distribution");
-
-        jLabel15.setText("Normal distribution");
-
-        jLabel33.setText("mm");
-
-        jLabel34.setText("mm");
-
-        jLabel35.setText("mm");
-
-        jLabel36.setText("mm");
-
-        javax.swing.GroupLayout CrackLayout = new javax.swing.GroupLayout(Crack);
-        Crack.setLayout(CrackLayout);
-        CrackLayout.setHorizontalGroup(
-            CrackLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(CrackLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(CrackLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jLabel2)
-                    .addGroup(CrackLayout.createSequentialGroup()
-                        .addGap(10, 10, 10)
-                        .addGroup(CrackLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(dethjLabel)
-                            .addComponent(lengthjLabel)))
-                    .addGroup(CrackLayout.createSequentialGroup()
-                        .addGroup(CrackLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabel11)
-                            .addGroup(CrackLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(jLabel8)
-                                .addGroup(CrackLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(jLabel10)
-                                    .addComponent(jLabel9))))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(CrackLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(crackDepthSkale)
-                            .addComponent(crackDepthMean)
-                            .addComponent(crackLengthSkale)
-                            .addComponent(crackLengthMean, javax.swing.GroupLayout.DEFAULT_SIZE, 80, Short.MAX_VALUE))))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(CrackLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(CrackLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                        .addComponent(jLabel14)
-                        .addComponent(jLabel15))
-                    .addComponent(jLabel33)
-                    .addComponent(jLabel34)
-                    .addComponent(jLabel35)
-                    .addComponent(jLabel36))
-                .addGap(92, 92, 92))
-        );
-        CrackLayout.setVerticalGroup(
-            CrackLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(CrackLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel2)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(CrackLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lengthjLabel)
-                    .addComponent(jLabel14))
-                .addGap(8, 8, 8)
-                .addGroup(CrackLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(crackLengthMean, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel8)
-                    .addComponent(jLabel33))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(CrackLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel9)
-                    .addComponent(crackLengthSkale, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel34))
-                .addGap(18, 18, 18)
-                .addGroup(CrackLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(dethjLabel)
-                    .addComponent(jLabel15))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(CrackLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel10)
-                    .addComponent(crackDepthMean, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel35))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(CrackLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel11)
-                    .addComponent(crackDepthSkale, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel36))
-                .addContainerGap(136, Short.MAX_VALUE))
-        );
-
-        Geometry.addTab("Crack", Crack);
-
         jLabel18.setText("Stress (sigma):");
 
         sigma.setText("200");
@@ -670,6 +541,157 @@ public class ProbabilisticGUI extends javax.swing.JFrame {
 
         Geometry.addTab("History", jPanel3);
 
+        jLabel11.setText("Scale:");
+
+        crackDepthMean.setEditable(false);
+        crackDepthMean.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                crackDepthMeanActionPerformed(evt);
+            }
+        });
+
+        jLabel8.setText("Mean:");
+
+        dethjLabel.setText("Depth b:");
+
+        crackLengthSkale.setText("0.03");
+        crackLengthSkale.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                crackLengthSkaleActionPerformed(evt);
+            }
+        });
+
+        jLabel2.setFont(new java.awt.Font("Tahoma", 1, 11));
+        jLabel2.setText("Crack");
+
+        lengthjLabel.setText("Length 2a:");
+
+        jLabel9.setText("Scale:");
+
+        crackLengthMean.setText("0.08");
+        crackLengthMean.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                crackLengthMeanActionPerformed(evt);
+            }
+        });
+
+        jLabel10.setText("Mean:");
+
+        crackDepthSkale.setEditable(false);
+        crackDepthSkale.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                crackDepthSkaleActionPerformed(evt);
+            }
+        });
+
+        jLabel14.setText("Normal distribution");
+
+        jLabel15.setText("Normal distribution");
+
+        jLabel33.setText("mm");
+
+        jLabel34.setText("mm");
+
+        jLabel35.setText("mm");
+
+        jLabel36.setText("mm");
+
+        jLabel37.setText("Aspect ratio b/a:");
+
+        jTextFieldAspectRatio.setText("1");
+
+        javax.swing.GroupLayout CrackLayout = new javax.swing.GroupLayout(Crack);
+        Crack.setLayout(CrackLayout);
+        CrackLayout.setHorizontalGroup(
+            CrackLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(CrackLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(CrackLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(CrackLayout.createSequentialGroup()
+                        .addGroup(CrackLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jLabel2)
+                            .addGroup(CrackLayout.createSequentialGroup()
+                                .addGap(10, 10, 10)
+                                .addComponent(lengthjLabel))
+                            .addGroup(CrackLayout.createSequentialGroup()
+                                .addGroup(CrackLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel8)
+                                    .addGroup(CrackLayout.createSequentialGroup()
+                                        .addGap(1, 1, 1)
+                                        .addComponent(jLabel9)))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(CrackLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(crackLengthSkale)
+                                    .addComponent(crackLengthMean, javax.swing.GroupLayout.DEFAULT_SIZE, 80, Short.MAX_VALUE)
+                                    .addComponent(jTextFieldAspectRatio, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(CrackLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel14)
+                            .addComponent(jLabel33)
+                            .addComponent(jLabel34)))
+                    .addGroup(CrackLayout.createSequentialGroup()
+                        .addGroup(CrackLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addGroup(CrackLayout.createSequentialGroup()
+                                .addGap(10, 10, 10)
+                                .addComponent(dethjLabel))
+                            .addGroup(CrackLayout.createSequentialGroup()
+                                .addGroup(CrackLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(jLabel11)
+                                    .addComponent(jLabel10))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(CrackLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(crackDepthSkale)
+                                    .addComponent(crackDepthMean, javax.swing.GroupLayout.DEFAULT_SIZE, 76, Short.MAX_VALUE))))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(CrackLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel15)
+                            .addComponent(jLabel35)
+                            .addComponent(jLabel36)))
+                    .addComponent(jLabel37))
+                .addContainerGap(37, Short.MAX_VALUE))
+        );
+        CrackLayout.setVerticalGroup(
+            CrackLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(CrackLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel2)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(CrackLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lengthjLabel)
+                    .addComponent(jLabel14))
+                .addGap(8, 8, 8)
+                .addGroup(CrackLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(crackLengthMean, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel8)
+                    .addComponent(jLabel33))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(CrackLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel9)
+                    .addComponent(crackLengthSkale, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel34))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jLabel37)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jTextFieldAspectRatio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 21, Short.MAX_VALUE)
+                .addGroup(CrackLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(dethjLabel)
+                    .addComponent(jLabel15))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(CrackLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel10)
+                    .addComponent(crackDepthMean, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel35))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(CrackLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel11)
+                    .addComponent(crackDepthSkale, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel36))
+                .addGap(73, 73, 73))
+        );
+
+        Geometry.addTab("Crack", Crack);
+
         submitCrack1.setText("submit");
         submitCrack1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -717,7 +739,7 @@ public class ProbabilisticGUI extends javax.swing.JFrame {
                 .addComponent(surfaceGeometry)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(gridJPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(83, Short.MAX_VALUE))
+                .addContainerGap(163, Short.MAX_VALUE))
         );
 
         fileMenu.setText("File");
@@ -948,6 +970,7 @@ public class ProbabilisticGUI extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel34;
     private javax.swing.JLabel jLabel35;
     private javax.swing.JLabel jLabel36;
+    private javax.swing.JLabel jLabel37;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
@@ -958,6 +981,7 @@ public class ProbabilisticGUI extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JSeparator jSeparator1;
+    private javax.swing.JTextField jTextFieldAspectRatio;
     private javax.swing.JLabel lengthjLabel;
     private javax.swing.JTextField maxLength;
     private javax.swing.JLabel maxTIndex;
@@ -992,20 +1016,28 @@ public class ProbabilisticGUI extends javax.swing.JFrame {
         timeScaleValue = Double.parseDouble(timeScale.getText()) * E10P6;
         lengthMean = Double.parseDouble(crackLengthMean.getText()) * E10P_3;
         lengthScale = Double.parseDouble(crackLengthSkale.getText()) * E10P_3;
-        depthMean = Double.parseDouble(crackDepthMean.getText()) * E10P_3;
-        depthScale = Double.parseDouble(crackDepthSkale.getText()) * E10P_3;
-        valueParametrK = Double.parseDouble(parametrK.getText()) ;
+        try {
+            depthMean = Double.parseDouble(crackDepthMean.getText()) * E10P_3;
+            depthScale = Double.parseDouble(crackDepthSkale.getText()) * E10P_3;
+        } catch (Exception e) {
+        }
+
+        valueParametrK = Double.parseDouble(parametrK.getText());
         valueYieldStress = Double.parseDouble(yieldStress.getText()) * E10P6;
-        valueSigma = Double.parseDouble(sigma.getText())* E10P6;
-//        surfaceObj = new SurfaceArea(HeightValue, WidthValue, gHeightValue, gWidthValue, timeMeanValue, timeScaleValue, valueSigma, valueYieldStress, valueParametrK);
-//        surfaceObj.setVisualKValue(visualKValue);
-//        surfaceObj.setMaxCrackLength(maxCrackLength);
+        valueSigma = Double.parseDouble(sigma.getText()) * E10P6;
+        try {
+            aspectRatio = Double.parseDouble(jTextFieldAspectRatio.getText());
+        } catch (Exception e) {
+        }
+
+
+
         simuleObj = new Simulation(HeightValue, WidthValue, gHeightValue,
                 gWidthValue, timeMeanValue, timeScaleValue, valueSigma,
                 valueYieldStress, valueParametrK, maxCrackLength, visualKValue);
-        
-            simuleObj.FillRandomCracks(lengthMean, lengthScale, depthMean, depthScale);
-        
+
+        simuleObj.FillRandomCracks(lengthMean, lengthScale, depthMean, depthScale, aspectRatio);
+
 
         gridJPanel1.setSimulObj(simuleObj);
         gridJPanel1.paintComponent(gridJPanel1.getGraphics());
@@ -1013,7 +1045,7 @@ public class ProbabilisticGUI extends javax.swing.JFrame {
 
         surfaceGeometry.setText("hxw surface=" + gridJPanel1.getSurface().getHeight() + "x"
                 + gridJPanel1.getSurface().getWidth() + " " + "grain=" + gridJPanel1.getSurface().getGrainHeight() + "x"
-                + gridJPanel1.getSurface().getGrainWidth()+" Nmax ="+gridJPanel1.getSurface().getNmax());
+                + gridJPanel1.getSurface().getGrainWidth() + " Nmax =" + gridJPanel1.getSurface().getNmax());
 
 //            for (int i = 0; i < gridJPanel1.getSurface().getEllipticalCrack().size(); i++) {
 //                SemiellipticalCrack crack = gridJPanel1.getSurface().getEllipticalCrack().get(i);
