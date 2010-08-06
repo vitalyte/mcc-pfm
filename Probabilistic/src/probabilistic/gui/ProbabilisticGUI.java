@@ -12,7 +12,7 @@ of stainless steel in high temperature water
  */
 package probabilistic.gui;
 
-import probabilistic.SurfaceArea;
+
 import probabilistic.Simulation;
 
 /**
