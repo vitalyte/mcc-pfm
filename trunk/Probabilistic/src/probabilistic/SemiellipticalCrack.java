@@ -43,7 +43,7 @@ public class SemiellipticalCrack implements Externalizable {
         crackTip.add(lrPoint[0]);
         crackTip.add(lrPoint[1]);
         this.depthB = depthB;
-        aspectRatio = depthB / this.getLength2a() / 2;
+        aspectRatio = depthB / (this.getLength2a() / 2);
     }
 
     public SemiellipticalCrack(SemiellipticalCrack obj1, SemiellipticalCrack obj2, int timeIndex) {
@@ -51,7 +51,7 @@ public class SemiellipticalCrack implements Externalizable {
         crackTip = obj1.getCrackTip();
         crackTip.addAll(obj2.getCrackTip());
         this.depthB = Math.max(obj1.getDepthB(), obj2.getDepthB());
-        aspectRatio = depthB / this.getLength2a() / 2;
+        aspectRatio = depthB / (this.getLength2a() / 2);
         this.checkMaxCondition();
 
     }
@@ -97,7 +97,7 @@ public class SemiellipticalCrack implements Externalizable {
     public boolean integrate(int tIndx, double currentTime, double deltaT) throws DerivativeException, IntegratorException {
 //        this.timeIndx = tIndx;
         boolean result = true;
-        double beforeGrowthLength = this.getLength2a();
+        double beforeGrowthLength_a = this.getLength2a()/2;
         double beforeGrowthDepth = depthB;
 //        double maxStep = deltaT;
 //        deltaT = 1.0e-4;
@@ -105,7 +105,7 @@ public class SemiellipticalCrack implements Externalizable {
         FirstOrderIntegrator dp54 = new DormandPrince54Integrator(deltaT * 0.1, deltaT, 1.0e-10, 1.0e-10);
 //        FirstOrderIntegrator dp853 = new DormandPrince54Integrator(1.0e-8, 100.0, 1.0e-10, 1.0e-10);
         FirstOrderDifferentialEquations ode = new CrackOrderOde(Const.k1SCC, this);
-        double[] y = new double[]{beforeGrowthLength, beforeGrowthDepth}; // initial state
+        double[] y = new double[]{beforeGrowthLength_a, beforeGrowthDepth}; // initial state
         double[] afterIntegr = new double[2]; // initial state
 
         double nextTime = currentTime + deltaT;
@@ -116,10 +116,10 @@ public class SemiellipticalCrack implements Externalizable {
 
 //        afterIntegr[0] = beforeGrowthLength + 1.0e-6;
 //        afterIntegr[1] = beforeGrowthDepth + 1.0e-6;
-        double growthX = afterIntegr[0] - y[0];
+        double growthX = (afterIntegr[0] - y[0])/2;
         double depth = afterIntegr[1];
-        double xLeft = crackTip.get(0).getX() - growthX / 2;
-        double xRight = crackTip.get(crackTip.size() - 1).getX() + growthX / 2;
+        double xLeft = crackTip.get(0).getX() - growthX;
+        double xRight = crackTip.get(crackTip.size() - 1).getX() + growthX;
         if (xLeft < 0) {
             xLeft = 0;
         }
@@ -130,8 +130,9 @@ public class SemiellipticalCrack implements Externalizable {
         crackTip.get(0).setX(xLeft);
         crackTip.get(crackTip.size() - 1).setX(xRight);
         setDepthB(afterIntegr[1]);
+        aspectRatio = depthB / (this.getLength2a() / 2);
 
-//        this.length2a = crackTip.get(crackTip.size() - 1).getX() - crackTip.get(0).getX();
+
         this.checkMaxCondition();
         return result;
     }
@@ -164,6 +165,7 @@ public class SemiellipticalCrack implements Externalizable {
      */
     public void setAspectRatio(double aspectRatio) {
         this.aspectRatio = aspectRatio;
+        setDepthB(getAspectRatio()*(getLength2a()/2));
     }
 
     /**
@@ -182,6 +184,7 @@ public class SemiellipticalCrack implements Externalizable {
      */
     public void setDepthB(double crackDepthB) {
         this.depthB = crackDepthB;
+        aspectRatio = depthB / (this.getLength2a() / 2);
     }
 
     /**
