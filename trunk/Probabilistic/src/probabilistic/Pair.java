@@ -44,7 +44,7 @@ public class Pair {
                             if (coalescencePair == null) {
                                 pair = new CrackPair(sourceListParametr.get(j), sourceListParametr.get(j + i));
                                 coalescencePair = pair;
-                                result = true;
+                                result = true;                                
 
                             } else if (coalescencePair.getRatioDistanceToRC() > CrackPair.getRatioDistanceToRC_(sourceListParametr.get(j), sourceListParametr.get(j + i))) {
                                 pair = new CrackPair(sourceListParametr.get(j), sourceListParametr.get(j + i));
@@ -52,6 +52,7 @@ public class Pair {
                                 result = true;
                             }
                             coalescencePair_ = coalescencePair;
+                            System.out.println("\n\nCriticalRadius = " + coalescencePair_.getCriticalRadius());
 
                         } else {
                             break;

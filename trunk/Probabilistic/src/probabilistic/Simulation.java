@@ -44,6 +44,7 @@ public class Simulation {
     private ArrayList<SemiellipticalCrack> paintedCracks;
     private static boolean maxLengthCondition;
     private static String histFolder = "Serializable";
+//    Const constObj = new Const();
 
     public Simulation(double height, double width, double grainHeight, double grainWidth,
             double meanInitiationTime, double scaleInitiationTime, double sigma, double yieldStress, double parametrK, double maxCrackLength, double visualKValue) {
@@ -75,6 +76,7 @@ public class Simulation {
                 System.out.println("Failed to delete " + file);
             }
         }
+        
 
 
     }

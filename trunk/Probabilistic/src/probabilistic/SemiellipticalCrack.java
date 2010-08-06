@@ -22,13 +22,13 @@ import org.apache.commons.math.ode.nonstiff.DormandPrince54Integrator;
  */
 public class SemiellipticalCrack implements Externalizable {
 //    private int timeIndx;
+
     private double depthB;
     private double aspectRatio;
     private ArrayList<Point> crackTip;
 
-
     public SemiellipticalCrack() {
-        this( 0, 0, new ArrayList<Point>());
+        this(0, 0, new ArrayList<Point>());
     }
 
     public SemiellipticalCrack(double depthB, double aspectRatio, ArrayList<Point> crackTip) {
@@ -77,8 +77,13 @@ public class SemiellipticalCrack implements Externalizable {
 
     public double CriticalRadius(SemiellipticalCrack crack2) {
         double RC = 0;
-        RC = (Simulation.getParametrK() / Math.PI) * (this.SIF_A() / Simulation.getYieldStress()) * (this.SIF_A() / Simulation.getYieldStress())
-                + (Simulation.getParametrK() / Math.PI) * (crack2.SIF_A() / Simulation.getYieldStress()) * (crack2.SIF_A() / Simulation.getYieldStress());
+        RC = (Simulation.getParametrK() / Math.PI) *
+                (
+                (this.SIF_A() / Simulation.getYieldStress()) *
+                (this.SIF_A() / Simulation.getYieldStress()) +
+                (crack2.SIF_A() / Simulation.getYieldStress()) *
+                (crack2.SIF_A() / Simulation.getYieldStress())
+                );
 //        System.out.println("\n\nCriticalRadius = " + RC);
 //        System.out.println("this.SIF_A() = " + this.SfIF_A());
 //        System.out.println("depthB / length2a = " + 2 * depthB / length2a);
@@ -204,9 +209,6 @@ public class SemiellipticalCrack implements Externalizable {
 //    public int getTimeIndx() {
 //        return timeIndx;
 //    }
-
-
-
     /**
      *
      * Check max length condition
