@@ -52,7 +52,7 @@ public class Pair {
                                 result = true;
                             }
                             coalescencePair_ = coalescencePair;
-                            System.out.println("\n\nCriticalRadius = " + coalescencePair_.getCriticalRadius());
+//                            System.out.println("\n\nCriticalRadius = " + coalescencePair_.getCriticalRadius());
 
                         } else {
                             break;

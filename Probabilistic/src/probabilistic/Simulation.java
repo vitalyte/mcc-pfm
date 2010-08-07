@@ -116,7 +116,7 @@ public class Simulation {
                         generNewCrack(i, rndX, rndY, rndI, rndJ, length2AMean, length2AScale, depthMean, depthScale,aspectRatio);
                         //Serialization
                         if (step == 99) {
-                            outputToFile(i);
+//                            outputToFile(i);
                             step = 0;
                         }
 
@@ -194,7 +194,7 @@ public class Simulation {
         Point lPoint = new Point(lX, rndY);
         Point rPoint = new Point(rX, rndY);
         Point[] lrPoint = {lPoint, rPoint};
-        newCrack = new SemiellipticalCrack(lrPoint, depth, i);
+        newCrack = new SemiellipticalCrack(lrPoint, depth);
         if (aspectRatio > 0){
             newCrack.setAspectRatio(aspectRatio);
         }else{
@@ -213,7 +213,7 @@ public class Simulation {
     private void coalescence(int i) {
         while (Pair.createPairs(ellipticalCrack)) {
             newCrack = new SemiellipticalCrack(Pair.getCoalescencePair().getCrackObj1(),
-                    Pair.getCoalescencePair().getCrackObj2(), i);
+                    Pair.getCoalescencePair().getCrackObj2());
             ellipticalCrack.add(newCrack);
             ellipticalCrack.remove(Pair.getCoalescencePair().getCrackObj1());
             ellipticalCrack.remove(Pair.getCoalescencePair().getCrackObj2());
@@ -226,7 +226,12 @@ public class Simulation {
      */
     private void growth(int tIndx, double currentTime, double deltaT) throws DerivativeException, IntegratorException {
         for (int j = 0; j < ellipticalCrack.size(); j++) {
-            ellipticalCrack.get(j).integrate(tIndx, currentTime, deltaT);
+     //       boolean output =
+                    ellipticalCrack.get(j).integrate(currentTime, deltaT);
+//            if (output) {
+//                System.out.println(output);
+//            }
+            
         }
     }
 

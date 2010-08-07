@@ -80,7 +80,7 @@ public class GridJPanel extends javax.swing.JPanel {
 //                if (!crack.isCriticalCreack()) {
 //                    g.setColor(Color.GREEN);
 //                }
-                if (crack.getCrackTip().size() >2) {
+                if (crack.getCrackTips().size() >2) {
                     g.setColor(Color.BLUE);
 
                 }
@@ -91,7 +91,7 @@ public class GridJPanel extends javax.swing.JPanel {
 //          //                super.paintComponent(g);
 //                g.drawLine((int) (k * crack.getLeftTip().getX()), (int) (k * crack.getLeftTip().getY()),
 //                        (int) (k * crack.getRightTip().getX()), (int) (k * crack.getRightTip().getY()));
-                g.drawPolyline(crack.getArrayPololine(k)[0], crack.getArrayPololine(k)[1], crack.getCrackTip().size());
+                g.drawPolyline(crack.getArrayPolyline(k)[0], crack.getArrayPolyline(k)[1], crack.getCrackTips().size());
 //                g.setColor(Color.BLACK);
 //                g.drawLine((int) (k * crack.getLeftTip().getX()), (int) (k * crack.getLeftTip().getY()),
 //                        (int) (k * crack.getRightTip().getX()), (int) (k * crack.getLeftTip().getY()));

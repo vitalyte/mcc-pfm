@@ -316,7 +316,7 @@ public class ProbabilisticGUI extends javax.swing.JFrame {
             }
         });
 
-        timeScale.setText("0.097");
+        timeScale.setText("2.97");
         timeScale.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 timeScaleActionPerformed(evt);
@@ -739,7 +739,7 @@ public class ProbabilisticGUI extends javax.swing.JFrame {
                 .addComponent(surfaceGeometry)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(gridJPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(163, Short.MAX_VALUE))
+                .addContainerGap(171, Short.MAX_VALUE))
         );
 
         fileMenu.setText("File");
