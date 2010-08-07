@@ -19,7 +19,7 @@ public class CrackOrderOde implements FirstOrderDifferentialEquations {
     private double k1SCC;
 
     public CrackOrderOde(double k1SCC, SemiellipticalCrack crack) {
-        this.k1SCC = k1SCC / Const.E10P6;
+        this.k1SCC = k1SCC;
 
     }
 
@@ -61,7 +61,7 @@ public class CrackOrderOde implements FirstOrderDifferentialEquations {
         KIA = Const.k1_A_b0 + Const.k1_A_b1 * lambda + Const.k1_A_b2 * lambda * lambda
                 + Const.k1_A_b3 * Math.pow(lambda, 3) + Const.k1_A_b4 * Math.pow(lambda, 4);
         result = Simulation.getSigma() * Math.sqrt(Math.PI * y[0] / 2) * KIA;
-        return result / Const.E10P6;
+        return result;
     }
 
     private double k1_B(double[] y) {
