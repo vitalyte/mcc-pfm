@@ -4,6 +4,10 @@
  */
 package probabilistic;
 
+import java.awt.geom.Ellipse2D;
+import java.awt.geom.GeneralPath;
+import java.awt.geom.Line2D;
+import java.awt.geom.Path2D;
 import java.io.Externalizable;
 import java.io.IOException;
 import java.io.ObjectInput;
@@ -41,6 +45,7 @@ public class SemiellipticalCrack implements Externalizable {
         this.aspectRatio = aspectRatio;
         this.crackTip = crackTip;
     }
+
     /**
      * Constructor for new initiated crack
      */
@@ -147,22 +152,6 @@ public class SemiellipticalCrack implements Externalizable {
     }
 
     /**
-     *
-     * @param visualKValue
-     * @return Array of points for drawing Polyline
-     */
-    public int[][] getArrayPolyline(int visualKValue) {
-        int ks = crackTip.size();
-        int[][] result = new int[2][ks];
-        for (int j = 0; j < crackTip.size(); j++) {
-            Point point = crackTip.get(j);
-            result[0][j] = (int) (point.getX() * visualKValue);
-            result[1][j] = (int) (point.getY() * visualKValue);
-        }
-        return result;
-    }
-
-    /**
      * Get the value of aspectRatio
      *
      * @return the value of aspectRatio
@@ -248,6 +237,67 @@ public class SemiellipticalCrack implements Externalizable {
     }
 
     /**
+     *
+     * @return true if crack create after at least one coalescence
+     */
+    public final boolean isCoalescenced() {
+        if (getCrackTips().size() > 2) {
+            return true;
+        }
+        return false;
+
+    }
+
+    /**
+     *
+     * @return horisontal axis of elips multipluxed in visualKValue- relax zone
+     */
+    public java.awt.geom.GeneralPath getAverageLine(int visualKValue) {
+        int size = getCrackTips().size();
+        GeneralPath pathAver = new GeneralPath(Path2D.WIND_NON_ZERO, 1);
+        if (size == 2) {
+            pathAver.moveTo(visualKValue * getLeftTip().getX(), visualKValue * getLeftTip().getY());
+            pathAver.lineTo(visualKValue * getRightTip().getX(), visualKValue * getRightTip().getY());
+            return pathAver;
+        } else if (size > 2) {
+            double Ymin = Math.min(getRightTip().getY(), getLeftTip().getY());
+            double deltaY = Math.abs((getRightTip().getY() - getLeftTip().getY())) / 2;
+            double yValue = visualKValue * (Ymin + deltaY);
+            pathAver.moveTo(visualKValue * getLeftTip().getX(), yValue);
+            pathAver.lineTo(visualKValue * getRightTip().getX(), yValue);
+        }
+        return pathAver;
+    }
+
+    /**
+     *
+     * @param visualKValue
+     * @return GeneralPath of polilyne for drawing crack
+     */
+    public GeneralPath getPolyline(int visualKValue) {
+        GeneralPath polyline = new GeneralPath(Path2D.WIND_NON_ZERO, getCrackTips().size());
+        polyline.moveTo((visualKValue * getLeftTip().getX()), (visualKValue * getLeftTip().getY()));
+        for (int i = 1; i < crackTip.size(); i++) {
+            Point point = crackTip.get(i);
+            polyline.lineTo(visualKValue * point.getX(), visualKValue * point.getY());
+        }
+        return polyline;
+    }
+
+    public Ellipse2D getSressReleazeZone(int visualKValue) {
+        double hToW = Const.STR_RELEASE_H_TO_W;
+        double w = visualKValue * getLength2a();
+        double h = w* hToW;
+//        the X coordinate of the upper-left corner of the framing rectangle
+        GeneralPath pathAver = getAverageLine(visualKValue);
+        double x =pathAver.getCurrentPoint().getX() -w;
+//        the Y coordinate of the upper-left corner of the framing rectangle
+        double y = pathAver.getCurrentPoint().getY()-h/2;
+        Ellipse2D releazeZone = new Ellipse2D.Double(x, y, w, h);
+        return releazeZone;
+    }
+
+    /**
      * realize Externalizable
      * write to file
      * @param oo
@@ -261,7 +311,6 @@ public class SemiellipticalCrack implements Externalizable {
         for (Externalizable ext : crackTip) {
             ext.writeExternal(oo);
         }
-
     }
 
     /**

@@ -26,6 +26,7 @@ public final class Const {
     public static final double k1_B_b1 = -0.7302;
     public static final double k1_B_b2 = 0.20827;
     public static final int BUFFER_SIZE = 6000 * 1024;
+    public static final double STR_RELEASE_H_TO_W = 1;
 
     private Const() {
     }

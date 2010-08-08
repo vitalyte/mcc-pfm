@@ -13,6 +13,7 @@ package probabilistic.gui;
 import probabilistic.SurfaceArea;
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import probabilistic.SemiellipticalCrack;
 import probabilistic.Simulation;
 
@@ -48,23 +49,22 @@ public class GridJPanel extends javax.swing.JPanel {
             grainWidth = (int) (k * surface.getGrainWidth());
             grainHeight = (int) (k * surface.getGrainHeight());
             this.setSize(width, height);
-//            System.out.println("\n\n1");
-
+            Graphics2D g2 = (Graphics2D) g;
             for (int i = 0; i < simulObj.getPainted().size(); i++) {
                 SemiellipticalCrack crack = simulObj.getPainted().get(i);
-                g.setColor(Color.GREEN);
-//                if (!crack.isCriticalCreack()) {
-//                    g.setColor(Color.GREEN);
-//                }
-                if (crack.getCrackTips().size() > 2) {
-                    g.setColor(Color.BLUE);
-
+                g2.setColor(Color.GREEN);
+                if (crack.isCoalescenced()) {
+                    g2.setColor(Color.BLUE);
                 }
                 if (crack.checkMaxCondition()) {
-                    g.setColor(Color.red);
+                    g2.setColor(Color.red);
                 }
+//                g2.draw(crack.getPolyline(k));
+                g2.draw(crack.getAverageLine(k));
+                g2.setColor(Color.ORANGE);
+                g2.draw(crack.getSressReleazeZone(k));
 
-                g.drawPolyline(crack.getArrayPolyline(k)[0], crack.getArrayPolyline(k)[1], crack.getCrackTips().size());
+                
             }
         }
     }

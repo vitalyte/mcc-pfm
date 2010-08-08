@@ -43,7 +43,6 @@ public class Simulation {
     private static boolean maxLengthCondition;
     private static String histFolder = "Serializable";
 
-
     public Simulation(double height, double width, double grainHeight, double grainWidth,
             double meanInitiationTime, double scaleInitiationTime, double sigma, double yieldStress, double parametrK, double maxCrackLength, double visualKValue) {
         surface = new SurfaceArea(height, width, grainHeight, grainWidth);
@@ -63,12 +62,11 @@ public class Simulation {
 
     public void FillRandomCracks(double length2AMean, double length2AScale,
             double depthMean, double depthScale, double aspectRatio) {
-//        boolean filledCkracks = false;
+        filledCkracks = false;
         int i = 0;
         int step = 0;
         if (isFilledCkracks() == false) {
-            exitMaxCondition:
-            {
+            exitMaxCondition:            
                 while (i < surface.getNmax()) {
                     timeIndx = i;
                     //ввести ще один цикл перевірки координати точки!!!
@@ -78,11 +76,21 @@ public class Simulation {
                     int rndJ = (int) (rndY / surface.getGrainHeight());
                     double deltaT;
                     if (isSquareEmpty(matrix, rndI, rndJ)) {
+                        boolean inReleaseZone = false;
+                        for (int j = 0; j < ellipticalCrack.size(); j++) {
+                            SemiellipticalCrack semiellipticalCrack = ellipticalCrack.get(j);
+                            inReleaseZone = semiellipticalCrack.getSressReleazeZone(1).contains(rndX, rndY);
+                            if (inReleaseZone) {
+                                i++;
+                                continue exitMaxCondition;
+                            }
+                        }
+
 //                         точку кинули в порожню клітину
                         generNewCrack(i, rndX, rndY, rndI, rndJ, length2AMean, length2AScale, depthMean, depthScale, aspectRatio);
                         //Serialization
                         if (step == 99) {
-//                            outputToFile(i);
+                            outputToFile(i);
                             step = 0;
                         }
                         double currentTime = timeObj.getInitTime().get(i);
@@ -121,7 +129,7 @@ public class Simulation {
                         step++;
                     }
                 }
-            }
+            
             filledCkracks = true;
             maxTimeIndx = i;
             outputToFile(i);
@@ -174,8 +182,6 @@ public class Simulation {
      */
     private void generNewCrack(int i, double rndX, double rndY, int rndI, int rndJ, double length2AMean, double length2AScale,
             double depthMean, double depthScale, double aspectRatio) {
-//        matPointsX[rndI][rndJ] = rndX;
-//        matPointsY[rndI][rndJ] = rndY;
         matrix[rndI][rndJ] = true;
         //потягнути з панелі
         double length2A = NormalDistribution.PPF(RNG.Ran2(seed), length2AMean, length2AScale);
