@@ -28,8 +28,6 @@ public class Simulation {
     String path;
     String filePath;
     private boolean[][] matrix;
-    private double[][] matPointsX;
-    private double[][] matPointsY;
     private int seed;
     boolean filledCkracks = false;
     private static double maxCrackLength, visualScale,
@@ -44,7 +42,7 @@ public class Simulation {
     private ArrayList<SemiellipticalCrack> paintedCracks;
     private static boolean maxLengthCondition;
     private static String histFolder = "Serializable";
-//    Const constObj = new Const();
+
 
     public Simulation(double height, double width, double grainHeight, double grainWidth,
             double meanInitiationTime, double scaleInitiationTime, double sigma, double yieldStress, double parametrK, double maxCrackLength, double visualKValue) {
@@ -60,39 +58,7 @@ public class Simulation {
         Simulation.maxCrackLength = maxCrackLength;
         Simulation.visualScale = visualKValue;
         maxLengthCondition = false;
-        try {
-            path = new java.io.File(".").getCanonicalPath();
-        } catch (IOException ex) {
-            Logger.getLogger(Simulation.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        File folder = new File(".." + File.separator + histFolder);
-        folder.mkdir();
-        filePath = ".." + File.separator + histFolder + File.separator;
-        File[] files = folder.listFiles();
-        for (File file : files) {
-            // Delete each file
-            if (!file.delete()) {
-                // Failed to delete file
-                System.out.println("Failed to delete " + file);
-            }
-        }
-        
-
-
-    }
-
-    private void initMatrix(SurfaceArea surface) {
-        Random rnd = new Random();
-        int s = -rnd.nextInt(1000000) + 1;
-        seed = s;
-        matPointsX = new double[surface.getNumColumns()][surface.getNumRows()];
-        matPointsY = new double[surface.getNumColumns()][surface.getNumRows()];
-        matrix = new boolean[surface.getNumColumns()][surface.getNumRows()];
-        for (int i = 0; i < surface.getNumColumns(); i++) {
-            for (int j = 0; j < surface.getNumRows(); j++) {
-                matrix[i][j] = false;
-            }
-        }
+        workWithFiles();
     }
 
     public void FillRandomCracks(double length2AMean, double length2AScale,
@@ -113,13 +79,12 @@ public class Simulation {
                     double deltaT;
                     if (isSquareEmpty(matrix, rndI, rndJ)) {
 //                         точку кинули в порожню клітину
-                        generNewCrack(i, rndX, rndY, rndI, rndJ, length2AMean, length2AScale, depthMean, depthScale,aspectRatio);
+                        generNewCrack(i, rndX, rndY, rndI, rndJ, length2AMean, length2AScale, depthMean, depthScale, aspectRatio);
                         //Serialization
                         if (step == 99) {
 //                            outputToFile(i);
                             step = 0;
                         }
-
                         double currentTime = timeObj.getInitTime().get(i);
                         if (i == timeObj.getInitTime().size()) {
                             break exitMaxCondition;
@@ -133,14 +98,12 @@ public class Simulation {
                             //об’єднання тріщин
                             coalescence(i);
                             if (growth) {
-
                                 if (maxLengthCondition) {
                                     maxTimeIndx = i;
                                     break exitMaxCondition;
                                 }
                                 break coalescenceGrowthCycle;
                             }
-
                             //підростання тріщин
                             if (!growth) {
                                 try {
@@ -154,12 +117,10 @@ public class Simulation {
                             growth = true;
 //                            iCoalescenceGrowth++;
                         }
-
                         i++;
                         step++;
                     }
-
-                }                
+                }
             }
             filledCkracks = true;
             maxTimeIndx = i;
@@ -168,21 +129,57 @@ public class Simulation {
         getPaintedCracks(i);
     }
 
+    private void initMatrix(SurfaceArea surface) {
+        Random rnd = new Random();
+        int s = -rnd.nextInt(1000000) + 1;
+        seed = s;
+//        matPointsX = new double[surface.getNumColumns()][surface.getNumRows()];
+//        matPointsY = new double[surface.getNumColumns()][surface.getNumRows()];
+        matrix = new boolean[surface.getNumColumns()][surface.getNumRows()];
+        for (int i = 0; i < surface.getNumColumns(); i++) {
+            for (int j = 0; j < surface.getNumRows(); j++) {
+                matrix[i][j] = false;
+            }
+        }
+    }
+
+    private void workWithFiles() {
+        try {
+            path = new java.io.File(".").getCanonicalPath();
+        } catch (IOException ex) {
+            Logger.getLogger(Simulation.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        File folder = new File(".." + File.separator + histFolder);
+        folder.mkdir();
+        filePath = ".." + File.separator + histFolder + File.separator;
+        File[] files = folder.listFiles();
+        for (File file : files) {
+            // Delete each file
+            if (!file.delete()) {
+                // Failed to delete file
+                System.out.println("Failed to delete " + file);
+            }
+        }
+    }
+
+    boolean isSquareEmpty(boolean[][] matrix, int i, int j) {
+        if (matrix[i][j] == false) {
+            return true;
+        }
+        return false;
+    }
+
     /**
-     * add coalescence crack and remove two source cracks
-     *
-     *
+     * add coalescence crack and remove two source cracks     
      */
     private void generNewCrack(int i, double rndX, double rndY, int rndI, int rndJ, double length2AMean, double length2AScale,
             double depthMean, double depthScale, double aspectRatio) {
-        matPointsX[rndI][rndJ] = rndX;
-        matPointsY[rndI][rndJ] = rndY;
+//        matPointsX[rndI][rndJ] = rndX;
+//        matPointsY[rndI][rndJ] = rndY;
         matrix[rndI][rndJ] = true;
         //потягнути з панелі
         double length2A = NormalDistribution.PPF(RNG.Ran2(seed), length2AMean, length2AScale);
         double depth = 0;
-        
-        
         double lX = rndX - length2A / 2;
         double rX = rndX + length2A / 2;
         if (lX < 0) {
@@ -195,13 +192,12 @@ public class Simulation {
         Point rPoint = new Point(rX, rndY);
         Point[] lrPoint = {lPoint, rPoint};
         newCrack = new SemiellipticalCrack(lrPoint, depth);
-        if (aspectRatio > 0){
+        if (aspectRatio > 0) {
             newCrack.setAspectRatio(aspectRatio);
-        }else{
+        } else {
             depth = NormalDistribution.PPF(RNG.Ran2(seed), depthMean, depthScale);
             newCrack.setDepthB(depth);
         }
-        
         ellipticalCrack.add(newCrack);
     }
 
@@ -226,12 +222,12 @@ public class Simulation {
      */
     private void growth(int tIndx, double currentTime, double deltaT) throws DerivativeException, IntegratorException {
         for (int j = 0; j < ellipticalCrack.size(); j++) {
-     //       boolean output =
-                    ellipticalCrack.get(j).integrate(currentTime, deltaT);
+            //       boolean output =
+            ellipticalCrack.get(j).integrate(currentTime, deltaT);
 //            if (output) {
 //                System.out.println(output);
 //            }
-            
+
         }
     }
 
@@ -244,15 +240,7 @@ public class Simulation {
         return filledCkracks;
     }
 
-    boolean isSquareEmpty(boolean[][] matrix, int i, int j) {
-        if (matrix[i][j] == false) {
-            return true;
-        }
-        return false;
-    }
-
     public ArrayList<SemiellipticalCrack> getPaintedCracks(int timeIndx) {
-//        ArrayList<CrackHistory> dispHistList = new ArrayList<CrackHistory>();
         inputFromFile(timeIndx);
         return paintedCracks;
     }
@@ -304,8 +292,6 @@ public class Simulation {
                 }
             }
         }
-
-
     }
 
     public ArrayList<SemiellipticalCrack> getPainted() {

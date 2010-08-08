@@ -17,7 +17,6 @@ public class SurfaceArea {
     private double width;
     private double grainHeight;
     private double grainWidth;
-
     private int numColumns;
     private int numRows;
 
