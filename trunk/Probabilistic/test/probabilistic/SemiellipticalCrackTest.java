@@ -124,20 +124,7 @@ System.out.println("AspectRatioBeforeGrowth " + result);
         assertEquals(1.01317541452007E-4, afterGrowthLength, 1e-6);
     }
 
-    /**
-     * Test of getArrayPololine method, of class SemiellipticalCrack.
-     */
-    @Ignore
-    public void testGetArrayPololine() {
-        System.out.println("getArrayPololine");
-        int visualKValue = 0;
-//        SemiellipticalCrack instance = new SemiellipticalCrack();
-        int[][] expResult = null;
-        int[][] result = instance.getArrayPolyline(visualKValue);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
+
 
     /**
      * Test of getAspectRatio method, of class SemiellipticalCrack.
