@@ -13,22 +13,12 @@ import java.util.ArrayList;
  */
 public class Pair {
 
-//    private ArrayList<SemiellipticalCrack> sourceList;
-//    private static ArrayList<CrackPair> listOfPair;
-//    private ArrayList<CrackPair> sortedListOfPair = new ArrayList<CrackPair>();
     private static CrackPair coalescencePair_;
     private SemiellipticalCrack resultCrack;
     private static boolean canCoalescence = false;
     static CrackPair pair;
 
-    public Pair(ArrayList<SemiellipticalCrack> sourceList) {
-//        this.sourceList = sourceList;
-//        if (createPairs(sourceList)) {
-//            canCoalescence = sortPairsRatio();
-//        }
-//        if (canCoalescence){
-//            coalescencePair.getCrackObj1().getRightTip()
-//        }
+    public Pair() {
     }
 
     public static boolean createPairs(ArrayList<SemiellipticalCrack> sourceListParametr) {
@@ -63,27 +53,9 @@ public class Pair {
                 }
             }
         }
-//        if (result == true) {
-//            result = sortPairsRatio();
-//            System.out.println("listOfPair = " + listOfPair.size());
-//        } else {
-//            result = false;
-//        }
         return result;
     }
 
-//    public static boolean sortPairsRatio() {
-//        boolean result = false;
-//        if (listOfPair.get(0) != null) {
-//            Collections.sort(listOfPair, new SortPairRatio());
-//            coalescencePair = listOfPair.get(0);
-////            resultCrack = coalescencePair.getCrackObj1().getCrackPoint().getX();
-//            result = true;
-////        SemiellipticalCrack crack1 = sortedListOfPair.get(0).getCrackObj1();
-////        SemiellipticalCrack crack2 = sortedListOfPair.get(0).getCrackObj2();
-//        }
-//        return result;
-//    }
     public boolean isCanCoalescence() {
         return canCoalescence;
     }

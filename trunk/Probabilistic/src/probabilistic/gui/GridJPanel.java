@@ -10,16 +10,11 @@
  */
 package probabilistic.gui;
 
-import probabilistic.CrackHistory;
 import probabilistic.SurfaceArea;
 import java.awt.Color;
 import java.awt.Graphics;
 import probabilistic.SemiellipticalCrack;
 import probabilistic.Simulation;
-//import java.util.ArrayList;
-//import java.util.Random;
-//import probabilistic.*;
-//import probabilistic.NormalDistribution;
 
 /**
  *
@@ -27,46 +22,27 @@ import probabilistic.Simulation;
  */
 public class GridJPanel extends javax.swing.JPanel {
 
-    /** Creates new form GridJPanel */
     private int height;
     private int width;
     private int grainHeight;
     private int grainWidth;
     private Simulation simulObj;
-//    private SemiellipticalCrack crack;
-//    private InitiationTime time;
 
-//    SurfaceArea area = new SurfaceArea(height, width, grainHeight, grainWidth);
     public GridJPanel() {
         initComponents();
-//        surface = new SurfaceArea(height, width, grainHeight, grainWidth, 0.3, 34.54, 500000000, 5, 500000000);
-//        surface.FillRandomCracks(10, 8, 10, 8);
     }
 
     public GridJPanel(Simulation simulObj) {
         initComponents();
         this.simulObj = simulObj;
-//        surface.FillRandomCracks(10, 8, 10, 8);
     }
 
-//    public GridJPanel(int height_, int width_, int grainHeight_, int grainWidth_) {
-//        height = height_;
-//        width = width_;
-//        grainHeight = grainHeight_;
-//        grainWidth = grainWidth_;
-//
-//        surface = new SurfaceArea(height_, width_, grainHeight_, grainWidth_);
-////        time = new InitiationTime(surface.getNmax(), 0.3, 34.54);
-//        surface.FillRandomCracks(height_, width_, grainHeight_, grainWidth_);
-//    }
-    //static boolean notPaint = false;
-    //paint grid
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         if (simulObj != null) {
             int k = (int) simulObj.getVisualScale();
-            SurfaceArea surface = simulObj.getSurface();
+            SurfaceArea surface = Simulation.getSurface();
             width = (int) (k * surface.getWidth());
             height = (int) (k * surface.getHeight());
             grainWidth = (int) (k * surface.getGrainWidth());
@@ -80,7 +56,7 @@ public class GridJPanel extends javax.swing.JPanel {
 //                if (!crack.isCriticalCreack()) {
 //                    g.setColor(Color.GREEN);
 //                }
-                if (crack.getCrackTips().size() >2) {
+                if (crack.getCrackTips().size() > 2) {
                     g.setColor(Color.BLUE);
 
                 }
@@ -88,30 +64,9 @@ public class GridJPanel extends javax.swing.JPanel {
                     g.setColor(Color.red);
                 }
 
-//          //                super.paintComponent(g);
-//                g.drawLine((int) (k * crack.getLeftTip().getX()), (int) (k * crack.getLeftTip().getY()),
-//                        (int) (k * crack.getRightTip().getX()), (int) (k * crack.getRightTip().getY()));
                 g.drawPolyline(crack.getArrayPolyline(k)[0], crack.getArrayPolyline(k)[1], crack.getCrackTips().size());
-//                g.setColor(Color.BLACK);
-//                g.drawLine((int) (k * crack.getLeftTip().getX()), (int) (k * crack.getLeftTip().getY()),
-//                        (int) (k * crack.getRightTip().getX()), (int) (k * crack.getLeftTip().getY()));
-
-
-
             }
         }
-//        else         {
-//            super.paintComponent(g);
-////            int a = 100;
-////            this.setSize(a, a);
-//
-//
-//
-//        }
-
-
-
-
     }
 
     public Simulation getSimulObj() {
@@ -125,10 +80,6 @@ public class GridJPanel extends javax.swing.JPanel {
     public SurfaceArea getSurface() {
         return simulObj.getSurface();
     }
-//
-//    public void setSurface(SurfaceArea surface) {
-//        this.surface = surface;
-//    }
 
     /** This method is called from within the constructor to
      * initialize the form.

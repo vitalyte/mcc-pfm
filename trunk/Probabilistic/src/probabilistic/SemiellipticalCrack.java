@@ -41,7 +41,9 @@ public class SemiellipticalCrack implements Externalizable {
         this.aspectRatio = aspectRatio;
         this.crackTip = crackTip;
     }
-
+    /**
+     * Constructor for new initiated crack
+     */
     public SemiellipticalCrack(Point[] lrPoint, double depthB) {
         crackTip = new ArrayList<Point>();
         crackTip.add(lrPoint[0]);
@@ -113,7 +115,7 @@ public class SemiellipticalCrack implements Externalizable {
      * @throws IntegratorException
      */
     public boolean integrate(double currentTime, double deltaT) throws DerivativeException, IntegratorException {
-        if (SIF_A() >= Const.k1SCC && SIF_B() >= Const.k1SCC) {
+        if (SIF_A() >= Const.k1SCC || SIF_B() >= Const.k1SCC) {
             double beforeGrowthLength_a = this.getLength2a() / 2;
             double beforeGrowthDepth = depthB;
             FirstOrderIntegrator dp54 = new DormandPrince54Integrator(deltaT * 0.1, deltaT, 1.0e-10, 1.0e-10);
@@ -133,8 +135,8 @@ public class SemiellipticalCrack implements Externalizable {
             if (xRight > Simulation.getSurface().getWidth()) {
                 xRight = Simulation.getSurface().getWidth();
             }
-            crackTip.get(0).setX(xLeft);
-            crackTip.get(crackTip.size() - 1).setX(xRight);
+            crackTip.get(0).setLocation(xLeft, crackTip.get(0).getY());
+            crackTip.get(crackTip.size() - 1).setLocation(xRight, crackTip.get(crackTip.size() - 1).getY());
             setDepthB(afterIntegr[1]);
             aspectRatio = depthB / (this.getLength2a() / 2);
             this.checkMaxCondition();
@@ -238,7 +240,6 @@ public class SemiellipticalCrack implements Externalizable {
      * used when crack growth and coalescence
      */
     public final boolean checkMaxCondition() {
-//        boolean result = false;
         if (Simulation.getMaxCrackLength() <= this.getLength2a()) {
             Simulation.setMaxLengthCondition(true);
             return true;
