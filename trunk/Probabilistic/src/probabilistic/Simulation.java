@@ -66,70 +66,71 @@ public class Simulation {
         int i = 0;
         int step = 0;
         if (isFilledCkracks() == false) {
-            exitMaxCondition:            
-                while (i < surface.getNmax()) {
-                    timeIndx = i;
-                    //ввести ще один цикл перевірки координати точки!!!
-                    double rndX = UniformDistribution.PPF(RNG.Ran2(seed), 0, surface.getWidth());
-                    double rndY = UniformDistribution.PPF(RNG.Ran2(seed), 0, surface.getHeight());
-                    int rndI = (int) (rndX / surface.getGrainWidth());
-                    int rndJ = (int) (rndY / surface.getGrainHeight());
-                    double deltaT;
-                    if (isSquareEmpty(matrix, rndI, rndJ)) {
-                        boolean inReleaseZone = false;
-                        for (int j = 0; j < ellipticalCrack.size(); j++) {
-                            SemiellipticalCrack semiellipticalCrack = ellipticalCrack.get(j);
-                            inReleaseZone = semiellipticalCrack.getSressReleazeZone(1).contains(rndX, rndY);
-                            if (inReleaseZone) {
-                                i++;
-                                continue exitMaxCondition;
-                            }
+            exitMaxCondition:
+            while (i < surface.getNmax()) {
+                timeIndx = i;
+                //ввести ще один цикл перевірки координати точки!!!
+                double rndX = UniformDistribution.PPF(RNG.Ran2(seed), 0, surface.getWidth());
+                double rndY = UniformDistribution.PPF(RNG.Ran2(seed), 0, surface.getHeight());
+                int rndI = (int) (rndX / surface.getGrainWidth());
+                int rndJ = (int) (rndY / surface.getGrainHeight());
+                double deltaT;
+                if (isSquareEmpty(matrix, rndI, rndJ)) {
+                    boolean inReleaseZone = false;
+                    for (int j = 0; j < ellipticalCrack.size(); j++) {
+                        SemiellipticalCrack semiellipticalCrack = ellipticalCrack.get(j);
+                        inReleaseZone = semiellipticalCrack.getSressReleazeZone(1).contains(rndX, rndY);
+                        if (inReleaseZone) {
+                            break;
                         }
-
-//                         точку кинули в порожню клітину
-                        generNewCrack(i, rndX, rndY, rndI, rndJ, length2AMean, length2AScale, depthMean, depthScale, aspectRatio);
-                        //Serialization
-                        if (step == 99) {
-                            outputToFile(i);
-                            step = 0;
-                        }
-                        double currentTime = timeObj.getInitTime().get(i);
-                        if (i == timeObj.getInitTime().size()) {
-                            break exitMaxCondition;
-                        } else {
-                            deltaT = timeObj.getInitTime().get(i + 1) - timeObj.getInitTime().get(i);
-                        }
-                        boolean growth = false;
-//                        int iCoalescenceGrowth = 0;
-                        coalescenceGrowthCycle:
-                        while (true) {
-                            //об’єднання тріщин
-                            coalescence(i);
-                            if (growth) {
-                                if (maxLengthCondition) {
-                                    maxTimeIndx = i;
-                                    break exitMaxCondition;
-                                }
-                                break coalescenceGrowthCycle;
-                            }
-                            //підростання тріщин
-                            if (!growth) {
-                                try {
-                                    growth(i, currentTime, deltaT);
-                                } catch (DerivativeException ex) {
-                                    Logger.getLogger(Simulation.class.getName()).log(Level.SEVERE, null, ex);
-                                } catch (IntegratorException ex) {
-                                    Logger.getLogger(Simulation.class.getName()).log(Level.SEVERE, null, ex);
-                                }
-                            }
-                            growth = true;
-//                            iCoalescenceGrowth++;
-                        }
-                        i++;
-                        step++;
                     }
+//                        check that crack not in stress release zone
+                    if (!inReleaseZone) {
+//                        точку кинули в порожню клітину
+                        generNewCrack(i, rndX, rndY, rndI, rndJ, length2AMean, length2AScale, depthMean, depthScale, aspectRatio);
+                    }
+                    //Serialization
+                    if (step >= 0) {
+                        outputToFile(i);
+                        step = 0;
+                    }
+                    double currentTime = timeObj.getInitTime().get(i);
+                    if (i == timeObj.getInitTime().size()) {
+                        break exitMaxCondition;
+                    } else {
+                        deltaT = timeObj.getInitTime().get(i + 1) - timeObj.getInitTime().get(i);
+                    }
+                    boolean growth = false;
+//                        int iCoalescenceGrowth = 0;
+                    coalescenceGrowthCycle:
+                    while (true) {
+                        //об’єднання тріщин
+                        coalescence(i);
+                        if (growth) {
+                            if (maxLengthCondition) {
+                                maxTimeIndx = i;
+                                break exitMaxCondition;
+                            }
+                            break coalescenceGrowthCycle;
+                        }
+                        //підростання тріщин
+                        if (!growth) {
+                            try {
+                                growth(i, currentTime, deltaT);
+                            } catch (DerivativeException ex) {
+                                Logger.getLogger(Simulation.class.getName()).log(Level.SEVERE, null, ex);
+                            } catch (IntegratorException ex) {
+                                Logger.getLogger(Simulation.class.getName()).log(Level.SEVERE, null, ex);
+                            }
+                        }
+                        growth = true;
+//                            iCoalescenceGrowth++;
+                    }
+                    i++;
+                    step++;
                 }
-            
+            }
+
             filledCkracks = true;
             maxTimeIndx = i;
             outputToFile(i);
