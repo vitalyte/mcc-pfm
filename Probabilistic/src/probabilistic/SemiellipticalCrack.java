@@ -120,7 +120,7 @@ public class SemiellipticalCrack implements Externalizable {
      * @throws IntegratorException
      */
     public boolean integrate(double currentTime, double deltaT) throws DerivativeException, IntegratorException {
-        if (SIF_A() >= Const.k1SCC || SIF_B() >= Const.k1SCC) {
+        if (SIF_A() >= Const.k1SCC && SIF_B() >= Const.k1SCC) {
             double beforeGrowthLength_a = this.getLength2a() / 2;
             double beforeGrowthDepth = depthB;
             FirstOrderIntegrator dp54 = new DormandPrince54Integrator(deltaT * 0.1, deltaT, 1.0e-10, 1.0e-10);
@@ -252,9 +252,9 @@ public class SemiellipticalCrack implements Externalizable {
      *
      * @return horisontal axis of elips multipluxed in visualKValue- relax zone
      */
-    public java.awt.geom.GeneralPath getAverageLine(int visualKValue) {
+    public java.awt.geom.Path2D.Double getAverageLine(int visualKValue) {
         int size = getCrackTips().size();
-        GeneralPath pathAver = new GeneralPath(Path2D.WIND_NON_ZERO, 1);
+        Path2D.Double pathAver = new Path2D.Double(Path2D.WIND_NON_ZERO, 1);
         if (size == 2) {
             pathAver.moveTo(visualKValue * getLeftTip().getX(), visualKValue * getLeftTip().getY());
             pathAver.lineTo(visualKValue * getRightTip().getX(), visualKValue * getRightTip().getY());
@@ -274,8 +274,8 @@ public class SemiellipticalCrack implements Externalizable {
      * @param visualKValue
      * @return GeneralPath of polilyne for drawing crack
      */
-    public GeneralPath getPolyline(int visualKValue) {
-        GeneralPath polyline = new GeneralPath(Path2D.WIND_NON_ZERO, getCrackTips().size());
+    public java.awt.geom.Path2D.Double getPolyline(int visualKValue) {
+        Path2D.Double polyline = new Path2D.Double(Path2D.WIND_NON_ZERO, getCrackTips().size());
         polyline.moveTo((visualKValue * getLeftTip().getX()), (visualKValue * getLeftTip().getY()));
         for (int i = 1; i < crackTip.size(); i++) {
             Point point = crackTip.get(i);
@@ -289,7 +289,7 @@ public class SemiellipticalCrack implements Externalizable {
         double w = visualKValue * getLength2a();
         double h = w* hToW;
 //        the X coordinate of the upper-left corner of the framing rectangle
-        GeneralPath pathAver = getAverageLine(visualKValue);
+        java.awt.geom.Path2D pathAver = getAverageLine(visualKValue);
         double x =pathAver.getCurrentPoint().getX() -w;
 //        the Y coordinate of the upper-left corner of the framing rectangle
         double y = pathAver.getCurrentPoint().getY()-h/2;

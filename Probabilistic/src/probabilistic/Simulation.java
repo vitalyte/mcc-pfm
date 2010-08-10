@@ -4,6 +4,7 @@
  */
 package probabilistic;
 
+import java.awt.geom.Area;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -76,19 +77,8 @@ public class Simulation {
                 int rndJ = (int) (rndY / surface.getGrainHeight());
                 double deltaT;
                 if (isSquareEmpty(matrix, rndI, rndJ)) {
-                    boolean inReleaseZone = false;
-                    for (int j = 0; j < ellipticalCrack.size(); j++) {
-                        SemiellipticalCrack semiellipticalCrack = ellipticalCrack.get(j);
-                        inReleaseZone = semiellipticalCrack.getSressReleazeZone(1).contains(rndX, rndY);
-                        if (inReleaseZone) {
-                            break;
-                        }
-                    }
-//                        check that crack not in stress release zone
-                    if (!inReleaseZone) {
 //                        точку кинули в порожню клітину
-                        generNewCrack(i, rndX, rndY, rndI, rndJ, length2AMean, length2AScale, depthMean, depthScale, aspectRatio);
-                    }
+                    generNewCrack(i, rndX, rndY, rndI, rndJ, length2AMean, length2AScale, depthMean, depthScale, aspectRatio);
                     //Serialization
                     if (step >= 0) {
                         outputToFile(i);
@@ -124,7 +114,6 @@ public class Simulation {
                             }
                         }
                         growth = true;
-//                            iCoalescenceGrowth++;
                     }
                     i++;
                     step++;
@@ -136,6 +125,20 @@ public class Simulation {
             outputToFile(i);
         }
         getPaintedCracks(i);
+    }
+
+    private boolean isInReleaseZone(double rndX, double rndY, SemiellipticalCrack newCrack) {
+        boolean inReleaseZone = false;
+        Area crackPath = new Area(newCrack.getPolyline(1));
+        for (int j = 0; j < ellipticalCrack.size(); j++) {
+            SemiellipticalCrack semiellipticalCrack = ellipticalCrack.get(j);            
+            inReleaseZone = semiellipticalCrack.getSressReleazeZone(1).contains(rndX, rndY);
+            if (inReleaseZone) {
+                break;
+            }
+        }
+
+        return inReleaseZone;
     }
 
     private void initMatrix(SurfaceArea surface) {
@@ -205,7 +208,10 @@ public class Simulation {
             depth = NormalDistribution.PPF(RNG.Ran2(seed), depthMean, depthScale);
             newCrack.setDepthB(depth);
         }
-        ellipticalCrack.add(newCrack);
+//      check that crack not in stress release zone
+        if(!isInReleaseZone(rndX, rndY, newCrack)){
+            ellipticalCrack.add(newCrack);
+        }
     }
 
     /**
@@ -285,17 +291,15 @@ public class Simulation {
         try {
             in = new ObjectInputStream(new BufferedInputStream(
                     new FileInputStream(filePath + timeIndx + ".ser")));
+//            @SuppressWarnings( "unchecked" )
             paintedCracks = (ArrayList<SemiellipticalCrack>) in.readObject();
         } catch (IOException ex) {
-//            ex.printStackTrace();
         } catch (Exception ex) {
-//            ex.printStackTrace();
         } finally {
             if (in != null) {
                 try {
                     in.close();
                 } catch (IOException ex) {
-//                     ex.printStackTrace();
                 }
             }
         }

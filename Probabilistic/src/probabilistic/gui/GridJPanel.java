@@ -59,8 +59,8 @@ public class GridJPanel extends javax.swing.JPanel {
                 if (crack.checkMaxCondition()) {
                     g2.setColor(Color.red);
                 }
-//                g2.draw(crack.getPolyline(k));
-                g2.draw(crack.getAverageLine(k));
+                g2.draw(crack.getPolyline(k));
+//                g2.draw(crack.getAverageLine(k));
                 g2.setColor(Color.ORANGE);
                 g2.draw(crack.getSressReleazeZone(k));
 
