@@ -38,7 +38,7 @@ public class Simulation {
     private int maxTimeIndx;
     private int timeIndx = 0;
     private SemiellipticalCrack newCrack;
-    private ArrayList<SemiellipticalCrack> ellipticalCrack;
+    private ArrayList<SemiellipticalCrack> ellipticalCrackList;
     private static ArrayList<ArrayList> cracksHistoryList;
     private ArrayList<SemiellipticalCrack> paintedCracks;
     private static boolean maxLengthCondition;
@@ -51,7 +51,7 @@ public class Simulation {
         timeObj = new InitiationTime(surface.getNmax() + 1, meanInitiationTime, scaleInitiationTime);
         Simulation.sigma = sigma;
         Simulation.yieldStress = yieldStress;
-        ellipticalCrack = new ArrayList<SemiellipticalCrack>();
+        ellipticalCrackList = new ArrayList<SemiellipticalCrack>();
         cracksHistoryList = new ArrayList<ArrayList>();
         Simulation.parametrK = parametrK;
 
@@ -81,7 +81,7 @@ public class Simulation {
                     generNewCrack(i, rndX, rndY, rndI, rndJ, length2AMean, length2AScale, depthMean, depthScale, aspectRatio);
                     //Serialization
                     if (step >= 0) {
-                        outputToFile(i);
+//                        outputToFile(i);
                         step = 0;
                     }
                     double currentTime = timeObj.getInitTime().get(i);
@@ -127,19 +127,7 @@ public class Simulation {
         getPaintedCracks(i);
     }
 
-    private boolean isInReleaseZone(double rndX, double rndY, SemiellipticalCrack newCrack) {
-        boolean inReleaseZone = false;
-        Area crackPath = new Area(newCrack.getPolyline(1));
-        for (int j = 0; j < ellipticalCrack.size(); j++) {
-            SemiellipticalCrack semiellipticalCrack = ellipticalCrack.get(j);            
-            inReleaseZone = semiellipticalCrack.getSressReleazeZone(1).contains(rndX, rndY);
-            if (inReleaseZone) {
-                break;
-            }
-        }
-
-        return inReleaseZone;
-    }
+    
 
     private void initMatrix(SurfaceArea surface) {
         Random rnd = new Random();
@@ -209,8 +197,11 @@ public class Simulation {
             newCrack.setDepthB(depth);
         }
 //      check that crack not in stress release zone
-        if(!isInReleaseZone(rndX, rndY, newCrack)){
-            ellipticalCrack.add(newCrack);
+        if(!newCrack.isInReleaseZone(rndX, rndY, ellipticalCrackList)){
+            ellipticalCrackList.add(newCrack);
+            //does some old cracks will be in stress releaze zone of this crack
+            newCrack.setInStressRelZoneScreen(ellipticalCrackList);
+            
         }
     }
 
@@ -220,12 +211,14 @@ public class Simulation {
      *
      */
     private void coalescence(int i) {
-        while (Pair.createPairs(ellipticalCrack)) {
+        while (Pair.createPairs(ellipticalCrackList)) {
             newCrack = new SemiellipticalCrack(Pair.getCoalescencePair().getCrackObj1(),
                     Pair.getCoalescencePair().getCrackObj2());
-            ellipticalCrack.add(newCrack);
-            ellipticalCrack.remove(Pair.getCoalescencePair().getCrackObj1());
-            ellipticalCrack.remove(Pair.getCoalescencePair().getCrackObj2());
+            ellipticalCrackList.add(newCrack);
+            ellipticalCrackList.remove(Pair.getCoalescencePair().getCrackObj1());
+            ellipticalCrackList.remove(Pair.getCoalescencePair().getCrackObj2());
+
+            newCrack.setInStressRelZoneScreen(ellipticalCrackList);
         }
     }
 
@@ -234,9 +227,12 @@ public class Simulation {
      *
      */
     private void growth(int tIndx, double currentTime, double deltaT) throws DerivativeException, IntegratorException {
-        for (int j = 0; j < ellipticalCrack.size(); j++) {
-            //       boolean output =
-            ellipticalCrack.get(j).integrate(currentTime, deltaT);
+        for (int j = 0; j < ellipticalCrackList.size(); j++) {
+            if (!ellipticalCrackList.get(j).isInStressRelZoneScreen()) {
+                ellipticalCrackList.get(j).integrate(currentTime, deltaT);
+                ellipticalCrackList.get(j).setInStressRelZoneScreen(ellipticalCrackList);
+            }
+            
 //            if (output) {
 //                System.out.println(output);
 //            }
@@ -268,7 +264,7 @@ public class Simulation {
             out = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(filePath + timeIndx + ".ser"), Const.BUFFER_SIZE));
 //            out = new ObjectOutputStream(
 //                    new FileOutputStream(filePath + timeIndx + ".ser"));
-            out.writeObject(ellipticalCrack);
+            out.writeObject(ellipticalCrackList);
         } catch (IOException ex) {
 //            ex.printStackTrace();
         } finally {
@@ -291,8 +287,7 @@ public class Simulation {
         try {
             in = new ObjectInputStream(new BufferedInputStream(
                     new FileInputStream(filePath + timeIndx + ".ser")));
-//            @SuppressWarnings( "unchecked" )
-            paintedCracks = (ArrayList<SemiellipticalCrack>) in.readObject();
+                paintedCracks =  (ArrayList<SemiellipticalCrack>) in.readObject();            
         } catch (IOException ex) {
         } catch (Exception ex) {
         } finally {
