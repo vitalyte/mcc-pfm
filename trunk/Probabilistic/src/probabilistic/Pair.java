@@ -29,15 +29,19 @@ public class Pair {
             for (int i = j + 1; i < sourceListParametr.size(); i++) {
                 if ((j + i) < sourceListParametr.size()) {
                     if (sourceListParametr.get(j + 1) != null && sourceListParametr.get(j) != null && sourceListParametr.get(i) != null) {
-
-                        if (CrackPair.isEntersTheRadiusS(sourceListParametr.get(j), sourceListParametr.get(j + i))) {
+                        SemiellipticalCrack firstInPair = sourceListParametr.get(j);
+                        SemiellipticalCrack secondInPair = sourceListParametr.get(j + i);
+                        if (firstInPair.isInStressRelZoneScreen() || secondInPair.isInStressRelZoneScreen()) {
+                            break;
+                        }
+                        if (CrackPair.isEntersTheRadiusS(firstInPair, secondInPair)) {
                             if (coalescencePair == null) {
-                                pair = new CrackPair(sourceListParametr.get(j), sourceListParametr.get(j + i));
+                                pair = new CrackPair(firstInPair, secondInPair);
                                 coalescencePair = pair;
-                                result = true;                                
+                                result = true;
 
-                            } else if (coalescencePair.getRatioDistanceToRC() > CrackPair.getRatioDistanceToRC_(sourceListParametr.get(j), sourceListParametr.get(j + i))) {
-                                pair = new CrackPair(sourceListParametr.get(j), sourceListParametr.get(j + i));
+                            } else if (coalescencePair.getRatioDistanceToRC() > CrackPair.getRatioDistanceToRC_(firstInPair, secondInPair)) {
+                                pair = new CrackPair(firstInPair, secondInPair);
                                 coalescencePair = pair;
                                 result = true;
                             }

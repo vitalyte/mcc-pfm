@@ -5,7 +5,6 @@
 package probabilistic;
 
 import java.awt.geom.Ellipse2D;
-import java.awt.geom.GeneralPath;
 import java.awt.geom.Line2D;
 import java.awt.geom.Path2D;
 import java.io.Externalizable;
@@ -29,6 +28,8 @@ public class SemiellipticalCrack implements Externalizable {
     private double depthB;
     private double aspectRatio;
     private ArrayList<Point> crackTip;
+    //not Serialized
+    private boolean inStressRelZoneScreen = false;
 
     /**
      * Constructor for Externalizable
@@ -252,21 +253,21 @@ public class SemiellipticalCrack implements Externalizable {
      *
      * @return horisontal axis of elips multipluxed in visualKValue- relax zone
      */
-    public java.awt.geom.Path2D.Double getAverageLine(int visualKValue) {
+    public Line2D getAverageLine(int visualKValue) {
         int size = getCrackTips().size();
-        Path2D.Double pathAver = new Path2D.Double(Path2D.WIND_NON_ZERO, 1);
+        Line2D lineAver = null;
         if (size == 2) {
-            pathAver.moveTo(visualKValue * getLeftTip().getX(), visualKValue * getLeftTip().getY());
-            pathAver.lineTo(visualKValue * getRightTip().getX(), visualKValue * getRightTip().getY());
-            return pathAver;
+            lineAver = new Line2D.Double(visualKValue * getLeftTip().getX(), visualKValue * getLeftTip().getY(),
+            visualKValue * getRightTip().getX(), visualKValue * getRightTip().getY());
+            return lineAver;
         } else if (size > 2) {
             double Ymin = Math.min(getRightTip().getY(), getLeftTip().getY());
             double deltaY = Math.abs((getRightTip().getY() - getLeftTip().getY())) / 2;
             double yValue = visualKValue * (Ymin + deltaY);
-            pathAver.moveTo(visualKValue * getLeftTip().getX(), yValue);
-            pathAver.lineTo(visualKValue * getRightTip().getX(), yValue);
+            lineAver = new Line2D.Double(visualKValue * getLeftTip().getX(), yValue,
+            visualKValue * getRightTip().getX(), yValue);
         }
-        return pathAver;
+        return lineAver;
     }
 
     /**
@@ -287,14 +288,65 @@ public class SemiellipticalCrack implements Externalizable {
     public Ellipse2D getSressReleazeZone(int visualKValue) {
         double hToW = Const.STR_RELEASE_H_TO_W;
         double w = visualKValue * getLength2a();
-        double h = w* hToW;
+        double h = w * hToW;
 //        the X coordinate of the upper-left corner of the framing rectangle
-        java.awt.geom.Path2D pathAver = getAverageLine(visualKValue);
-        double x =pathAver.getCurrentPoint().getX() -w;
+        Line2D lineAver = getAverageLine(visualKValue);
+        double x = lineAver.getX2() - w;
 //        the Y coordinate of the upper-left corner of the framing rectangle
-        double y = pathAver.getCurrentPoint().getY()-h/2;
+        double y = lineAver.getY2() - h / 2;
         Ellipse2D releazeZone = new Ellipse2D.Double(x, y, w, h);
         return releazeZone;
+    }
+
+    /**
+     * Get the value of inStressRelZone
+     *
+     * @return the value of inStressRelZone
+     */
+    public boolean isInStressRelZoneScreen() {
+        return inStressRelZoneScreen;
+    }
+
+    /**
+     * Set the value of inStressRelZone for cracks in ellipticalCrackList
+     *
+     * @param inStressRelZone new value of inStressRelZone
+     */
+    public void setInStressRelZoneScreen(ArrayList<SemiellipticalCrack> ellipticalCrackList) {
+        for (int i = 0; i < ellipticalCrackList.size(); i++) {
+            SemiellipticalCrack semiellipticalCrack = ellipticalCrackList.get(i);
+            boolean screening = false;
+//            screening = getSressReleazeZone(1).contains(getLeftTip().getX(), getAverageLine(1).getCurrentPoint().getY(), getLength2a(), 0);
+            screening = semiellipticalCrack.getSressReleazeZone(1).contains(getLeftTip().getX(), getLeftTip().getY());
+            if (semiellipticalCrack != this && semiellipticalCrack.getSressReleazeZone(1).contains(getLeftTip().getX(), getLeftTip().getY())
+                    && semiellipticalCrack.getSressReleazeZone(1).contains(getRightTip().getX(), getRightTip().getY())) {
+                semiellipticalCrack.inStressRelZoneScreen = true;
+            }
+        }
+    }
+
+    public boolean isInReleaseZone(double rndX, double rndY, ArrayList<SemiellipticalCrack> ellipticalCrackList) {
+        boolean inReleaseZone = false;
+        for (int j = 0; j < ellipticalCrackList.size(); j++) {
+            SemiellipticalCrack semiellipticalCrack = ellipticalCrackList.get(j);
+            //check initiation point
+            inReleaseZone = semiellipticalCrack.getSressReleazeZone(1).contains(rndX, rndY);
+            if (inReleaseZone) {
+                break;
+            }
+            //check left tip
+            inReleaseZone = semiellipticalCrack.getSressReleazeZone(1).contains(getLeftTip().getX(), getLeftTip().getY());
+            if (inReleaseZone) {
+                break;
+            }
+            //check right tip
+            inReleaseZone = semiellipticalCrack.getSressReleazeZone(1).contains(getRightTip().getX(), getRightTip().getY());
+            if (inReleaseZone) {
+                break;
+            }
+        }
+
+        return inReleaseZone;
     }
 
     /**
