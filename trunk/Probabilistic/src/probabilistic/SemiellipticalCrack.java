@@ -30,6 +30,7 @@ public class SemiellipticalCrack implements Externalizable {
     private ArrayList<Point> crackTip;
     //not Serialized
     private boolean inStressRelZoneScreen = false;
+    private double initTime;
 
     /**
      * Constructor for Externalizable
@@ -50,12 +51,14 @@ public class SemiellipticalCrack implements Externalizable {
     /**
      * Constructor for new initiated crack
      */
-    public SemiellipticalCrack(Point[] lrPoint, double depthB) {
+    public SemiellipticalCrack(Point[] lrPoint, double depthB, double initTime) {
         crackTip = new ArrayList<Point>();
         crackTip.add(lrPoint[0]);
         crackTip.add(lrPoint[1]);
         this.depthB = depthB;
         aspectRatio = depthB / (this.getLength2a() / 2);
+        this.initTime = initTime;
+        this.checkMaxCondition();
     }
 
     /**
@@ -121,7 +124,7 @@ public class SemiellipticalCrack implements Externalizable {
      * @throws IntegratorException
      */
     public boolean integrate(double currentTime, double deltaT) throws DerivativeException, IntegratorException {
-        if (SIF_A() >= Const.k1SCC && SIF_B() >= Const.k1SCC) {
+        if (SIF_A() >= Const.k1SCC && SIF_B() >= Const.k1SCC && initTime!=currentTime) {
             double beforeGrowthLength_a = this.getLength2a() / 2;
             double beforeGrowthDepth = depthB;
             FirstOrderIntegrator dp54 = new DormandPrince54Integrator(deltaT * 0.1, deltaT, 1.0e-10, 1.0e-10);

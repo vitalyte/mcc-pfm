@@ -40,9 +40,9 @@ public class SemiellipticalCrackTest {
     public void setUp() {
         simulObj = new Simulation(20e-3, 20e-3, 0.08e-3, 0.08e-3, 2.97e6, 0.0258e6, 200e6, 162e6, 0.2, 10, 2000);
         Point[] lrPoint = {new Point(3e-3, 1e-3), new Point(3.1e-3, 1e-3)};
-        instance = new SemiellipticalCrack(lrPoint, 1e-4);
+        instance = new SemiellipticalCrack(lrPoint, 1e-4, simulObj.getTime().getInitTime().get(1));
         Point[] lrPointCrack2 = {new Point(4e-3, 1e-3), new Point(4.1e-3, 1e-3)};
-        crack2 = new SemiellipticalCrack(lrPointCrack2, 0.05e-3);
+        crack2 = new SemiellipticalCrack(lrPointCrack2, 0.05e-3, simulObj.getTime().getInitTime().get(1));
 
 
     }

@@ -4,7 +4,6 @@
  */
 package probabilistic;
 
-import java.awt.geom.Area;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -48,7 +47,7 @@ public class Simulation {
             double meanInitiationTime, double scaleInitiationTime, double sigma, double yieldStress, double parametrK, double maxCrackLength, double visualKValue) {
         surface = new SurfaceArea(height, width, grainHeight, grainWidth);
         initMatrix(surface);
-        timeObj = new InitiationTime(surface.getNmax() + 1, meanInitiationTime, scaleInitiationTime);
+        timeObj = new InitiationTime(surface.getNmax(), meanInitiationTime, scaleInitiationTime);
         Simulation.sigma = sigma;
         Simulation.yieldStress = yieldStress;
         ellipticalCrackList = new ArrayList<SemiellipticalCrack>();
@@ -68,14 +67,13 @@ public class Simulation {
         int step = 0;
         if (isFilledCkracks() == false) {
             exitMaxCondition:
-            while (i < surface.getNmax()) {
-                timeIndx = i;
-                //ввести ще один цикл перевірки координати точки!!!
+            while (i < surface.getNmax()-1) {
+                 //ввести ще один цикл перевірки координати точки!!!
                 double rndX = UniformDistribution.PPF(RNG.Ran2(seed), 0, surface.getWidth());
                 double rndY = UniformDistribution.PPF(RNG.Ran2(seed), 0, surface.getHeight());
                 int rndI = (int) (rndX / surface.getGrainWidth());
                 int rndJ = (int) (rndY / surface.getGrainHeight());
-                double deltaT;
+                double deltaT = 0;
                 if (isSquareEmpty(matrix, rndI, rndJ)) {
 //                        точку кинули в порожню клітину
                     generNewCrack(i, rndX, rndY, rndI, rndJ, length2AMean, length2AScale, depthMean, depthScale, aspectRatio);
@@ -85,13 +83,14 @@ public class Simulation {
                         step = 0;
                     }
                     double currentTime = timeObj.getInitTime().get(i);
-                    if (i == timeObj.getInitTime().size()) {
+                    if (i > 0 && i < timeObj.getInitTime().size()) {
+                        deltaT =currentTime - timeObj.getInitTime().get(i - 1) ;
+                    } else if (i >= timeObj.getInitTime().size()) {
                         break exitMaxCondition;
-                    } else {
-                        deltaT = timeObj.getInitTime().get(i + 1) - timeObj.getInitTime().get(i);
+                    } else if (i == 0) {
+                        deltaT = 0;
                     }
                     boolean growth = false;
-//                        int iCoalescenceGrowth = 0;
                     coalescenceGrowthCycle:
                     while (true) {
                         //об’єднання тріщин
@@ -104,7 +103,7 @@ public class Simulation {
                             break coalescenceGrowthCycle;
                         }
                         //підростання тріщин
-                        if (!growth) {
+                        if (!growth && deltaT != 0) {
                             try {
                                 growth(i, currentTime, deltaT);
                             } catch (DerivativeException ex) {
@@ -126,8 +125,6 @@ public class Simulation {
         }
         getPaintedCracks(i);
     }
-
-    
 
     private void initMatrix(SurfaceArea surface) {
         Random rnd = new Random();
@@ -189,7 +186,8 @@ public class Simulation {
         Point lPoint = new Point(lX, rndY);
         Point rPoint = new Point(rX, rndY);
         Point[] lrPoint = {lPoint, rPoint};
-        newCrack = new SemiellipticalCrack(lrPoint, depth);
+
+        newCrack = new SemiellipticalCrack(lrPoint, depth, timeObj.getInitTime().get(i));
         if (aspectRatio > 0) {
             newCrack.setAspectRatio(aspectRatio);
         } else {
@@ -197,11 +195,11 @@ public class Simulation {
             newCrack.setDepthB(depth);
         }
 //      check that crack not in stress release zone
-        if(!newCrack.isInReleaseZone(rndX, rndY, ellipticalCrackList)){
+        if (!newCrack.isInReleaseZone(rndX, rndY, ellipticalCrackList)) {
             ellipticalCrackList.add(newCrack);
             //does some old cracks will be in stress releaze zone of this crack
             newCrack.setInStressRelZoneScreen(ellipticalCrackList);
-            
+
         }
     }
 
@@ -217,7 +215,6 @@ public class Simulation {
             ellipticalCrackList.add(newCrack);
             ellipticalCrackList.remove(Pair.getCoalescencePair().getCrackObj1());
             ellipticalCrackList.remove(Pair.getCoalescencePair().getCrackObj2());
-
             newCrack.setInStressRelZoneScreen(ellipticalCrackList);
         }
     }
@@ -230,13 +227,7 @@ public class Simulation {
         for (int j = 0; j < ellipticalCrackList.size(); j++) {
             if (!ellipticalCrackList.get(j).isInStressRelZoneScreen()) {
                 ellipticalCrackList.get(j).integrate(currentTime, deltaT);
-                ellipticalCrackList.get(j).setInStressRelZoneScreen(ellipticalCrackList);
             }
-            
-//            if (output) {
-//                System.out.println(output);
-//            }
-
         }
     }
 
@@ -287,7 +278,7 @@ public class Simulation {
         try {
             in = new ObjectInputStream(new BufferedInputStream(
                     new FileInputStream(filePath + timeIndx + ".ser")));
-                paintedCracks =  (ArrayList<SemiellipticalCrack>) in.readObject();            
+            paintedCracks = (ArrayList<SemiellipticalCrack>) in.readObject();
         } catch (IOException ex) {
         } catch (Exception ex) {
         } finally {
