@@ -61,8 +61,8 @@ public class GridJPanel extends javax.swing.JPanel {
                 }
                 g2.draw(crack.getPolyline(k));
 //                g2.draw(crack.getAverageLine(k));
-                g2.setColor(Color.ORANGE);
-                g2.draw(crack.getSressReleazeZone(k));
+//                g2.setColor(Color.ORANGE);
+//                g2.draw(crack.getSressReleazeZone(k));
 
                 
             }
