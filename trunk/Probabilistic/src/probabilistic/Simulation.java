@@ -211,7 +211,7 @@ public class Simulation {
     private void coalescence(int i) {
         while (Pair.createPairs(ellipticalCrackList)) {
             newCrack = new SemiellipticalCrack(Pair.getCoalescencePair().getCrackObj1(),
-                    Pair.getCoalescencePair().getCrackObj2());
+                    Pair.getCoalescencePair().getCrackObj2(), timeObj.getInitTime().get(i));
             ellipticalCrackList.add(newCrack);
             ellipticalCrackList.remove(Pair.getCoalescencePair().getCrackObj1());
             ellipticalCrackList.remove(Pair.getCoalescencePair().getCrackObj2());

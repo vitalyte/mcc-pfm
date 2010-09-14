@@ -8,13 +8,18 @@ import java.io.Externalizable;
 import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
+import javax.persistence.Entity;
+import javax.persistence.Id;
 
 /**
  *
  * @author Alximik
  */
+@Entity
 public class Point extends java.awt.geom.Point2D.Double
         implements Externalizable {
+    @Id
+    private Long id;
 
     public Point() {
         super();
@@ -58,5 +63,13 @@ public class Point extends java.awt.geom.Point2D.Double
         x = oi.readDouble();
         y = oi.readDouble();
 
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 }
