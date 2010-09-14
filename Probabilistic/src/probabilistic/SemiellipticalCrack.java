@@ -11,8 +11,12 @@ import java.io.Externalizable;
 import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import probabilistic.integration.CrackOrderOde;
 import java.util.ArrayList;
+import javax.persistence.Entity;
+import javax.persistence.Transient;
 import org.apache.commons.math.ode.DerivativeException;
 import org.apache.commons.math.ode.FirstOrderDifferentialEquations;
 import org.apache.commons.math.ode.FirstOrderIntegrator;
@@ -23,14 +27,21 @@ import org.apache.commons.math.ode.nonstiff.DormandPrince54Integrator;
  *
  * @author Vitaly
  */
+@Entity
 public class SemiellipticalCrack implements Externalizable {
 
     private double depthB;
     private double aspectRatio;
+    @OneToMany
     private ArrayList<Point> crackTip;
-    //not Serialized
-    private boolean inStressRelZoneScreen = false;
     private double initTime;
+    private double currentTime;
+    @Id
+    private Long id;
+    //not Serialized
+    @Transient
+    private boolean inStressRelZoneScreen = false;
+    
 
     /**
      * Constructor for Externalizable
@@ -59,12 +70,13 @@ public class SemiellipticalCrack implements Externalizable {
         aspectRatio = depthB / (this.getLength2a() / 2);
         this.initTime = initTime;
         this.checkMaxCondition();
+        currentTime = initTime;
     }
 
     /**
      * Constructor for coalescence
      */
-    public SemiellipticalCrack(SemiellipticalCrack obj1, SemiellipticalCrack obj2) {
+    public SemiellipticalCrack(SemiellipticalCrack obj1, SemiellipticalCrack obj2, double currentTime) {
         crackTip = obj1.getCrackTips();
         crackTip.addAll(obj2.getCrackTips());
         this.depthB = Math.max(obj1.getDepthB(), obj2.getDepthB());
@@ -124,7 +136,7 @@ public class SemiellipticalCrack implements Externalizable {
      * @throws IntegratorException
      */
     public boolean integrate(double currentTime, double deltaT) throws DerivativeException, IntegratorException {
-        if (SIF_A() >= Const.k1SCC && SIF_B() >= Const.k1SCC && initTime!=currentTime) {
+        if (SIF_A() >= Const.k1SCC && SIF_B() >= Const.k1SCC && initTime != currentTime) {
             double beforeGrowthLength_a = this.getLength2a() / 2;
             double beforeGrowthDepth = depthB;
             FirstOrderIntegrator dp54 = new DormandPrince54Integrator(deltaT * 0.1, deltaT, 1.0e-10, 1.0e-10);
@@ -149,6 +161,7 @@ public class SemiellipticalCrack implements Externalizable {
             setDepthB(afterIntegr[1]);
             aspectRatio = depthB / (this.getLength2a() / 2);
             this.checkMaxCondition();
+            this.currentTime = currentTime;
             return true;
         }
 
@@ -261,14 +274,14 @@ public class SemiellipticalCrack implements Externalizable {
         Line2D lineAver = null;
         if (size == 2) {
             lineAver = new Line2D.Double(visualKValue * getLeftTip().getX(), visualKValue * getLeftTip().getY(),
-            visualKValue * getRightTip().getX(), visualKValue * getRightTip().getY());
+                    visualKValue * getRightTip().getX(), visualKValue * getRightTip().getY());
             return lineAver;
         } else if (size > 2) {
             double Ymin = Math.min(getRightTip().getY(), getLeftTip().getY());
             double deltaY = Math.abs((getRightTip().getY() - getLeftTip().getY())) / 2;
             double yValue = visualKValue * (Ymin + deltaY);
             lineAver = new Line2D.Double(visualKValue * getLeftTip().getX(), yValue,
-            visualKValue * getRightTip().getX(), yValue);
+                    visualKValue * getRightTip().getX(), yValue);
         }
         return lineAver;
     }
@@ -386,4 +399,38 @@ public class SemiellipticalCrack implements Externalizable {
             crackTip.add(ext);
         }
     }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public ArrayList<Point> getCrackTip() {
+        return crackTip;
+    }
+
+    public void setCrackTip(ArrayList<Point> crackTip) {
+        this.crackTip = crackTip;
+    }
+
+    public double getCurrentTime() {
+        return currentTime;
+    }
+
+    public void setCurrentTime(double currentTime) {
+        this.currentTime = currentTime;
+    }
+
+    public double getInitTime() {
+        return initTime;
+    }
+
+    public void setInitTime(double initTime) {
+        this.initTime = initTime;
+    }
+
+
 }
