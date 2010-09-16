@@ -11,6 +11,7 @@ import java.io.Externalizable;
 import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
+import java.io.Serializable;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import probabilistic.integration.CrackOrderOde;
@@ -28,7 +29,7 @@ import org.apache.commons.math.ode.nonstiff.DormandPrince54Integrator;
  * @author Vitaly
  */
 @Entity
-public class SemiellipticalCrack implements Externalizable {
+public class SemiellipticalCrack implements Externalizable, Serializable {
 
     private double depthB;
     private double aspectRatio;
