@@ -226,16 +226,16 @@ System.out.println("AspectRatioBeforeGrowth " + result);
     /**
      * Test of getCrackTip method, of class SemiellipticalCrack.
      */
-    @Ignore
-    public void testGetCrackTip() {
-        System.out.println("getCrackTip");
-//        SemiellipticalCrack instance = new SemiellipticalCrack();
-        ArrayList expResult = null;
-        ArrayList result = instance.getCrackTips();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
+//    @Ignore
+//    public void testGetCrackTip() {
+//        System.out.println("getCrackTip");
+////        SemiellipticalCrack instance = new SemiellipticalCrack();
+//        ArrayList expResult = null;
+//        List result = instance.getCrackTips();
+//        assertEquals(expResult, result);
+//        // TODO review the generated test code and remove the default call to fail.
+//        fail("The test case is a prototype.");
+//    }
 
     /**
      * Test of checkMaxCondition method, of class SemiellipticalCrack.
