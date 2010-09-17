@@ -16,28 +16,34 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import probabilistic.integration.CrackOrderOde;
 import java.util.ArrayList;
+import java.util.List;
 import javax.persistence.Entity;
+import javax.persistence.*;
 import javax.persistence.Transient;
 import org.apache.commons.math.ode.DerivativeException;
 import org.apache.commons.math.ode.FirstOrderDifferentialEquations;
 import org.apache.commons.math.ode.FirstOrderIntegrator;
 import org.apache.commons.math.ode.IntegratorException;
 import org.apache.commons.math.ode.nonstiff.DormandPrince54Integrator;
+import org.eclipse.persistence.annotations.Customizer;
 
 /**
  *
  * @author Vitaly
  */
 @Entity
+//@Customizer(probabilistic.persistence.HistoryCustomizer.class)
+
 public class SemiellipticalCrack implements Externalizable, Serializable {
 
     private double depthB;
     private double aspectRatio;
     @OneToMany
-    private ArrayList<Point> crackTip;
+    private List<Point> crackTip;
     private double initTime;
     private double currentTime;
     @Id
+    @GeneratedValue(strategy = GenerationType.TABLE)
     private Long id;
     //not Serialized
     @Transient
@@ -237,7 +243,7 @@ public class SemiellipticalCrack implements Externalizable, Serializable {
      *
      * @return list of crack Points
      */
-    public ArrayList<Point> getCrackTips() {
+    public List<Point> getCrackTips() {
         return crackTip;
     }
 
@@ -409,7 +415,7 @@ public class SemiellipticalCrack implements Externalizable, Serializable {
         this.id = id;
     }
 
-    public ArrayList<Point> getCrackTip() {
+    public List<Point> getCrackTip() {
         return crackTip;
     }
 

@@ -18,6 +18,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.commons.math.ode.DerivativeException;
 import org.apache.commons.math.ode.IntegratorException;
+import probabilistic.persistence.PersistenceRun;
 
 /**
  *
@@ -38,10 +39,11 @@ public class Simulation {
     private int timeIndx = 0;
     private SemiellipticalCrack newCrack;
     private ArrayList<SemiellipticalCrack> ellipticalCrackList;
-    private static ArrayList<ArrayList> cracksHistoryList;
+//    private static ArrayList<ArrayList> cracksHistoryList;
     private ArrayList<SemiellipticalCrack> paintedCracks;
     private static boolean maxLengthCondition;
     private static String histFolder = "Serializable";
+    PersistenceRun persistenceObj;
 
     public Simulation(double height, double width, double grainHeight, double grainWidth,
             double meanInitiationTime, double scaleInitiationTime, double sigma, double yieldStress, double parametrK, double maxCrackLength, double visualKValue) {
@@ -51,13 +53,14 @@ public class Simulation {
         Simulation.sigma = sigma;
         Simulation.yieldStress = yieldStress;
         ellipticalCrackList = new ArrayList<SemiellipticalCrack>();
-        cracksHistoryList = new ArrayList<ArrayList>();
+//        cracksHistoryList = new ArrayList<ArrayList>();
         Simulation.parametrK = parametrK;
 
         Simulation.maxCrackLength = maxCrackLength;
         Simulation.visualScale = visualKValue;
         maxLengthCondition = false;
         workWithFiles();
+        persistenceObj = new PersistenceRun();
     }
 
     public void FillRandomCracks(double length2AMean, double length2AScale,
@@ -114,10 +117,13 @@ public class Simulation {
                         }
                         growth = true;
                     }
+                    persistenceObj.setUpPersistence(ellipticalCrackList);
                     i++;
                     step++;
                 }
             }
+            persistenceObj.setUpPersistence(ellipticalCrackList);
+             persistenceObj.close();
 
             filledCkracks = true;
             maxTimeIndx = i;
@@ -376,9 +382,9 @@ public class Simulation {
         return yieldStress;
     }
 
-    public static ArrayList<ArrayList> getCracksHistoryList() {
-        return cracksHistoryList;
-    }
+//    public static ArrayList<ArrayList> getCracksHistoryList() {
+//        return cracksHistoryList;
+//    }
 
     public static boolean isMaxLengthCondition() {
         return maxLengthCondition;
