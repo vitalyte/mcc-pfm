@@ -18,13 +18,15 @@ import org.eclipse.persistence.history.HistoryPolicy;
 public class HistoryCustomizer implements DescriptorCustomizer{
 
     @Override
-    public void customize(ClassDescriptor cd) throws Exception {
+    public void customize(ClassDescriptor descriptor) throws Exception {
 //        throw new UnsupportedOperationException("Not supported yet.");
         HistoryPolicy policy = new HistoryPolicy();
+//        policy.addHistoryTableName("SEMIELLIPTICALCRACK", "CRACK_HIST");
         policy.addHistoryTableName("CRACK_HIST");
-//        policy.addStartFieldName("START_DATE");
-//        policy.addEndFieldName("END_DATE");
-//        descriptor.setHistoryPolicy(policy);
+        policy.addHistoryTableName("SEMIELLIPTICALCRACK_POINT", "POINT_HIST");
+        policy.addStartFieldName("START_DATE");
+        policy.addEndFieldName("END_DATE");
+        descriptor.setHistoryPolicy(policy);
 
     }
 
