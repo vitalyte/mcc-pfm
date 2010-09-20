@@ -199,7 +199,7 @@ public class TestDB1 {
                     "insert into location values (?, ?)");
             statements.add(psInsert);
 
-            for (int i = 0; i < 500000; i++) {
+            for (int i = 0; i < 5000; i++) {
                 psInsert.setInt(1, i);
                 psInsert.setString(2, String.valueOf(i + i));
                 psInsert.executeUpdate();

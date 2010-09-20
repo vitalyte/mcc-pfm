@@ -1,7 +1,7 @@
-2010-09-17 22:35:46.830 GMT : Apache Derby Network Server - 10.5.3.0 - (802917) started and ready to accept connections on port 1527
+2010-09-20 04:43:24.375 GMT : Apache Derby Network Server - 10.5.3.0 - (802917) started and ready to accept connections on port 1527
 ----------------------------------------------------------------
-2010-09-17 22:35:50.408 GMT:
- Booting Derby version The Apache Software Foundation - Apache Derby - 10.5.3.0 - (802917): instance a816c00e-012b-21d6-cc53-fffff87cda12
+2010-09-20 04:43:43.671 GMT:
+ Booting Derby version The Apache Software Foundation - Apache Derby - 10.5.3.0 - (802917): instance a816c00e-012b-2d74-16ba-fffff87cda12
 on database directory C:\Documents and Settings\Vitaly Brevus\My Documents\NetBeansProjects\trunk\Probabilistic\crackDB  
 
 Database Class Loader started - derby.database.classpath=''

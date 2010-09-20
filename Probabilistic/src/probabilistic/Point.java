@@ -8,6 +8,7 @@ import java.io.Externalizable;
 import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
+import java.io.Serializable;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -16,12 +17,12 @@ import javax.persistence.Id;
  *
  * @author Alximik
  */
-@Entity
+//@Entity
 public class Point
 //        extends java.awt.geom.Point2D.Double
-        implements Externalizable {
-    @Id
-    @GeneratedValue
+        implements Externalizable, Serializable {
+//    @Id
+//    @GeneratedValue
 
     private Long id;
     private double x;
