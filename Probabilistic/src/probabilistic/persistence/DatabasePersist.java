@@ -12,6 +12,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Properties;
+import probabilistic.Point;
 import probabilistic.SemiellipticalCrack;
 
 /**
@@ -23,8 +24,19 @@ public class DatabasePersist {
     private String framework = "embedded";
     private String driver = "org.apache.derby.jdbc.EmbeddedDriver";
     private String protocol = "jdbc:derby:";
+    ArrayList statements;
+    PreparedStatement crackInsert = null;
+    PreparedStatement pointInsert = null;
+    PreparedStatement psUpdate = null;
+    Statement s = null;
+    ResultSet rs = null;
+    Connection conn;
+    boolean last = false;
+    long crackID, tipID;
 
-    public void persist(ArrayList <SemiellipticalCrack> ellipticalCrackList) {
+    public void setup() {
+        crackID = 1;
+        tipID = 1;
         /* load the desired JDBC driver */
         loadDriver();
 
@@ -35,16 +47,17 @@ public class DatabasePersist {
          * We are storing the Statement and Prepared statement object references
          * in an array list for convenience.
          */
-        Connection conn = null;
+        conn = null;
 
         /* This ArrayList usage may cause a warning when compiling this class
          * with a compiler for J2SE 5.0 or newer. We are not using generics
          * because we want the source to support J2SE 1.4.2 environments. */
-        ArrayList statements = new ArrayList(); // list of Statements, PreparedStatements
-        PreparedStatement crackInsert = null;
-        PreparedStatement psUpdate = null;
-        Statement s = null;
-        ResultSet rs = null;
+        statements = new ArrayList(); // list of Statements, PreparedStatements
+        crackInsert = null;
+        psUpdate = null;
+        s = null;
+        rs = null;
+
         try {
             Properties props = new Properties(); // connection properties
             // providing a user name and password is optional in the embedded
@@ -74,8 +87,7 @@ public class DatabasePersist {
              * the system property derby.system.home points to, or the current
              * directory (user.dir) if derby.system.home is not set.
              */
-            conn = DriverManager.getConnection(protocol + dbName
-//                    + ";create=true"
+            conn = DriverManager.getConnection(protocol + dbName //                    + ";create=true"
                     , props);
 
             System.out.println("Connected to and created database " + dbName);
@@ -88,6 +100,19 @@ public class DatabasePersist {
              * SQL statements commands against the database.*/
             s = conn.createStatement();
             statements.add(s);
+            s.execute("DELETE FROM SEMIELLIPTICALCRACK;");
+             s.execute("DELETE FROM POINT;");
+//             s.executeUpdate(dbName);
+        } catch (SQLException sqle) {
+            printSQLException(sqle);
+        }
+
+    }
+
+    public void persist(ArrayList<SemiellipticalCrack> ellipticalCrackList) {
+
+        try {
+            setup();
 
             // We create a table...
 //            s.execute("create table location(num int, addr varchar(40))");
@@ -103,12 +128,35 @@ public class DatabasePersist {
              * improve security (because of Java type checking).
              */
             // parameter 1 is num (int), parameter 2 is addr (varchar)
-            crackInsert = conn.prepareStatement(
-                    "insert into SEMIELLIPTICALCRACK values (?, ?)");
+            String crackSql = "insert into SEMIELLIPTICALCRACK (CURRENTTIME, DEPTHB, INITTIME, ASPECTRATIO, ID) "
+                    + "values (?, ?, ?, ?, ?)";
+            crackInsert = conn.prepareStatement(crackSql);
             statements.add(crackInsert);
+            String pointSql = "insert into POINT (ID, Y, X) "
+                    + "values (?, ?, ?)";
+            pointInsert = conn.prepareStatement(pointSql);
+            statements.add(pointInsert);
             for (int i = 0; i < ellipticalCrackList.size(); i++) {
                 SemiellipticalCrack crack = ellipticalCrackList.get(i);
-                crackInsert.setDouble(2, crack.getCurrentTime());
+                for (int j = 0; j < crack.getCrackTip().size(); j++) {
+                    Point tip = crack.getCrackTip().get(j);
+                    pointInsert.setLong(1, tipID);
+                    pointInsert.setDouble(2, tip.getY());
+                    pointInsert.setDouble(3, tip.getX());
+                    pointInsert.executeUpdate();
+
+                    tipID++;
+
+                }
+
+                crackInsert.setDouble(1, crack.getCurrentTime());
+                crackInsert.setDouble(2, crack.getDepthB());
+                crackInsert.setDouble(3, crack.getInitTime());
+                crackInsert.setDouble(4, crack.getAspectRatio());
+                crackInsert.setLong(5, crackID);
+                crackInsert.executeUpdate();
+                crackID++;
+
             }
 
 //            for (int i = 0; i < 5000; i++) {
@@ -120,10 +168,18 @@ public class DatabasePersist {
         } catch (SQLException sqle) {
             printSQLException(sqle);
         } finally {
+            close(last);
+        }
+    }
+
+    public void close(boolean param) {
+        if (param == true) {
             // release all open resources to avoid unnecessary memory usage
 
             // ResultSet
             try {
+                conn.commit();
+                System.out.println("Committed the transaction");
                 if (rs != null) {
                     rs.close();
                     rs = null;
@@ -156,6 +212,7 @@ public class DatabasePersist {
             } catch (SQLException sqle) {
                 printSQLException(sqle);
             }
+
         }
     }
 
