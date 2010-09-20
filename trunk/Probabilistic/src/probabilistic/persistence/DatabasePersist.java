@@ -4,6 +4,7 @@
  */
 package probabilistic.persistence;
 
+import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -28,7 +29,8 @@ public class DatabasePersist {
     PreparedStatement crackInsert = null;
     PreparedStatement pointInsert = null;
     PreparedStatement psUpdate = null;
-    Statement s = null;
+    PreparedStatement crackPointInsert = null;
+    Statement stat = null;
     ResultSet rs = null;
     Connection conn;
     boolean last = false;
@@ -55,15 +57,17 @@ public class DatabasePersist {
         statements = new ArrayList(); // list of Statements, PreparedStatements
         crackInsert = null;
         psUpdate = null;
-        s = null;
+        stat = null;
         rs = null;
 
         try {
             Properties props = new Properties(); // connection properties
             // providing a user name and password is optional in the embedded
             // and derbyclient frameworks
+            props.put("create", "true");
             props.put("user", "crack");
             props.put("password", "crack");
+            props.put("SYSCS_UTIL.SYSCS_DISABLE_LOG_ARCHIVE_MODE", "1");
 
             /* By default, the schema APP will be used when no username is
              * provided.
@@ -89,20 +93,43 @@ public class DatabasePersist {
              */
             conn = DriverManager.getConnection(protocol + dbName //                    + ";create=true"
                     , props);
+//            disableLogArchiveMode(conn);
 
             System.out.println("Connected to and created database " + dbName);
 
             // We want to control transactions manually. Autocommit is on by
             // default in JDBC.
             conn.setAutoCommit(false);
+            String createSemielepticalcrack = "create table CRACK.SEMIELLIPTICALCRACK"
+                    + "(ID BIGINT not null primary key,"
+                    + "CURRENTTIME DOUBLE, DEPTHB DOUBLE, INITTIME DOUBLE, ASPECTRATIO DOUBLE"
+                    + ")";
+            String createPoint = "create table CRACK.POINT"
+                    + "(ID BIGINT not null primary key, Y DOUBLE, X DOUBLE"
+                    + ")";
 
+            String createSemielepticalcrackPoint = "create table CRACK.SEMIELLIPTICALCRACK_POINT"
+                    + "(SEMIELLIPTICALCRACK_ID BIGINT REFERENCES CRACK.SEMIELLIPTICALCRACK(ID) ,"
+                    + "CRACKTIP_ID BIGINT REFERENCES CRACK.POINT(ID))";
+//            String alterSemielepticalcrackPoint = "ALTER TABLE CRACK.SEMIELLIPTICALCRACK_POINT"
+//                    + "ADD FOREIGN KEY (SEMIELLIPTICALCRACK_ID)REFERENCES CRACK.SEMIELLIPTICALCRACK(ID), "
+//                    + "ADD FOREIGN KEY (CRACKTIP_ID) REFERENCES CRACK.POINT(ID)";
             /* Creating a statement object that we can use for running various
              * SQL statements commands against the database.*/
-            s = conn.createStatement();
-            statements.add(s);
-            s.execute("DELETE FROM SEMIELLIPTICALCRACK;");
-             s.execute("DELETE FROM POINT;");
-//             s.executeUpdate(dbName);
+            stat = conn.createStatement();
+            stat.execute(createSemielepticalcrack);
+            stat.execute(createPoint);
+            stat.execute(createSemielepticalcrackPoint);
+//            stat.execute(alterSemielepticalcrackPoint);
+
+            statements.add(stat);
+            String delCracPointkSql = "DELETE FROM SEMIELLIPTICALCRACK_POINT";
+            stat.execute(delCracPointkSql);
+
+            String delCrackSql = "DELETE FROM SEMIELLIPTICALCRACK";
+            stat.execute(delCrackSql);
+            String delPointSql = "DELETE FROM POINT";
+            stat.execute(delPointSql);
         } catch (SQLException sqle) {
             printSQLException(sqle);
         }
@@ -112,7 +139,7 @@ public class DatabasePersist {
     public void persist(ArrayList<SemiellipticalCrack> ellipticalCrackList) {
 
         try {
-            setup();
+//            setup();
 
             // We create a table...
 //            s.execute("create table location(num int, addr varchar(40))");
@@ -136,27 +163,33 @@ public class DatabasePersist {
                     + "values (?, ?, ?)";
             pointInsert = conn.prepareStatement(pointSql);
             statements.add(pointInsert);
+            String crackPointSql = "insert into SEMIELLIPTICALCRACK_POINT (SEMIELLIPTICALCRACK_ID, CRACKTIP_ID) "
+                    + "values (?, ?)";
+            crackPointInsert = conn.prepareStatement(crackPointSql);
+            statements.add(crackPointInsert);
+
             for (int i = 0; i < ellipticalCrackList.size(); i++) {
                 SemiellipticalCrack crack = ellipticalCrackList.get(i);
-                for (int j = 0; j < crack.getCrackTip().size(); j++) {
-                    Point tip = crack.getCrackTip().get(j);
-                    pointInsert.setLong(1, tipID);
-                    pointInsert.setDouble(2, tip.getY());
-                    pointInsert.setDouble(3, tip.getX());
-                    pointInsert.executeUpdate();
-
-                    tipID++;
-
-                }
-
                 crackInsert.setDouble(1, crack.getCurrentTime());
                 crackInsert.setDouble(2, crack.getDepthB());
                 crackInsert.setDouble(3, crack.getInitTime());
                 crackInsert.setDouble(4, crack.getAspectRatio());
                 crackInsert.setLong(5, crackID);
                 crackInsert.executeUpdate();
-                crackID++;
 
+
+                for (int j = 0; j < crack.getCrackTip().size(); j++) {
+                    Point tip = crack.getCrackTip().get(j);
+                    pointInsert.setLong(1, tipID);
+                    pointInsert.setDouble(2, tip.getY());
+                    pointInsert.setDouble(3, tip.getX());
+                    pointInsert.executeUpdate();
+                    crackPointInsert.setLong(1, crackID);
+                    crackPointInsert.setLong(2, tipID);
+                    crackPointInsert.executeUpdate();
+                    tipID++;
+                }
+                crackID++;
             }
 
 //            for (int i = 0; i < 5000; i++) {
@@ -266,5 +299,13 @@ public class DatabasePersist {
             //e.printStackTrace(System.err);
             e = e.getNextException();
         }
+    }
+
+    private void disableLogArchiveMode(Connection conn) throws SQLException {
+        String sqlstmt = "CALL SYSCS_UTIL.SYSCS_DISABLE_LOG_ARCHIVE_MODE(?)";
+        CallableStatement cs = conn.prepareCall(sqlstmt);
+        cs.setInt(1, 1);
+        cs.execute();
+//    cs.close();
     }
 }
