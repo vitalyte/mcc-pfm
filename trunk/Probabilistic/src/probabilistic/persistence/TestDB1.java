@@ -203,7 +203,6 @@ public class TestDB1 {
                 psInsert.setInt(1, i);
                 psInsert.setString(2, String.valueOf(i + i));
                 psInsert.executeUpdate();
-//           db.executeUpdate("INSERT INTO demotab VALUES("+String.valueOf(i)+","+String.valueOf(i*i)+")");
             }
 
 //            psInsert.setInt(1, 1956);
