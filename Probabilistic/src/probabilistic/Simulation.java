@@ -18,6 +18,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.commons.math.ode.DerivativeException;
 import org.apache.commons.math.ode.IntegratorException;
+import probabilistic.persistence.DatabasePersist;
 import probabilistic.persistence.PersistenceRun;
 
 /**
@@ -41,9 +42,9 @@ public class Simulation {
     private ArrayList<SemiellipticalCrack> ellipticalCrackList;
 //    private static ArrayList<ArrayList> cracksHistoryList;
     private ArrayList<SemiellipticalCrack> paintedCracks;
-    private static boolean maxLengthCondition;
+    private static boolean  maxLengthCondition;
     private static String histFolder = "Serializable";
-    PersistenceRun persistenceObj;
+    DatabasePersist persistObj;
 
     public Simulation(double height, double width, double grainHeight, double grainWidth,
             double meanInitiationTime, double scaleInitiationTime, double sigma, double yieldStress, double parametrK, double maxCrackLength, double visualKValue) {
@@ -60,7 +61,8 @@ public class Simulation {
         Simulation.visualScale = visualKValue;
         maxLengthCondition = false;
         workWithFiles();
-        persistenceObj = new PersistenceRun();
+        persistObj = new DatabasePersist();
+        persistObj.setup();
     }
 
     public void FillRandomCracks(double length2AMean, double length2AScale,
@@ -117,13 +119,13 @@ public class Simulation {
                         }
                         growth = true;
                     }
-                    persistenceObj.setUpPersistence(ellipticalCrackList);
+//                    persistenceObj.setUpPersistence(ellipticalCrackList);
                     i++;
                     step++;
                 }
             }
-            persistenceObj.setUpPersistence(ellipticalCrackList);
-             persistenceObj.close();
+            persistObj.persist(ellipticalCrackList);
+             persistObj.close(true);
 
             filledCkracks = true;
             maxTimeIndx = i;
