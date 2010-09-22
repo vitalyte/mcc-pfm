@@ -64,10 +64,11 @@ public class DatabasePersist {
             Properties props = new Properties(); // connection properties
             // providing a user name and password is optional in the embedded
             // and derbyclient frameworks
+
             props.put("create", "true");
             props.put("user", "crack");
             props.put("password", "crack");
-            props.put("SYSCS_UTIL.SYSCS_DISABLE_LOG_ARCHIVE_MODE", "1");
+            props.put("durability", "test");
 
             /* By default, the schema APP will be used when no username is
              * provided.
@@ -100,6 +101,9 @@ public class DatabasePersist {
             // We want to control transactions manually. Autocommit is on by
             // default in JDBC.
             conn.setAutoCommit(false);
+            String deleteSemielepticalcrackPoint = "DROP TABLE CRACK.SEMIELLIPTICALCRACK_POINT";
+            String deleteSemielepticalcrack = "DROP TABLE CRACK.SEMIELLIPTICALCRACK";
+            String deletePoint = "DROP TABLE CRACK.POINT";
             String createSemielepticalcrack = "create table CRACK.SEMIELLIPTICALCRACK"
                     + "(ID BIGINT not null primary key,"
                     + "CURRENTTIME DOUBLE, DEPTHB DOUBLE, INITTIME DOUBLE, ASPECTRATIO DOUBLE"
@@ -117,6 +121,9 @@ public class DatabasePersist {
             /* Creating a statement object that we can use for running various
              * SQL statements commands against the database.*/
             stat = conn.createStatement();
+            stat.execute(deleteSemielepticalcrackPoint);
+            stat.execute(deleteSemielepticalcrack);
+            stat.execute(deletePoint);
             stat.execute(createSemielepticalcrack);
             stat.execute(createPoint);
             stat.execute(createSemielepticalcrackPoint);
