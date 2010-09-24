@@ -42,7 +42,7 @@ public class Simulation {
     private ArrayList<SemiellipticalCrack> ellipticalCrackList;
 //    private static ArrayList<ArrayList> cracksHistoryList;
     private ArrayList<SemiellipticalCrack> paintedCracks;
-    private static boolean  maxLengthCondition;
+    private static boolean maxLengthCondition;
     private static String histFolder = "Serializable";
     DatabasePersist persistObj;
 
@@ -69,11 +69,11 @@ public class Simulation {
             double depthMean, double depthScale, double aspectRatio) {
         filledCkracks = false;
         int i = 0;
-        int step = 0;
+        int step = 100;
         if (isFilledCkracks() == false) {
             exitMaxCondition:
-            while (i < surface.getNmax()-1) {
-                 //ввести ще один цикл перевірки координати точки!!!
+            while (i < surface.getNmax() - 1) {
+                //ввести ще один цикл перевірки координати точки!!!
                 double rndX = UniformDistribution.PPF(RNG.Ran2(seed), 0, surface.getWidth());
                 double rndY = UniformDistribution.PPF(RNG.Ran2(seed), 0, surface.getHeight());
                 int rndI = (int) (rndX / surface.getGrainWidth());
@@ -84,12 +84,12 @@ public class Simulation {
                     generNewCrack(i, rndX, rndY, rndI, rndJ, length2AMean, length2AScale, depthMean, depthScale, aspectRatio);
                     //Serialization
                     if (step >= 0) {
-//                        outputToFile(i);
+                       outputToDB();
                         step = 0;
                     }
                     double currentTime = timeObj.getInitTime().get(i);
                     if (i > 0 && i < timeObj.getInitTime().size()) {
-                        deltaT =currentTime - timeObj.getInitTime().get(i - 1) ;
+                        deltaT = currentTime - timeObj.getInitTime().get(i - 1);
                     } else if (i >= timeObj.getInitTime().size()) {
                         break exitMaxCondition;
                     } else if (i == 0) {
@@ -119,19 +119,23 @@ public class Simulation {
                         }
                         growth = true;
                     }
-//                    persistenceObj.setUpPersistence(ellipticalCrackList);
+                    persistObj.persist(ellipticalCrackList);
                     i++;
                     step++;
                 }
             }
-            persistObj.persist(ellipticalCrackList);
-             persistObj.close(true);
-
+            outputToDB();
+            persistObj.close(true);
             filledCkracks = true;
             maxTimeIndx = i;
             outputToFile(i);
         }
         getPaintedCracks(i);
+    }
+
+    private void outputToDB() {
+        persistObj.persist(ellipticalCrackList);
+
     }
 
     private void initMatrix(SurfaceArea surface) {
@@ -387,7 +391,6 @@ public class Simulation {
 //    public static ArrayList<ArrayList> getCracksHistoryList() {
 //        return cracksHistoryList;
 //    }
-
     public static boolean isMaxLengthCondition() {
         return maxLengthCondition;
     }

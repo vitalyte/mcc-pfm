@@ -1,6 +1,6 @@
 ----------------------------------------------------------------
-2010-09-22 15:24:23.819 GMT:
- Booting Derby version The Apache Software Foundation - Apache Derby - 10.5.3.0 - (802917): instance a816c00e-012b-3a0b-a66d-0000020f6380
+2010-09-24 13:32:01.881 GMT:
+ Booting Derby version The Apache Software Foundation - Apache Derby - 10.5.3.0 - (802917): instance a816c00e-012b-43f1-7ec0-00000167d138
 on database directory /home/vitaly/NetBeansProjects/trunk/Probabilistic/crackDB  
 
 Database Class Loader started - derby.database.classpath=''
