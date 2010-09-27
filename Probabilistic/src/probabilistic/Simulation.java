@@ -82,9 +82,9 @@ public class Simulation {
                 if (isSquareEmpty(matrix, rndI, rndJ)) {
 //                        точку кинули в порожню клітину
                     generNewCrack(i, rndX, rndY, rndI, rndJ, length2AMean, length2AScale, depthMean, depthScale, aspectRatio);
-                    //Serialization
+                    //Persistence (Serialization)
                     if (step >= 0) {
-                       outputToDB();
+                        outputToDB();
                         step = 0;
                     }
                     double currentTime = timeObj.getInitTime().get(i);
@@ -119,22 +119,22 @@ public class Simulation {
                         }
                         growth = true;
                     }
-                    persistObj.persist(ellipticalCrackList);
                     i++;
                     step++;
                 }
             }
             outputToDB();
-            persistObj.close(true);
+//            persistObj.close(true);
             filledCkracks = true;
             maxTimeIndx = i;
-            outputToFile(i);
+//            outputToFile(i);
         }
         getPaintedCracks(i);
     }
 
     private void outputToDB() {
         persistObj.persist(ellipticalCrackList);
+        persistObj.commit();
 
     }
 
@@ -253,7 +253,7 @@ public class Simulation {
     }
 
     public ArrayList<SemiellipticalCrack> getPaintedCracks(int timeIndx) {
-        inputFromFile(timeIndx);
+        inputFromDB(timeIndx);
         return paintedCracks;
     }
 
@@ -280,6 +280,11 @@ public class Simulation {
             }
         }
 
+    }
+
+    private void inputFromDB(int timeIndx) {
+        paintedCracks =
+                persistObj.retrieve(timeObj.getInitTime().get(timeIndx-1));
     }
 
     /**
@@ -402,4 +407,9 @@ public class Simulation {
     public static double getMaxCrackLength() {
         return maxCrackLength;
     }
+
+    public DatabasePersist getPersistObj() {
+        return persistObj;
+    }
+
 }

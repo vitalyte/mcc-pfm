@@ -35,6 +35,53 @@ public class DatabasePersist {
     Connection conn;
     boolean last = false;
     long crackID, tipID;
+    String dbName = "crackDB";
+
+    public ArrayList<SemiellipticalCrack> retrieve(double currentTime) {
+        ArrayList<SemiellipticalCrack> retrievedCracks = new ArrayList<SemiellipticalCrack>();
+        try {
+            System.out.println("Select from " + dbName);
+
+            // We want to control transactions manually. Autocommit is on by
+            // default in JDBC.
+            conn.setAutoCommit(false);
+            String selectSemielepticalcrackPoint = 
+                    "SELECT ID,CURRENTTIME,DEPTHB,INITTIME,ASPECTRATIO "
+                    + "FROM CRACK.SEMIELLIPTICALCRACK WHERE CURRENTTIME=" + currentTime;
+            /* Creating a statement object that we can use for running various
+             * SQL statements commands against the database.*/
+
+
+            stat = conn.createStatement();
+            try {
+                ResultSet rs = stat.executeQuery(selectSemielepticalcrackPoint);
+
+                while (rs.next()) {
+                    SemiellipticalCrack crack= new SemiellipticalCrack();
+                    int id = rs.getInt(1);
+                    crack.setCurrentTime(rs.getDouble(2));
+                    crack.setDepthB(rs.getDouble(3));
+                    crack.setInitTime(rs.getDouble(4));
+                    crack.setAspectRatio(rs.getDouble(5));
+                    String selectPoint  = "SELECT CRACK.POINT.X, CRACK.POINT.Y "
+                            + "FROM CRACK.POINT WHERE CRACK.SEMIELLIPTICALCRACK.ID = " + id;
+                    ResultSet rsPoint = stat.executeQuery(selectPoint);
+                    while (rsPoint.next()) {
+                        crack.getCrackTip().add(new Point(rsPoint.getDouble(2), rsPoint.getDouble(3)));
+                    }
+                    retrievedCracks.add(crack);
+                }
+
+               
+            } catch (SQLException sQLException) {
+                System.out.println("sQLException");
+            }
+            statements.add(stat);
+        } catch (SQLException sqle) {
+            printSQLException(sqle);
+        }
+        return retrievedCracks;
+    }
 
     public void setup() {
         crackID = 1;
@@ -80,7 +127,7 @@ public class DatabasePersist {
              * authentication, see the Derby Developer's Guide.
              */
 
-            String dbName = "crackDB"; // the name of the database
+            dbName = "crackDB"; // the name of the database
 
             /*
              * This connection specifies create=true in the connection URL to
@@ -121,22 +168,25 @@ public class DatabasePersist {
             /* Creating a statement object that we can use for running various
              * SQL statements commands against the database.*/
             stat = conn.createStatement();
-            stat.execute(deleteSemielepticalcrackPoint);
-            stat.execute(deleteSemielepticalcrack);
-            stat.execute(deletePoint);
+            try {
+                stat.execute(deleteSemielepticalcrackPoint);
+                stat.execute(deleteSemielepticalcrack);
+                stat.execute(deletePoint);
+            } catch (SQLException sQLException) {
+            }
             stat.execute(createSemielepticalcrack);
             stat.execute(createPoint);
             stat.execute(createSemielepticalcrackPoint);
 //            stat.execute(alterSemielepticalcrackPoint);
 
             statements.add(stat);
-            String delCracPointkSql = "DELETE FROM SEMIELLIPTICALCRACK_POINT";
-            stat.execute(delCracPointkSql);
-
-            String delCrackSql = "DELETE FROM SEMIELLIPTICALCRACK";
-            stat.execute(delCrackSql);
-            String delPointSql = "DELETE FROM POINT";
-            stat.execute(delPointSql);
+//            String delCracPointkSql = "DELETE FROM SEMIELLIPTICALCRACK_POINT";
+//            stat.execute(delCracPointkSql);
+//
+//            String delCrackSql = "DELETE FROM SEMIELLIPTICALCRACK";
+//            stat.execute(delCrackSql);
+//            String delPointSql = "DELETE FROM POINT";
+//            stat.execute(delPointSql);
         } catch (SQLException sqle) {
             printSQLException(sqle);
         }
@@ -212,21 +262,25 @@ public class DatabasePersist {
         }
     }
 
+    public void commit() {
+        try {
+            conn.commit();
+            System.out.println("Committed the transaction");
+            if (rs != null) {
+                rs.close();
+                rs = null;
+            }
+        } catch (SQLException sqle) {
+            printSQLException(sqle);
+        }
+    }
+
     public void close(boolean param) {
         if (param == true) {
             // release all open resources to avoid unnecessary memory usage
 
             // ResultSet
-            try {
-                conn.commit();
-                System.out.println("Committed the transaction");
-                if (rs != null) {
-                    rs.close();
-                    rs = null;
-                }
-            } catch (SQLException sqle) {
-                printSQLException(sqle);
-            }
+            this.commit();
 
             // Statements and PreparedStatements
             int i = 0;
