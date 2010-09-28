@@ -82,11 +82,7 @@ public class Simulation {
                 if (isSquareEmpty(matrix, rndI, rndJ)) {
 //                        точку кинули в порожню клітину
                     generNewCrack(i, rndX, rndY, rndI, rndJ, length2AMean, length2AScale, depthMean, depthScale, aspectRatio);
-                    //Persistence (Serialization)
-                    if (step >= 0) {
-                        outputToDB();
-                        step = 0;
-                    }
+
                     double currentTime = timeObj.getInitTime().get(i);
                     if (i > 0 && i < timeObj.getInitTime().size()) {
                         deltaT = currentTime - timeObj.getInitTime().get(i - 1);
@@ -103,7 +99,13 @@ public class Simulation {
                         if (growth) {
                             if (maxLengthCondition) {
                                 maxTimeIndx = i;
+                                outputToDB();
                                 break exitMaxCondition;
+                            }
+                            //Persistence (Serialization)
+                            if (step >= 0) {
+                                outputToDB();
+                                step = 0;
                             }
                             break coalescenceGrowthCycle;
                         }
@@ -123,8 +125,8 @@ public class Simulation {
                     step++;
                 }
             }
-            outputToDB();
-//            persistObj.close(true);
+
+
             filledCkracks = true;
             maxTimeIndx = i;
 //            outputToFile(i);
@@ -237,6 +239,7 @@ public class Simulation {
      */
     private void growth(int tIndx, double currentTime, double deltaT) throws DerivativeException, IntegratorException {
         for (int j = 0; j < ellipticalCrackList.size(); j++) {
+            ellipticalCrackList.get(j).setCurrentTime(currentTime);
             if (!ellipticalCrackList.get(j).isInStressRelZoneScreen()) {
                 ellipticalCrackList.get(j).integrate(currentTime, deltaT);
             }
@@ -284,7 +287,7 @@ public class Simulation {
 
     private void inputFromDB(int timeIndx) {
         paintedCracks =
-                persistObj.retrieve(timeObj.getInitTime().get(timeIndx-1));
+                persistObj.retrieve(timeObj.getInitTime().get(timeIndx - 1));
     }
 
     /**
@@ -411,5 +414,4 @@ public class Simulation {
     public DatabasePersist getPersistObj() {
         return persistObj;
     }
-
 }
