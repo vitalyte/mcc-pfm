@@ -34,8 +34,8 @@ import org.eclipse.persistence.annotations.Customizer;
  */
 //@Entity
 //@Customizer(probabilistic.persistence.HistoryCustomizer.class)
-
 public class SemiellipticalCrack implements Externalizable, Serializable {
+
     private double depthB;
     private double aspectRatio;
 //    @OneToMany
@@ -48,7 +48,6 @@ public class SemiellipticalCrack implements Externalizable, Serializable {
 //    private Long id;
     //not Serialized
 //    @Transient
-
 
     /**
      * Constructor for Externalizable
@@ -195,6 +194,15 @@ public class SemiellipticalCrack implements Externalizable, Serializable {
     }
 
     /**
+     * Set the value of aspectRatio
+     *
+     * @param aspectRatio new value of aspectRatio
+     */
+    public void setAspectRatioORM(double aspectRatio) {
+        this.aspectRatio = aspectRatio;
+    }
+
+    /**
      * Get the value of crackLengthB
      *
      * @return the value of crackLengthB
@@ -214,13 +222,22 @@ public class SemiellipticalCrack implements Externalizable, Serializable {
     }
 
     /**
+     * Set the value of crackLengthB
+     *
+     * @param crackLengthB new value of crackLengthB
+     */
+    public void setDepthBORM(double crackDepthB) {
+        this.depthB = crackDepthB;
+    }
+
+    /**
      * Get the value of crackLength
      *
      * @return the value of crackLength
      */
     public final double getLength2a() {
 //        crackTip.get(crackTip.size()-1).getX() - crackTip.get(0).getX()
-        return crackTip.get(crackTip.size() - 1).getX() - crackTip.get(0).getX();
+        return Math.abs(crackTip.get(crackTip.size() - 1).getX() - crackTip.get(0).getX());
     }
 
     /**
@@ -414,7 +431,6 @@ public class SemiellipticalCrack implements Externalizable, Serializable {
 //    public void setId(Long id) {
 //        this.id = id;
 //    }
-
     public List<Point> getCrackTip() {
         return crackTip;
     }
@@ -438,6 +454,4 @@ public class SemiellipticalCrack implements Externalizable, Serializable {
     public void setInitTime(double initTime) {
         this.initTime = initTime;
     }
-
-
 }

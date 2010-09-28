@@ -33,7 +33,6 @@ public class DatabasePersist {
     Statement stat = null;
     ResultSet rs = null;
     Connection conn;
-    boolean last = false;
     long crackID, tipID;
     String dbName = "crackDB";
 
@@ -42,44 +41,54 @@ public class DatabasePersist {
         try {
             System.out.println("Select from " + dbName);
 
-            // We want to control transactions manually. Autocommit is on by
-            // default in JDBC.
-            conn.setAutoCommit(false);
-            String selectSemielepticalcrackPoint = 
+
+            String selectSemielepticalcrackPoint =
                     "SELECT ID,CURRENTTIME,DEPTHB,INITTIME,ASPECTRATIO "
                     + "FROM CRACK.SEMIELLIPTICALCRACK WHERE CURRENTTIME=" + currentTime;
             /* Creating a statement object that we can use for running various
              * SQL statements commands against the database.*/
 
-
+            stat.close();
             stat = conn.createStatement();
+            Statement statPoint = conn.createStatement();
+
             try {
+                ArrayList<Long> idList = new ArrayList<Long>();
+
                 ResultSet rs = stat.executeQuery(selectSemielepticalcrackPoint);
 
+
                 while (rs.next()) {
-                    SemiellipticalCrack crack= new SemiellipticalCrack();
-                    int id = rs.getInt(1);
+                    SemiellipticalCrack crack = new SemiellipticalCrack();
+                    idList.add(rs.getLong(1));
+                    long id = rs.getLong(1);
                     crack.setCurrentTime(rs.getDouble(2));
-                    crack.setDepthB(rs.getDouble(3));
+                    crack.setDepthBORM(rs.getDouble(3));
                     crack.setInitTime(rs.getDouble(4));
-                    crack.setAspectRatio(rs.getDouble(5));
-                    String selectPoint  = "SELECT CRACK.POINT.X, CRACK.POINT.Y "
-                            + "FROM CRACK.POINT WHERE CRACK.SEMIELLIPTICALCRACK.ID = " + id;
-                    ResultSet rsPoint = stat.executeQuery(selectPoint);
+                    crack.setAspectRatioORM(rs.getDouble(5));
+                    retrievedCracks.add(crack);
+                    String selectPoint = "SELECT ID,X,Y FROM CRACK.POINT WHERE POINT.ID IN (SELECT SEMIELLIPTICALCRACK_POINT.CRACKTIP_ID FROM CRACK.SEMIELLIPTICALCRACK_POINT WHERE SEMIELLIPTICALCRACK_POINT.SEMIELLIPTICALCRACK_ID=" + id + ")";
+                    ResultSet rsPoint = statPoint.executeQuery(selectPoint);
                     while (rsPoint.next()) {
                         crack.getCrackTip().add(new Point(rsPoint.getDouble(2), rsPoint.getDouble(3)));
                     }
-                    retrievedCracks.add(crack);
+                    rsPoint.close();
                 }
+                rs.close();
 
-               
+
+
             } catch (SQLException sQLException) {
                 System.out.println("sQLException");
             }
+            statPoint.close();
             statements.add(stat);
+            statements.add(statPoint);
         } catch (SQLException sqle) {
             printSQLException(sqle);
         }
+
+
         return retrievedCracks;
     }
 
@@ -89,14 +98,7 @@ public class DatabasePersist {
         /* load the desired JDBC driver */
         loadDriver();
 
-        /* We will be using Statement and PreparedStatement objects for
-         * executing SQL. These objects, as well as Connections and ResultSets,
-         * are resources that should be released explicitly after use, hence
-         * the try-catch-finally pattern used below.
-         * We are storing the Statement and Prepared statement object references
-         * in an array list for convenience.
-         */
-        conn = null;
+
 
         /* This ArrayList usage may cause a warning when compiling this class
          * with a compiler for J2SE 5.0 or newer. We are not using generics
@@ -108,6 +110,7 @@ public class DatabasePersist {
         rs = null;
 
         try {
+
             Properties props = new Properties(); // connection properties
             // providing a user name and password is optional in the embedded
             // and derbyclient frameworks
@@ -141,9 +144,10 @@ public class DatabasePersist {
              */
             conn = DriverManager.getConnection(protocol + dbName //                    + ";create=true"
                     , props);
-//            disableLogArchiveMode(conn);
+
 
             System.out.println("Connected to and created database " + dbName);
+
 
             // We want to control transactions manually. Autocommit is on by
             // default in JDBC.
@@ -249,23 +253,17 @@ public class DatabasePersist {
                 crackID++;
             }
 
-//            for (int i = 0; i < 5000; i++) {
-//                crackInsert.setInt(1, i);
-//                crackInsert.setString(2, String.valueOf(i + i));
-//                crackInsert.executeUpdate();
-//           db.executeUpdate("INSERT INTO demotab VALUES("+String.valueOf(i)+","+String.valueOf(i*i)+")");
-//            }
+
         } catch (SQLException sqle) {
             printSQLException(sqle);
         } finally {
-            close(last);
         }
     }
 
     public void commit() {
         try {
             conn.commit();
-            System.out.println("Committed the transaction");
+//            System.out.println("Committed the transaction");
             if (rs != null) {
                 rs.close();
                 rs = null;

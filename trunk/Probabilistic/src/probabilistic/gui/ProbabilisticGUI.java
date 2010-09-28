@@ -1030,7 +1030,10 @@ public class ProbabilisticGUI extends javax.swing.JFrame {
         } catch (Exception e) {
         }
 
-
+        try {
+            simuleObj.getPersistObj().close(true);
+        } catch (Exception e) {
+        }
 
         simuleObj = new Simulation(HeightValue, WidthValue, gHeightValue,
                 gWidthValue, timeMeanValue, timeScaleValue, valueSigma,
@@ -1041,41 +1044,17 @@ public class ProbabilisticGUI extends javax.swing.JFrame {
 
         gridJPanel1.setSimulObj(simuleObj);
         gridJPanel1.paintComponent(gridJPanel1.getGraphics());
-//        gridJPanel1 = new GridJPanel(surfaceObj);
 
         surfaceGeometry.setText("hxw surface=" + gridJPanel1.getSurface().getHeight() + "x"
                 + gridJPanel1.getSurface().getWidth() + " " + "grain=" + gridJPanel1.getSurface().getGrainHeight() + "x"
                 + gridJPanel1.getSurface().getGrainWidth() + " Nmax =" + gridJPanel1.getSurface().getNmax());
 
-//            for (int i = 0; i < gridJPanel1.getSurface().getEllipticalCrack().size(); i++) {
-//                SemiellipticalCrack crack = gridJPanel1.getSurface().getEllipticalCrack().get(i);
-//
-//                System.out.println("Length of cracks = " + crack.getLength2a());
-//                System.out.println("cracks = " + crack.toString());
-//                System.out.println("cracks = " + gridJPanel1.getSurface().getEllipticalCrack().size());
-//            }
 
-
-
-//        for (int i = 0; i < gridJPanel1.getSurface().getCracksHistoryList().get(0).size(); i++) {
-//            CrackHistory crack = (CrackHistory) gridJPanel1.getSurface().getCracksHistoryList().get(0).get(i);
-//            System.out.println("cracks = " + crack.toString());
-//            System.out.println("Length of cracks = " + crack.getLength2a());
-////            System.out.println("cracks = " + gridJPanel1.getSurface().getEllipticalCrack().size());
-//        }
         timeIndexHistory.setText(gridJPanel1.getSimulObj().getMaxTimeIndxS());
         maxTIndex.setText(gridJPanel1.getSimulObj().getMaxTimeIndxS());
         timeValue.setText(gridJPanel1.getSimulObj().getTime().getInitTime().get(gridJPanel1.getSimulObj().getMaxTimeIndx()).toString());
-//        jSlider1.setMaximum(gridJPanel1.getSurface().getMaxCrackLengthTimeIndex());
-//        jScrollPane1.setViewportView(gridJPanel1);
-//        jScrollPane1.repaint();
 
-//        jSpinnerHistory.setText(gridJPanel1.getSurface().getMaxCrackLengthTimeIndexS());
 
-//        gridJPanel1.validate();
-//        gridJPanel1.invalidate();
-//        //this.validateTree();
-//        gridJPanel1.repaint();
-//        jPanel4.repaint();
+
     }
 }
