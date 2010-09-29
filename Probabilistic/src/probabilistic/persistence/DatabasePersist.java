@@ -155,6 +155,7 @@ public class DatabasePersist {
             String deleteSemielepticalcrackPoint = "DROP TABLE CRACK.SEMIELLIPTICALCRACK_POINT";
             String deleteSemielepticalcrack = "DROP TABLE CRACK.SEMIELLIPTICALCRACK";
             String deletePoint = "DROP TABLE CRACK.POINT";
+            String deleteSemielepticalcrackINDX = "DROP INDEX CURTIME";
             String createSemielepticalcrack = "create table CRACK.SEMIELLIPTICALCRACK"
                     + "(ID BIGINT not null primary key,"
                     + "CURRENTTIME DOUBLE, DEPTHB DOUBLE, INITTIME DOUBLE, ASPECTRATIO DOUBLE"
@@ -166,6 +167,7 @@ public class DatabasePersist {
             String createSemielepticalcrackPoint = "create table CRACK.SEMIELLIPTICALCRACK_POINT"
                     + "(SEMIELLIPTICALCRACK_ID BIGINT REFERENCES CRACK.SEMIELLIPTICALCRACK(ID) ,"
                     + "CRACKTIP_ID BIGINT REFERENCES CRACK.POINT(ID))";
+            String createSemielepticalcrackINDX = "CREATE INDEX CURTIME ON CRACK.SEMIELLIPTICALCRACK (CURRENTTIME)";
 //            String alterSemielepticalcrackPoint = "ALTER TABLE CRACK.SEMIELLIPTICALCRACK_POINT"
 //                    + "ADD FOREIGN KEY (SEMIELLIPTICALCRACK_ID)REFERENCES CRACK.SEMIELLIPTICALCRACK(ID), "
 //                    + "ADD FOREIGN KEY (CRACKTIP_ID) REFERENCES CRACK.POINT(ID)";
@@ -176,11 +178,14 @@ public class DatabasePersist {
                 stat.execute(deleteSemielepticalcrackPoint);
                 stat.execute(deleteSemielepticalcrack);
                 stat.execute(deletePoint);
+                stat.execute(deleteSemielepticalcrackINDX);
             } catch (SQLException sQLException) {
             }
             stat.execute(createSemielepticalcrack);
             stat.execute(createPoint);
             stat.execute(createSemielepticalcrackPoint);
+            stat.execute(createSemielepticalcrackINDX);
+
 //            stat.execute(alterSemielepticalcrackPoint);
 
             statements.add(stat);
