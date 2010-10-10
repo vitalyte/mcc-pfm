@@ -69,10 +69,11 @@ public class Simulation {
             double depthMean, double depthScale, double aspectRatio) {
         filledCkracks = false;
         int i = 0;
-        int step = 100;
+        int step = 1;
         if (isFilledCkracks() == false) {
             exitMaxCondition:
             while (i < surface.getNmax() - 1) {
+                
                 //ввести ще один цикл перевірки координати точки!!!
                 double rndX = UniformDistribution.PPF(RNG.Ran2(seed), 0, surface.getWidth());
                 double rndY = UniformDistribution.PPF(RNG.Ran2(seed), 0, surface.getHeight());
@@ -103,9 +104,10 @@ public class Simulation {
                                 break exitMaxCondition;
                             }
                             //Persistence (Serialization)
-                            if (step >= 0) {
+                            if (step >= 100 && i < (surface.getNmax() - 1)) {
                                 outputToDB();
                                 step = 0;
+                                System.out.println("timeIndex x from X= " + i +"/"+ (surface.getNmax() - 1));
                             }
                             break coalescenceGrowthCycle;
                         }
@@ -129,6 +131,7 @@ public class Simulation {
 
             filledCkracks = true;
             maxTimeIndx = i;
+            outputToDB();
 //            outputToFile(i);
         }
         getPaintedCracks(i);
