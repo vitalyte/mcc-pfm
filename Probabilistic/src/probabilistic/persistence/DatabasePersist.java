@@ -4,6 +4,7 @@
  */
 package probabilistic.persistence;
 
+import java.math.BigDecimal;
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -30,60 +31,67 @@ public class DatabasePersist {
     PreparedStatement pointInsert = null;
     PreparedStatement psUpdate = null;
     PreparedStatement crackPointInsert = null;
+    PreparedStatement crackCrackSelect = null;
+    PreparedStatement crackPointSelect = null;
     Statement stat = null;
     ResultSet rs = null;
     Connection conn;
     long crackID, tipID;
     String dbName = "crackDB";
+    private static final String selectSemielepticalcrackPoint =
+                    "SELECT ID,CURRENTTIME,DEPTHB,INITTIME,ASPECTRATIO "
+                    + "FROM CRACK.SEMIELLIPTICALCRACK WHERE CURRENTTIME = ?";
+    private static final String selectPoint = "SELECT ID,X,Y,IDCRACK FROM CRACK.POINT WHERE POINT.IDCRACK = ?";
 
     public ArrayList<SemiellipticalCrack> retrieve(double currentTime) {
         ArrayList<SemiellipticalCrack> retrievedCracks = new ArrayList<SemiellipticalCrack>();
         try {
             System.out.println("Select from " + dbName);
+            crackCrackSelect = conn.prepareStatement(selectSemielepticalcrackPoint);
+            statements.add(crackCrackSelect);
+            crackPointSelect = conn.prepareStatement(selectPoint);
+            statements.add(crackPointSelect);
 
-
-            String selectSemielepticalcrackPoint =
-                    "SELECT ID,CURRENTTIME,DEPTHB,INITTIME,ASPECTRATIO "
-                    + "FROM CRACK.SEMIELLIPTICALCRACK WHERE CURRENTTIME=" + currentTime;
             /* Creating a statement object that we can use for running various
              * SQL statements commands against the database.*/
 
             stat.close();
-            stat = conn.createStatement();
-            Statement statPoint = conn.createStatement();
+//            stat = conn.createStatement();
+//            Statement statPoint = conn.createStatement();
+            crackCrackSelect.setDouble(1, currentTime);
 
             try {
                 ArrayList<Long> idList = new ArrayList<Long>();
 
-                ResultSet rs = stat.executeQuery(selectSemielepticalcrackPoint);
+                ResultSet resultOfCtacks = crackCrackSelect.executeQuery();
 
 
-                while (rs.next()) {
+                while (resultOfCtacks.next()) {
                     SemiellipticalCrack crack = new SemiellipticalCrack();
-                    idList.add(rs.getLong(1));
-                    long id = rs.getLong(1);
-                    crack.setCurrentTime(rs.getDouble(2));
-                    crack.setDepthBORM(rs.getDouble(3));
-                    crack.setInitTime(rs.getDouble(4));
-                    crack.setAspectRatioORM(rs.getDouble(5));
+                    idList.add(resultOfCtacks.getLong(1));
+                    long id = resultOfCtacks.getLong(1);
+                    crack.setCurrentTime(resultOfCtacks.getDouble(2));
+                    crack.setDepthBORM(resultOfCtacks.getDouble(3));
+                    crack.setInitTime(resultOfCtacks.getDouble(4));
+                    crack.setAspectRatioORM(resultOfCtacks.getDouble(5));
                     retrievedCracks.add(crack);
-                    String selectPoint = "SELECT ID,X,Y FROM CRACK.POINT WHERE POINT.ID IN (SELECT SEMIELLIPTICALCRACK_POINT.CRACKTIP_ID FROM CRACK.SEMIELLIPTICALCRACK_POINT WHERE SEMIELLIPTICALCRACK_POINT.SEMIELLIPTICALCRACK_ID=" + id + ")";
-                    ResultSet rsPoint = statPoint.executeQuery(selectPoint);
+                    crackPointSelect.setLong(1, id);
+                    ResultSet rsPoint = crackPointSelect.executeQuery();
                     while (rsPoint.next()) {
                         crack.getCrackTip().add(new Point(rsPoint.getDouble(2), rsPoint.getDouble(3)));
                     }
                     rsPoint.close();
                 }
-                rs.close();
+                resultOfCtacks.close();
 
 
 
             } catch (SQLException sQLException) {
                 System.out.println("sQLException");
             }
-            statPoint.close();
-            statements.add(stat);
-            statements.add(statPoint);
+            crackPointSelect.close();
+            crackCrackSelect.close();
+            statements.add(stat);            
         } catch (SQLException sqle) {
             printSQLException(sqle);
         }
@@ -152,39 +160,50 @@ public class DatabasePersist {
             // We want to control transactions manually. Autocommit is on by
             // default in JDBC.
             conn.setAutoCommit(false);
-            String deleteSemielepticalcrackPoint = "DROP TABLE CRACK.SEMIELLIPTICALCRACK_POINT";
+//            String deleteSemielepticalcrackPoint = "DROP TABLE CRACK.SEMIELLIPTICALCRACK_POINT";
             String deleteSemielepticalcrack = "DROP TABLE CRACK.SEMIELLIPTICALCRACK";
             String deletePoint = "DROP TABLE CRACK.POINT";
             String deleteSemielepticalcrackINDX = "DROP INDEX CURTIME";
+//            String deleteSemielepticalcrackPointINDX = "DROP INDEX CRACKID";
+            String deletePointINDXIDCRACK = "DROP INDEX POINTIDCRACK";
+//            String deleteSemielepticalcrackINDX_ID = "DROP INDEX IDOFCRACK";
+
             String createSemielepticalcrack = "create table CRACK.SEMIELLIPTICALCRACK"
                     + "(ID BIGINT not null primary key,"
                     + "CURRENTTIME DOUBLE, DEPTHB DOUBLE, INITTIME DOUBLE, ASPECTRATIO DOUBLE"
                     + ")";
             String createPoint = "create table CRACK.POINT"
-                    + "(ID BIGINT not null primary key, Y DOUBLE, X DOUBLE"
+                    + "(ID BIGINT not null primary key, Y DOUBLE, X DOUBLE, IDCRACK BIGINT not null"
                     + ")";
 
-            String createSemielepticalcrackPoint = "create table CRACK.SEMIELLIPTICALCRACK_POINT"
-                    + "(SEMIELLIPTICALCRACK_ID BIGINT REFERENCES CRACK.SEMIELLIPTICALCRACK(ID) ,"
-                    + "CRACKTIP_ID BIGINT REFERENCES CRACK.POINT(ID))";
+//            String createSemielepticalcrackPoint = "create table CRACK.SEMIELLIPTICALCRACK_POINT"
+//                    + "(SEMIELLIPTICALCRACK_ID BIGINT REFERENCES CRACK.SEMIELLIPTICALCRACK(ID) ,"
+//                    + "CRACKTIP_ID BIGINT REFERENCES CRACK.POINT(ID))";
             String createSemielepticalcrackINDX = "CREATE INDEX CURTIME ON CRACK.SEMIELLIPTICALCRACK (CURRENTTIME)";
-//            String alterSemielepticalcrackPoint = "ALTER TABLE CRACK.SEMIELLIPTICALCRACK_POINT"
-//                    + "ADD FOREIGN KEY (SEMIELLIPTICALCRACK_ID)REFERENCES CRACK.SEMIELLIPTICALCRACK(ID), "
-//                    + "ADD FOREIGN KEY (CRACKTIP_ID) REFERENCES CRACK.POINT(ID)";
+//            String createSemielepticalcrackPointINDX = "CREATE INDEX CRACKID ON CRACK.SEMIELLIPTICALCRACK_POINT (SEMIELLIPTICALCRACK_ID)";
+            String createPointINDX = "CREATE INDEX POINTIDCRACK ON CRACK.POINT (IDCRACK)";
+//            String createSemielepticalcrackINDX_ID = "CREATE INDEX IDOFCRACK ON CRACK.SEMIELLIPTICALCRACK (CURRENTTIME)";
+
             /* Creating a statement object that we can use for running various
              * SQL statements commands against the database.*/
             stat = conn.createStatement();
             try {
-                stat.execute(deleteSemielepticalcrackPoint);
+//                stat.execute(deleteSemielepticalcrackPoint);
                 stat.execute(deleteSemielepticalcrack);
                 stat.execute(deletePoint);
                 stat.execute(deleteSemielepticalcrackINDX);
+                stat.execute(deletePointINDXIDCRACK);
+//                stat.execute(deletePointINDX);
+//                stat.execute(deleteSemielepticalcrackINDX_ID);
             } catch (SQLException sQLException) {
             }
             stat.execute(createSemielepticalcrack);
             stat.execute(createPoint);
-            stat.execute(createSemielepticalcrackPoint);
+            stat.execute(createPointINDX);
             stat.execute(createSemielepticalcrackINDX);
+//            stat.execute(createSemielepticalcrackPointINDX);
+//            stat.execute(createPointINDX);
+//            stat.execute(createSemielepticalcrackINDX_ID);
 
 //            stat.execute(alterSemielepticalcrackPoint);
 
@@ -225,14 +244,14 @@ public class DatabasePersist {
                     + "values (?, ?, ?, ?, ?)";
             crackInsert = conn.prepareStatement(crackSql);
             statements.add(crackInsert);
-            String pointSql = "insert into POINT (ID, Y, X) "
-                    + "values (?, ?, ?)";
+            String pointSql = "insert into POINT (ID, Y, X, IDCRACK) "
+                    + "values (?, ?, ?, ?)";
             pointInsert = conn.prepareStatement(pointSql);
             statements.add(pointInsert);
-            String crackPointSql = "insert into SEMIELLIPTICALCRACK_POINT (SEMIELLIPTICALCRACK_ID, CRACKTIP_ID) "
-                    + "values (?, ?)";
-            crackPointInsert = conn.prepareStatement(crackPointSql);
-            statements.add(crackPointInsert);
+//            String crackPointSql = "insert into SEMIELLIPTICALCRACK_POINT (SEMIELLIPTICALCRACK_ID, CRACKTIP_ID) "
+//                    + "values (?, ?)";
+//            crackPointInsert = conn.prepareStatement(crackPointSql);
+//            statements.add(crackPointInsert);
 
             for (int i = 0; i < ellipticalCrackList.size(); i++) {
                 SemiellipticalCrack crack = ellipticalCrackList.get(i);
@@ -249,10 +268,11 @@ public class DatabasePersist {
                     pointInsert.setLong(1, tipID);
                     pointInsert.setDouble(2, tip.getY());
                     pointInsert.setDouble(3, tip.getX());
+                    pointInsert.setLong(4, crackID);
                     pointInsert.executeUpdate();
-                    crackPointInsert.setLong(1, crackID);
-                    crackPointInsert.setLong(2, tipID);
-                    crackPointInsert.executeUpdate();
+//                    crackPointInsert.setLong(1, crackID);
+//                    crackPointInsert.setLong(2, tipID);
+//                    crackPointInsert.executeUpdate();
                     tipID++;
                 }
                 crackID++;
