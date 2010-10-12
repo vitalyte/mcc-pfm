@@ -12,21 +12,14 @@ import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
 import java.io.Serializable;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
 import probabilistic.integration.CrackOrderOde;
 import java.util.ArrayList;
 import java.util.List;
-import javax.jws.HandlerChain;
-import javax.persistence.Entity;
-import javax.persistence.*;
-import javax.persistence.Transient;
 import org.apache.commons.math.ode.DerivativeException;
 import org.apache.commons.math.ode.FirstOrderDifferentialEquations;
 import org.apache.commons.math.ode.FirstOrderIntegrator;
 import org.apache.commons.math.ode.IntegratorException;
 import org.apache.commons.math.ode.nonstiff.DormandPrince54Integrator;
-import org.eclipse.persistence.annotations.Customizer;
 
 /**
  *
