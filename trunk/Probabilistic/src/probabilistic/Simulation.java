@@ -215,7 +215,7 @@ public class Simulation {
         if (!newCrack.isInReleaseZone(rndX, rndY, ellipticalCrackList)) {
             ellipticalCrackList.add(newCrack);
             //does some old cracks will be in stress releaze zone of this crack
-            newCrack.setInStressRelZoneScreen(ellipticalCrackList);
+//            newCrack.setInStressRelZoneScreen(ellipticalCrackList);
 
         }
     }
@@ -243,7 +243,9 @@ public class Simulation {
     private void growth(int tIndx, double currentTime, double deltaT) throws DerivativeException, IntegratorException {
         for (int j = 0; j < ellipticalCrackList.size(); j++) {
             ellipticalCrackList.get(j).setCurrentTime(currentTime);
+            
             if (!ellipticalCrackList.get(j).isInStressRelZoneScreen()) {
+                ellipticalCrackList.get(j).setInStressRelZoneScreen(ellipticalCrackList);
                 ellipticalCrackList.get(j).integrate(currentTime, deltaT);
             }
         }

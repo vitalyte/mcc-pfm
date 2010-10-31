@@ -36,6 +36,8 @@ public class SemiellipticalCrack implements Externalizable, Serializable {
     private double initTime;
     private double currentTime;
     private boolean inStressRelZoneScreen = false;
+    private boolean inStressRelZoneLTip = false;
+    private boolean inStressRelZoneRTip = false;
     //    @Id
 //    @GeneratedValue
 //    private Long id;
@@ -135,7 +137,8 @@ public class SemiellipticalCrack implements Externalizable, Serializable {
      * @throws IntegratorException
      */
     public boolean integrate(double currentTime, double deltaT) throws DerivativeException, IntegratorException {
-        if (SIF_A() >= Const.k1SCC && SIF_B() >= Const.k1SCC && initTime != currentTime) {
+        if (SIF_A() >= Const.k1SCC && SIF_B() >= Const.k1SCC && initTime != currentTime
+                && inStressRelZoneScreen && (inStressRelZoneLTip != true || inStressRelZoneRTip != true)) {
             double beforeGrowthLength_a = this.getLength2a() / 2;
             double beforeGrowthDepth = depthB;
             FirstOrderIntegrator dp54 = new DormandPrince54Integrator(deltaT * 0.1, deltaT, 1.0e-10, 1.0e-10);
@@ -147,8 +150,14 @@ public class SemiellipticalCrack implements Externalizable, Serializable {
             double changeofLength = afterIntegr[0] - y[0];
             double growthX = (afterIntegr[0] - y[0]) / 2;
             double depth = afterIntegr[1];
-            double xLeft = crackTip.get(0).getX() - growthX;
-            double xRight = crackTip.get(crackTip.size() - 1).getX() + growthX;
+            double xLeft = crackTip.get(0).getX();
+            if (inStressRelZoneLTip != true){
+            xLeft = crackTip.get(0).getX() - growthX;
+            }
+            double xRight = crackTip.get(crackTip.size() - 1).getX();
+            if (inStressRelZoneRTip != true){
+            xRight = crackTip.get(crackTip.size() - 1).getX() + growthX;
+            }
             if (xLeft < 0) {
                 xLeft = 0;
             }
@@ -348,12 +357,16 @@ public class SemiellipticalCrack implements Externalizable, Serializable {
     public void setInStressRelZoneScreen(ArrayList<SemiellipticalCrack> ellipticalCrackList) {
         for (int i = 0; i < ellipticalCrackList.size(); i++) {
             SemiellipticalCrack semiellipticalCrack = ellipticalCrackList.get(i);
-            boolean screening = false;
-//            screening = getSressReleazeZone(1).contains(getLeftTip().getX(), getAverageLine(1).getCurrentPoint().getY(), getLength2a(), 0);
-            screening = semiellipticalCrack.getSressReleazeZone(1).contains(getLeftTip().getX(), getLeftTip().getY());
+//            boolean screening = false;
+////            screening = getSressReleazeZone(1).contains(getLeftTip().getX(), getAverageLine(1).getCurrentPoint().getY(), getLength2a(), 0);
+//            screening = semiellipticalCrack.getSressReleazeZone(1).contains(getLeftTip().getX(), getLeftTip().getY());
             if (semiellipticalCrack != this && semiellipticalCrack.getSressReleazeZone(1).contains(getLeftTip().getX(), getLeftTip().getY())
                     && semiellipticalCrack.getSressReleazeZone(1).contains(getRightTip().getX(), getRightTip().getY())) {
-                semiellipticalCrack.inStressRelZoneScreen = true;
+                inStressRelZoneScreen = true;
+            }else if (semiellipticalCrack != this && semiellipticalCrack.getSressReleazeZone(1).contains(getLeftTip().getX(), getLeftTip().getY())){
+                inStressRelZoneLTip = true;
+            }if (semiellipticalCrack != this && semiellipticalCrack.getSressReleazeZone(1).contains(getRightTip().getX(), getRightTip().getY())){
+                inStressRelZoneRTip = true;
             }
         }
     }
@@ -447,4 +460,13 @@ public class SemiellipticalCrack implements Externalizable, Serializable {
     public void setInitTime(double initTime) {
         this.initTime = initTime;
     }
+
+    public boolean isInStressRelZoneLTip() {
+        return inStressRelZoneLTip;
+    }
+
+    public boolean isInStressRelZoneRTip() {
+        return inStressRelZoneRTip;
+    }
+
 }

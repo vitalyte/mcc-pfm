@@ -4,6 +4,8 @@
  */
 package probabilistic;
 
+import com.sun.org.apache.bcel.internal.generic.BREAKPOINT;
+
 /**
  *
  * @author Vitaly
@@ -82,7 +84,9 @@ public class CrackPair {
             crackObj1_ = crackObjTemp;
         }
         boolean entersTheRadius_ = false;
-        if (crackObj2_.getLeftTip().getX() >= crackObj1_.getRightTip().getX()) {
+        if (crackObj2_.getLeftTip().getX() >= crackObj1_.getRightTip().getX()
+                && (crackObj2_.isInStressRelZoneLTip() !=true && crackObj1_.isInStressRelZoneRTip() != true)) {
+
 
             double distanceBetweenTips_ = Point.Distance(crackObj2_.getLeftTip(), crackObj1_.getRightTip());
             double CriticalRadius_ = crackObj1_.CriticalRadius(crackObj2_);
