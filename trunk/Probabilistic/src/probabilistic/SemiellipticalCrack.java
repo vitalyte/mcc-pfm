@@ -30,6 +30,7 @@ import org.apache.commons.math.ode.nonstiff.DormandPrince54Integrator;
 public class SemiellipticalCrack implements Externalizable, Serializable {
 
     private double depthB;
+    private double length2a;
     private double aspectRatio;
 //    @OneToMany
     private List<Point> crackTip;

@@ -53,7 +53,7 @@ public class DatabasePersist {
     private static final String createSemielepticalcrack =
             "create table CRACK.SEMIELLIPTICALCRACK"
             + "(ID BIGINT not null primary key,"
-            + "CURRENTTIME DOUBLE, DEPTHB DOUBLE, INITTIME DOUBLE, ASPECTRATIO DOUBLE)";
+            + "CURRENTTIME DOUBLE, DEPTHB DOUBLE, INITTIME DOUBLE, ASPECTRATIO DOUBLE, LENGTH2A DOUBLE)";
     private static final String createPoint =
             "create table CRACK.POINT"
             + "(ID BIGINT not null primary key, Y DOUBLE, X DOUBLE, IDCRACK BIGINT NOT NULL)";
@@ -200,8 +200,8 @@ public class DatabasePersist {
              * improve security (because of Java type checking).
              */
             // parameter 1 is num (int), parameter 2 is addr (varchar)
-            String crackSql = "insert into SEMIELLIPTICALCRACK (CURRENTTIME, DEPTHB, INITTIME, ASPECTRATIO, ID) "
-                    + "values (?, ?, ?, ?, ?)";
+            String crackSql = "insert into SEMIELLIPTICALCRACK (CURRENTTIME, DEPTHB, INITTIME, ASPECTRATIO, ID, LENGTH2A) "
+                    + "values (?, ?, ?, ?, ?, ?)";
             crackInsert = conn.prepareStatement(crackSql);
             statements.add(crackInsert);
             String pointSql = "insert into POINT (ID, Y, X, IDCRACK) "
@@ -217,6 +217,7 @@ public class DatabasePersist {
                 crackInsert.setDouble(3, crack.getInitTime());
                 crackInsert.setDouble(4, crack.getAspectRatio());
                 crackInsert.setLong(5, crackID);
+                crackInsert.setDouble(6, crack.getLength2a());
                 crackInsert.executeUpdate();
 
 
