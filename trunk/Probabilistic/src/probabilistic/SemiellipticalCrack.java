@@ -82,6 +82,7 @@ public class SemiellipticalCrack implements Externalizable, Serializable {
         crackTip = obj1.getCrackTips();
         crackTip.addAll(obj2.getCrackTips());
         this.depthB = Math.max(obj1.getDepthB(), obj2.getDepthB());
+        initTime = currentTime;
         aspectRatio = depthB / (this.getLength2a() / 2);
         this.checkMaxCondition();
 
@@ -139,7 +140,9 @@ public class SemiellipticalCrack implements Externalizable, Serializable {
      */
     public boolean integrate(double currentTime, double deltaT) throws DerivativeException, IntegratorException {
         if (SIF_A() >= Const.k1SCC && SIF_B() >= Const.k1SCC && initTime != currentTime
-                && inStressRelZoneScreen && (inStressRelZoneLTip != true || inStressRelZoneRTip != true)) {
+                && !inStressRelZoneScreen
+                && (inStressRelZoneLTip != true || inStressRelZoneRTip != true)
+                ) {
             double beforeGrowthLength_a = this.getLength2a() / 2;
             double beforeGrowthDepth = depthB;
             FirstOrderIntegrator dp54 = new DormandPrince54Integrator(deltaT * 0.1, deltaT, 1.0e-10, 1.0e-10);
@@ -364,10 +367,32 @@ public class SemiellipticalCrack implements Externalizable, Serializable {
             if (semiellipticalCrack != this && semiellipticalCrack.getSressReleazeZone(1).contains(getLeftTip().getX(), getLeftTip().getY())
                     && semiellipticalCrack.getSressReleazeZone(1).contains(getRightTip().getX(), getRightTip().getY())) {
                 inStressRelZoneScreen = true;
+                inStressRelZoneLTip = true;
+                inStressRelZoneRTip = true;
+                break;
             }else if (semiellipticalCrack != this && semiellipticalCrack.getSressReleazeZone(1).contains(getLeftTip().getX(), getLeftTip().getY())){
                 inStressRelZoneLTip = true;
             }if (semiellipticalCrack != this && semiellipticalCrack.getSressReleazeZone(1).contains(getRightTip().getX(), getRightTip().getY())){
                 inStressRelZoneRTip = true;
+            }
+        }
+    }
+
+
+    public void setInZoneScreen(ArrayList<SemiellipticalCrack> ellipticalCrackList) {
+        for (int i = 0; i < ellipticalCrackList.size(); i++) {
+            SemiellipticalCrack semiellipticalCrack = ellipticalCrackList.get(i);
+
+            if (semiellipticalCrack != this && getSressReleazeZone(1).contains(semiellipticalCrack.getLeftTip().getX(), semiellipticalCrack.getLeftTip().getY())
+                    && getSressReleazeZone(1).contains(semiellipticalCrack.getRightTip().getX(), semiellipticalCrack.getRightTip().getY())) {
+                semiellipticalCrack.inStressRelZoneScreen = true;
+                semiellipticalCrack.inStressRelZoneLTip = true;
+                semiellipticalCrack.inStressRelZoneRTip = true;
+                break;
+            }else if (semiellipticalCrack != this && getSressReleazeZone(1).contains(semiellipticalCrack.getLeftTip().getX(), semiellipticalCrack.getLeftTip().getY())){
+                semiellipticalCrack.inStressRelZoneLTip = true;
+            }if (semiellipticalCrack != this && getSressReleazeZone(1).contains(semiellipticalCrack.getRightTip().getX(), semiellipticalCrack.getRightTip().getY())){
+                semiellipticalCrack.inStressRelZoneRTip = true;
             }
         }
     }
