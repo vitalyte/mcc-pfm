@@ -31,9 +31,9 @@ public class Pair {
                     if (sourceListParametr.get(j + 1) != null && sourceListParametr.get(j) != null && sourceListParametr.get(i) != null) {
                         SemiellipticalCrack firstInPair = sourceListParametr.get(j);
                         SemiellipticalCrack secondInPair = sourceListParametr.get(j + i);
-                        if (firstInPair.isInStressRelZoneScreen() || secondInPair.isInStressRelZoneScreen()) {
-                            break;
-                        }
+//                        if (firstInPair.isInStressRelZoneScreen() || secondInPair.isInStressRelZoneScreen()) {
+//                            continue;
+//                        }
                         if (CrackPair.isEntersTheRadiusS(firstInPair, secondInPair)) {
                             if (coalescencePair == null) {
                                 pair = new CrackPair(firstInPair, secondInPair);

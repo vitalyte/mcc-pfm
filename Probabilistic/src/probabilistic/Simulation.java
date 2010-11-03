@@ -106,6 +106,9 @@ public class Simulation {
                             //Persistence (Serialization)
                             if (step >= 100 && i < (surface.getNmax() - 1)) {
                                 outputToDB();
+                                for (int j = 0; j < ellipticalCrackList.size(); j++) {
+                                ellipticalCrackList.get(j).setInStressRelZoneScreen(ellipticalCrackList);
+                                }
                                 step = 0;
                                 System.out.println("timeIndex x from X= " + i +"/"+ (surface.getNmax() - 1));
                             }
@@ -114,7 +117,9 @@ public class Simulation {
                         //підростання тріщин
                         if (!growth && deltaT != 0) {
                             try {
+                                
                                 growth(i, currentTime, deltaT);
+
                             } catch (DerivativeException ex) {
                                 Logger.getLogger(Simulation.class.getName()).log(Level.SEVERE, null, ex);
                             } catch (IntegratorException ex) {
@@ -232,7 +237,7 @@ public class Simulation {
             ellipticalCrackList.add(newCrack);
             ellipticalCrackList.remove(Pair.getCoalescencePair().getCrackObj1());
             ellipticalCrackList.remove(Pair.getCoalescencePair().getCrackObj2());
-            newCrack.setInStressRelZoneScreen(ellipticalCrackList);
+            newCrack.setInZoneScreen(ellipticalCrackList);
         }
     }
 
@@ -245,7 +250,7 @@ public class Simulation {
             ellipticalCrackList.get(j).setCurrentTime(currentTime);
             
             if (!ellipticalCrackList.get(j).isInStressRelZoneScreen()) {
-                ellipticalCrackList.get(j).setInStressRelZoneScreen(ellipticalCrackList);
+//                ellipticalCrackList.get(j).setInStressRelZoneScreen(ellipticalCrackList);
                 ellipticalCrackList.get(j).integrate(currentTime, deltaT);
             }
         }
