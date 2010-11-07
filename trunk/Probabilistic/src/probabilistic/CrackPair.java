@@ -22,16 +22,10 @@ public class CrackPair {
     public CrackPair() {
     }
 
-
     public CrackPair(SemiellipticalCrack crackObj1, SemiellipticalCrack crackObj2) {
+        this.crackObj1 = crackObj1;
+        this.crackObj2 = crackObj2;
 
-        if (crackObj2.getLeftTip().getX() < crackObj1.getRightTip().getX()) {
-            this.crackObj1 = crackObj2;
-            this.crackObj2 = crackObj1;
-        } else {
-            this.crackObj1 = crackObj1;
-            this.crackObj2 = crackObj2;
-        }
         distanceBetweenTips = Point.Distance(this.crackObj2.getLeftTip(), this.crackObj1.getRightTip());
         CriticalRadius = this.crackObj1.CriticalRadius(crackObj2);
 //        System.out.println("CriticalRadius = "+CriticalRadius);
@@ -68,49 +62,30 @@ public class CrackPair {
         return entersTheRadius;
     }
 
-    public static SemiellipticalCrack[] leftRightCracks(SemiellipticalCrack crackObj1_, SemiellipticalCrack crackObj2_) {
-        SemiellipticalCrack crackArr[] = {crackObj1_, crackObj2_};
-        if (crackObj2_.getLeftTip().getX() < crackObj1_.getRightTip().getX()) {
-            crackArr[1] = crackObj1_;
-            crackArr[0] = crackObj2_;
-        }
-        return crackArr;
-    }
+
 
     public static boolean isEntersTheRadiusS(SemiellipticalCrack crackObj1_, SemiellipticalCrack crackObj2_) {
-        if (crackObj2_.getLeftTip().getX() < crackObj1_.getRightTip().getX()) {
-            SemiellipticalCrack crackObjTemp = crackObj2_;
-            crackObj2_ = crackObj1_;
-            crackObj1_ = crackObjTemp;
-        }
+//       
         boolean entersTheRadius_ = false;
-        if (crackObj2_.getLeftTip().getX() >= crackObj1_.getRightTip().getX()
-//                && (crackObj2_.isInStressRelZoneLTip() !=true && crackObj1_.isInStressRelZoneRTip() != true)
+        if ( crackObj2_.isInStressRelZoneLTip() != true && crackObj1_.isInStressRelZoneRTip() != true
                 ) {
-
-
             double distanceBetweenTips_ = Point.Distance(crackObj2_.getLeftTip(), crackObj1_.getRightTip());
             double CriticalRadius_ = crackObj1_.CriticalRadius(crackObj2_);
 
             Point centerOfRC_ = new Point(crackObj1_.getRightTip().getX() + CriticalRadius_ / 2, crackObj1_.getRightTip().getY());
             entersTheRadius_ = new Circle(centerOfRC_, CriticalRadius_).IsPointInsideCircle(crackObj2_.getLeftTip());
-        } else {
-            entersTheRadius_ = false;
+            if (entersTheRadius_) {
+                return entersTheRadius_;
+            }
         }
-
         return entersTheRadius_;
     }
 
     public static double getRatioDistanceToRC_(SemiellipticalCrack crackObj1_, SemiellipticalCrack crackObj2_) {
-        if (crackObj2_.getLeftTip().getX() < crackObj1_.getRightTip().getX()) {
-            SemiellipticalCrack crackObjTemp = crackObj2_;
-            crackObj2_ = crackObj1_;
-            crackObj1_ = crackObjTemp;
-        }
+
         double distanceBetweenTips_ = Point.Distance(crackObj2_.getLeftTip(), crackObj1_.getRightTip());
         double CriticalRadius_ = crackObj1_.CriticalRadius(crackObj2_);
         double ratioDistanceToRC_ = distanceBetweenTips_ / CriticalRadius_;
         return ratioDistanceToRC_;
     }
-
 }

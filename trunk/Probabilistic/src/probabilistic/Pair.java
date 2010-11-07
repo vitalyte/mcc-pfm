@@ -4,6 +4,7 @@
  */
 package probabilistic;
 
+import java.awt.geom.Ellipse2D;
 import java.util.ArrayList;
 
 //import sorting.SortPairRC;
@@ -28,32 +29,51 @@ public class Pair {
         for (int j = 0; j < sourceListParametr.size() - 1; j++) {
             for (int i = j + 1; i < sourceListParametr.size(); i++) {
                 if ((j + i) < sourceListParametr.size()) {
-                    if (sourceListParametr.get(j + 1) != null && sourceListParametr.get(j) != null && sourceListParametr.get(i) != null) {
-                        SemiellipticalCrack firstInPair = sourceListParametr.get(j);
-                        SemiellipticalCrack secondInPair = sourceListParametr.get(j + i);
-//                        if (firstInPair.isInStressRelZoneScreen() || secondInPair.isInStressRelZoneScreen()) {
-//                            continue;
-//                        }
-                        if (CrackPair.isEntersTheRadiusS(firstInPair, secondInPair)) {
-                            if (coalescencePair == null) {
-                                pair = new CrackPair(firstInPair, secondInPair);
-                                coalescencePair = pair;
-                                result = true;
+                    if (sourceListParametr.get(j) != null && sourceListParametr.get(i) != null) {
+                        //Sorting from left to right cracks
+                        SemiellipticalCrack leftInPair = sourceListParametr.get(j);
+                        SemiellipticalCrack rightInPair = sourceListParametr.get(j + i);
+                        double xOfR = (rightInPair.getRightTip().getX() - rightInPair.getLeftTip().getX()) / 2;
+                        double xOfL = (leftInPair.getRightTip().getX() - leftInPair.getLeftTip().getX()) / 2;
+                        if (xOfR < xOfL) {
+                            SemiellipticalCrack crackObjTemp = rightInPair;
+                            rightInPair = leftInPair;
+                            leftInPair = crackObjTemp;
+                        }
+                        if (rightInPair.getLeftTip().getX() < leftInPair.getRightTip().getX()) {
+                            continue;
+                        }
+                        //end of Sorting from left to right cracks
 
-                            } else if (coalescencePair.getRatioDistanceToRC() > CrackPair.getRatioDistanceToRC_(firstInPair, secondInPair)) {
-                                pair = new CrackPair(firstInPair, secondInPair);
+                        if ((leftInPair.isInStressRelZoneScreen() && !leftInPair.isDeeper())
+                                || (rightInPair.isInStressRelZoneScreen() && !rightInPair.isDeeper())) {
+                            continue;
+                        }
+
+                        if (coalescencePair == null) {
+                            if (CrackPair.isEntersTheRadiusS(leftInPair, rightInPair)
+//                                &&  !isCoalescencedOverCracks(sourceListParametr, leftInPair, rightInPair)
+                                    ) {
+                                pair = new CrackPair(leftInPair, rightInPair);
                                 coalescencePair = pair;
                                 result = true;
                             }
-                            coalescencePair_ = coalescencePair;
-//                            System.out.println("\n\nCriticalRadius = " + coalescencePair_.getCriticalRadius());
 
                         } else {
-                            break;
+                            if (coalescencePair.getRatioDistanceToRC() > CrackPair.getRatioDistanceToRC_(leftInPair, rightInPair)
+//                                    &&  !isCoalescencedOverCracks(sourceListParametr, leftInPair, rightInPair)
+                                    ) {
+                                pair = new CrackPair(leftInPair, rightInPair);
+                                coalescencePair = pair;
+                                result = true;
+                            }
                         }
+
+                        coalescencePair_ = coalescencePair;
+//                            System.out.println("\n\nCriticalRadius = " + coalescencePair_.getCriticalRadius());                         
                     }
                 } else {
-                    break;
+                    continue;
                 }
             }
         }
@@ -70,5 +90,20 @@ public class Pair {
 
     public static CrackPair getCoalescencePair() {
         return coalescencePair_;
+    }
+
+    public static boolean isCoalescencedOverCracks(ArrayList<SemiellipticalCrack> sourceListParametr,
+            SemiellipticalCrack leftInPair, SemiellipticalCrack rightInPair) {
+        Point pL = leftInPair.getRightTip();
+        Point pR = rightInPair.getLeftTip();
+        boolean result = false;
+        SemiellipticalCrack newCrack = new SemiellipticalCrack();
+        ArrayList points = new ArrayList<Point>(2);
+        points.add(pL);
+        points.add(pR);
+        newCrack.setCrackTip(points);
+        newCrack.setDepthB(Math.max(leftInPair.getDepthB(), rightInPair.getDepthB()));
+        result = newCrack.setInZoneScreenCoal(sourceListParametr);
+        return result;
     }
 }
