@@ -148,7 +148,7 @@ public class ProbabilisticGUI extends javax.swing.JFrame {
         Geometry.setDoubleBuffered(true);
         Geometry.setOpaque(true);
 
-        surfaceHeight.setText("0.2");
+        surfaceHeight.setText("1");
         surfaceHeight.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 surfaceHeightActionPerformed(evt);
@@ -159,7 +159,7 @@ public class ProbabilisticGUI extends javax.swing.JFrame {
 
         width.setText("Width:");
 
-        surfaceWidth.setText("0.2");
+        surfaceWidth.setText("1");
         surfaceWidth.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 surfaceWidthActionPerformed(evt);
@@ -200,7 +200,7 @@ public class ProbabilisticGUI extends javax.swing.JFrame {
 
         jLabel25.setText("Visual scale:");
 
-        visualK.setText("2000000");
+        visualK.setText("200000");
         visualK.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 visualKActionPerformed(evt);
@@ -739,7 +739,7 @@ public class ProbabilisticGUI extends javax.swing.JFrame {
                 .addComponent(surfaceGeometry)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(gridJPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(171, Short.MAX_VALUE))
+                .addContainerGap(191, Short.MAX_VALUE))
         );
 
         fileMenu.setText("File");

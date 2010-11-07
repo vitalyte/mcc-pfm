@@ -45,6 +45,7 @@ public class Simulation {
     private static boolean maxLengthCondition;
     private static String histFolder = "Serializable";
     DatabasePersist persistObj;
+    private static double averageDepth;
 
     public Simulation(double height, double width, double grainHeight, double grainWidth,
             double meanInitiationTime, double scaleInitiationTime, double sigma, double yieldStress, double parametrK, double maxCrackLength, double visualKValue) {
@@ -63,6 +64,7 @@ public class Simulation {
         workWithFiles();
         persistObj = new DatabasePersist();
         persistObj.setup();
+        averageDepth = 0;
     }
 
     public void FillRandomCracks(double length2AMean, double length2AScale,
@@ -73,7 +75,7 @@ public class Simulation {
         if (isFilledCkracks() == false) {
             exitMaxCondition:
             while (i < surface.getNmax() - 1) {
-                
+
                 //ввести ще один цикл перевірки координати точки!!!
                 double rndX = UniformDistribution.PPF(RNG.Ran2(seed), 0, surface.getWidth());
                 double rndY = UniformDistribution.PPF(RNG.Ran2(seed), 0, surface.getHeight());
@@ -95,6 +97,12 @@ public class Simulation {
                     boolean growth = false;
                     coalescenceGrowthCycle:
                     while (true) {
+                        double sum = 0;
+                        for (int j = 0; j < ellipticalCrackList.size(); j++) {
+                            sum = sum + ellipticalCrackList.get(j).getDepthB();
+                        }
+                        averageDepth = sum / ellipticalCrackList.size();
+
                         //об’єднання тріщин
                         coalescence(i);
                         if (growth) {
@@ -106,20 +114,18 @@ public class Simulation {
                             //Persistence (Serialization)
                             if (step >= 100 && i < (surface.getNmax() - 1)) {
                                 outputToDB();
-                                for (int j = 0; j < ellipticalCrackList.size(); j++) {
-                                ellipticalCrackList.get(j).setInStressRelZoneScreen(ellipticalCrackList);
-                                }
                                 step = 0;
-                                System.out.println("timeIndex x from X= " + i +"/"+ (surface.getNmax() - 1));
+                                System.out.println("timeIndex x from X= " + i + "/" + (surface.getNmax() - 1));
                             }
                             break coalescenceGrowthCycle;
                         }
                         //підростання тріщин
                         if (!growth && deltaT != 0) {
                             try {
-                                
+                                for (int j = 0; j < ellipticalCrackList.size(); j++) {
+                                    ellipticalCrackList.get(j).setInStressRelZoneScreen(ellipticalCrackList);
+                                }
                                 growth(i, currentTime, deltaT);
-
                             } catch (DerivativeException ex) {
                                 Logger.getLogger(Simulation.class.getName()).log(Level.SEVERE, null, ex);
                             } catch (IntegratorException ex) {
@@ -248,7 +254,7 @@ public class Simulation {
     private void growth(int tIndx, double currentTime, double deltaT) throws DerivativeException, IntegratorException {
         for (int j = 0; j < ellipticalCrackList.size(); j++) {
             ellipticalCrackList.get(j).setCurrentTime(currentTime);
-            
+
             if (!ellipticalCrackList.get(j).isInStressRelZoneScreen()) {
 //                ellipticalCrackList.get(j).setInStressRelZoneScreen(ellipticalCrackList);
                 ellipticalCrackList.get(j).integrate(currentTime, deltaT);
@@ -424,4 +430,9 @@ public class Simulation {
     public DatabasePersist getPersistObj() {
         return persistObj;
     }
+
+    public static double getAverageDepth() {
+        return averageDepth;
+    }
+
 }

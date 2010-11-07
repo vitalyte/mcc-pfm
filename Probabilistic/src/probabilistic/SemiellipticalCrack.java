@@ -39,6 +39,7 @@ public class SemiellipticalCrack implements Externalizable, Serializable {
     private boolean inStressRelZoneScreen = false;
     private boolean inStressRelZoneLTip = false;
     private boolean inStressRelZoneRTip = false;
+    private boolean deeper = false;
     //    @Id
 //    @GeneratedValue
 //    private Long id;
@@ -139,9 +140,11 @@ public class SemiellipticalCrack implements Externalizable, Serializable {
      * @throws IntegratorException
      */
     public boolean integrate(double currentTime, double deltaT) throws DerivativeException, IntegratorException {
-        if (SIF_A() >= Const.k1SCC && SIF_B() >= Const.k1SCC && initTime != currentTime
-                && !inStressRelZoneScreen
-                && (inStressRelZoneLTip != true || inStressRelZoneRTip != true)
+        if (
+                (SIF_A() >= Const.k1SCC &&
+                SIF_B() >= Const.k1SCC) &&
+                initTime != currentTime &&
+                (!inStressRelZoneScreen || deeper)
                 ) {
             double beforeGrowthLength_a = this.getLength2a() / 2;
             double beforeGrowthDepth = depthB;
@@ -155,11 +158,11 @@ public class SemiellipticalCrack implements Externalizable, Serializable {
             double growthX = (afterIntegr[0] - y[0]) / 2;
             double depth = afterIntegr[1];
             double xLeft = crackTip.get(0).getX();
-            if (inStressRelZoneLTip != true){
+            if (deeper || inStressRelZoneLTip != true){
             xLeft = crackTip.get(0).getX() - growthX;
             }
             double xRight = crackTip.get(crackTip.size() - 1).getX();
-            if (inStressRelZoneRTip != true){
+            if (deeper ||inStressRelZoneRTip != true){
             xRight = crackTip.get(crackTip.size() - 1).getX() + growthX;
             }
             if (xLeft < 0) {
@@ -361,10 +364,15 @@ public class SemiellipticalCrack implements Externalizable, Serializable {
     public void setInStressRelZoneScreen(ArrayList<SemiellipticalCrack> ellipticalCrackList) {
         for (int i = 0; i < ellipticalCrackList.size(); i++) {
             SemiellipticalCrack semiellipticalCrack = ellipticalCrackList.get(i);
-//            boolean screening = false;
-////            screening = getSressReleazeZone(1).contains(getLeftTip().getX(), getAverageLine(1).getCurrentPoint().getY(), getLength2a(), 0);
-//            screening = semiellipticalCrack.getSressReleazeZone(1).contains(getLeftTip().getX(), getLeftTip().getY());
-            if (semiellipticalCrack != this && semiellipticalCrack.getSressReleazeZone(1).contains(getLeftTip().getX(), getLeftTip().getY())
+            setDeeper(Simulation.getAverageDepth());
+            if (deeper){
+                inStressRelZoneScreen = false;
+                inStressRelZoneLTip = false;
+                inStressRelZoneRTip = false;
+                continue;
+            }
+            if (semiellipticalCrack != this
+                    && semiellipticalCrack.getSressReleazeZone(1).contains(getLeftTip().getX(), getLeftTip().getY())
                     && semiellipticalCrack.getSressReleazeZone(1).contains(getRightTip().getX(), getRightTip().getY())) {
                 inStressRelZoneScreen = true;
                 inStressRelZoneLTip = true;
@@ -372,29 +380,60 @@ public class SemiellipticalCrack implements Externalizable, Serializable {
                 break;
             }else if (semiellipticalCrack != this && semiellipticalCrack.getSressReleazeZone(1).contains(getLeftTip().getX(), getLeftTip().getY())){
                 inStressRelZoneLTip = true;
-            }if (semiellipticalCrack != this && semiellipticalCrack.getSressReleazeZone(1).contains(getRightTip().getX(), getRightTip().getY())){
+            }else if (semiellipticalCrack != this && semiellipticalCrack.getSressReleazeZone(1).contains(getRightTip().getX(), getRightTip().getY())){
                 inStressRelZoneRTip = true;
             }
         }
     }
 
 
-    public void setInZoneScreen(ArrayList<SemiellipticalCrack> ellipticalCrackList) {
+
+
+    public boolean setInZoneScreen(ArrayList<SemiellipticalCrack> ellipticalCrackList) {
+        boolean result = false;
         for (int i = 0; i < ellipticalCrackList.size(); i++) {
             SemiellipticalCrack semiellipticalCrack = ellipticalCrackList.get(i);
-
+            setDeeper(Simulation.getAverageDepth());
+            if (semiellipticalCrack.deeper){
+                semiellipticalCrack.inStressRelZoneScreen = false;
+                semiellipticalCrack.inStressRelZoneLTip = false;
+                semiellipticalCrack.inStressRelZoneRTip = false;
+                continue;
+            }
             if (semiellipticalCrack != this && getSressReleazeZone(1).contains(semiellipticalCrack.getLeftTip().getX(), semiellipticalCrack.getLeftTip().getY())
                     && getSressReleazeZone(1).contains(semiellipticalCrack.getRightTip().getX(), semiellipticalCrack.getRightTip().getY())) {
                 semiellipticalCrack.inStressRelZoneScreen = true;
                 semiellipticalCrack.inStressRelZoneLTip = true;
                 semiellipticalCrack.inStressRelZoneRTip = true;
+                result = true;
                 break;
             }else if (semiellipticalCrack != this && getSressReleazeZone(1).contains(semiellipticalCrack.getLeftTip().getX(), semiellipticalCrack.getLeftTip().getY())){
                 semiellipticalCrack.inStressRelZoneLTip = true;
-            }if (semiellipticalCrack != this && getSressReleazeZone(1).contains(semiellipticalCrack.getRightTip().getX(), semiellipticalCrack.getRightTip().getY())){
+                result = true;
+            }else if (semiellipticalCrack != this && getSressReleazeZone(1).contains(semiellipticalCrack.getRightTip().getX(), semiellipticalCrack.getRightTip().getY())){
                 semiellipticalCrack.inStressRelZoneRTip = true;
+                result = true;
             }
         }
+        return result;
+    }
+
+    public boolean setInZoneScreenCoal(ArrayList<SemiellipticalCrack> ellipticalCrackList) {
+        boolean result = false;
+        for (int i = 0; i < ellipticalCrackList.size(); i++) {
+            SemiellipticalCrack semiellipticalCrack = ellipticalCrackList.get(i);
+            if (semiellipticalCrack != this && getSressReleazeZone(1).contains(semiellipticalCrack.getLeftTip().getX(), semiellipticalCrack.getLeftTip().getY())
+                    && getSressReleazeZone(1).contains(semiellipticalCrack.getRightTip().getX(), semiellipticalCrack.getRightTip().getY())) {
+
+                result = true;
+                break;
+            }else if (semiellipticalCrack != this && getSressReleazeZone(1).contains(semiellipticalCrack.getLeftTip().getX(), semiellipticalCrack.getLeftTip().getY())){
+                result = true;
+            }if (semiellipticalCrack != this && getSressReleazeZone(1).contains(semiellipticalCrack.getRightTip().getX(), semiellipticalCrack.getRightTip().getY())){
+                result = true;
+            }
+        }
+        return result;
     }
 
     public boolean isInReleaseZone(double rndX, double rndY, ArrayList<SemiellipticalCrack> ellipticalCrackList) {
@@ -494,5 +533,20 @@ public class SemiellipticalCrack implements Externalizable, Serializable {
     public boolean isInStressRelZoneRTip() {
         return inStressRelZoneRTip;
     }
+
+    public boolean isDeeper() {
+        return deeper;
+    }
+
+    public void setDeeper(double averageDepth) {
+        if(depthB >= 2*averageDepth){
+        this.deeper = true;
+        }else{
+            this.deeper = false;
+        }
+    }
+
+
+
 
 }

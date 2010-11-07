@@ -270,7 +270,7 @@
           <SubComponents>
             <Component class="javax.swing.JTextField" name="surfaceHeight">
               <Properties>
-                <Property name="text" type="java.lang.String" value="0.2"/>
+                <Property name="text" type="java.lang.String" value="1"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="surfaceHeightActionPerformed"/>
@@ -288,7 +288,7 @@
             </Component>
             <Component class="javax.swing.JTextField" name="surfaceWidth">
               <Properties>
-                <Property name="text" type="java.lang.String" value="0.2"/>
+                <Property name="text" type="java.lang.String" value="1"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="surfaceWidthActionPerformed"/>
@@ -363,7 +363,7 @@
             </Component>
             <Component class="javax.swing.JTextField" name="visualK">
               <Properties>
-                <Property name="text" type="java.lang.String" value="2000000"/>
+                <Property name="text" type="java.lang.String" value="200000"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="visualKActionPerformed"/>
@@ -1050,7 +1050,7 @@
                   <Component id="surfaceGeometry" min="-2" max="-2" attributes="0"/>
                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
                   <Component id="gridJPanel1" min="-2" max="-2" attributes="1"/>
-                  <EmptySpace pref="171" max="32767" attributes="0"/>
+                  <EmptySpace pref="191" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
