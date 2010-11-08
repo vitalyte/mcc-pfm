@@ -37,7 +37,7 @@ public class Simulation {
     private static SurfaceArea surface;
     private InitiationTime timeObj;
     private int maxTimeIndx;
-    private int timeIndx = 0;
+//    private int timeIndx = 0;
     private SemiellipticalCrack newCrack;
     private ArrayList<SemiellipticalCrack> ellipticalCrackList;
 //    private static ArrayList<ArrayList> cracksHistoryList;
@@ -65,6 +65,7 @@ public class Simulation {
         persistObj = new DatabasePersist();
         persistObj.setup();
         averageDepth = 0;
+        maxTimeIndx = 0;
     }
 
     public void FillRandomCracks(double length2AMean, double length2AScale,
@@ -74,8 +75,7 @@ public class Simulation {
         int step = 1;
         if (isFilledCkracks() == false) {
             exitMaxCondition:
-            while (i < surface.getNmax() - 1) {
-
+            while (i <= (surface.getNmax() - 1)) {
                 //ввести ще один цикл перевірки координати точки!!!
                 double rndX = UniformDistribution.PPF(RNG.Ran2(seed), 0, surface.getWidth());
                 double rndY = UniformDistribution.PPF(RNG.Ran2(seed), 0, surface.getHeight());
@@ -85,7 +85,6 @@ public class Simulation {
                 if (isSquareEmpty(matrix, rndI, rndJ)) {
 //                        точку кинули в порожню клітину
                     generNewCrack(i, rndX, rndY, rndI, rndJ, length2AMean, length2AScale, depthMean, depthScale, aspectRatio);
-
                     double currentTime = timeObj.getInitTime().get(i);
                     if (i > 0 && i < timeObj.getInitTime().size()) {
                         deltaT = currentTime - timeObj.getInitTime().get(i - 1);
@@ -106,17 +105,18 @@ public class Simulation {
                         //об’єднання тріщин
                         coalescence(i);
                         if (growth) {
-                            if (maxLengthCondition) {
-                                maxTimeIndx = i;
-                                outputToDB();
-                                break exitMaxCondition;
-                            }
                             //Persistence (Serialization)
                             if (step >= 100 && i < (surface.getNmax() - 1)) {
                                 outputToDB();
                                 step = 0;
                                 System.out.println("timeIndex x from X= " + i + "/" + (surface.getNmax() - 1));
                             }
+                            if (maxLengthCondition) {
+//                                maxTimeIndx = i;
+//                                outputToDB();
+//                                i++;
+                                break exitMaxCondition;
+                            }                            
                             break coalescenceGrowthCycle;
                         }
                         //підростання тріщин
@@ -134,6 +134,10 @@ public class Simulation {
                         }
                         growth = true;
                     }
+                    if(i == (surface.getNmax() - 1)){
+                        System.out.println("timeIndex x from X= " + i + "/" + (surface.getNmax() - 1));
+                        break exitMaxCondition;
+                    }
                     i++;
                     step++;
                 }
@@ -145,9 +149,12 @@ public class Simulation {
             outputToDB();
 //            outputToFile(i);
         }
-        getPaintedCracks(i);
+        getPaintedCracks(maxTimeIndx);
     }
-
+    private void inputFromDB(int timeIndx) {
+        paintedCracks =
+                persistObj.retrieve(timeObj.getInitTime().get(timeIndx));
+    }
     private void outputToDB() {
         persistObj.persist(ellipticalCrackList);
         persistObj.commit();
@@ -223,7 +230,7 @@ public class Simulation {
             newCrack.setDepthB(depth);
         }
 //      check that crack not in stress release zone
-        if (!newCrack.isInReleaseZone(rndX, rndY, ellipticalCrackList)) {
+        if (!newCrack.isInReleaseZone(rndX, rndY, ellipticalCrackList) && (newCrack.getLength2a()>0)) {
             ellipticalCrackList.add(newCrack);
             //does some old cracks will be in stress releaze zone of this crack
 //            newCrack.setInStressRelZoneScreen(ellipticalCrackList);
@@ -276,56 +283,53 @@ public class Simulation {
         return paintedCracks;
     }
 
-    /**
-     * output to file
-     */
-    private void outputToFile(int timeIndx) {
-        ObjectOutputStream out = null;
+//    /**
+//     * output to file
+//     */
+//    private void outputToFile(int timeIndx) {
+//        ObjectOutputStream out = null;
+//
+//        try {
+//            out = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(filePath + timeIndx + ".ser"), Const.BUFFER_SIZE));
+////            out = new ObjectOutputStream(
+////                    new FileOutputStream(filePath + timeIndx + ".ser"));
+//            out.writeObject(ellipticalCrackList);
+//        } catch (IOException ex) {
+////            ex.printStackTrace();
+//        } finally {
+//            if (out != null) {
+//                try {
+//                    out.close();
+//                } catch (IOException ex) {
+////                    ex.printStackTrace();
+//                }
+//            }
+//        }
+//
+//    }
 
-        try {
-            out = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(filePath + timeIndx + ".ser"), Const.BUFFER_SIZE));
-//            out = new ObjectOutputStream(
-//                    new FileOutputStream(filePath + timeIndx + ".ser"));
-            out.writeObject(ellipticalCrackList);
-        } catch (IOException ex) {
-//            ex.printStackTrace();
-        } finally {
-            if (out != null) {
-                try {
-                    out.close();
-                } catch (IOException ex) {
-//                    ex.printStackTrace();
-                }
-            }
-        }
 
-    }
-
-    private void inputFromDB(int timeIndx) {
-        paintedCracks =
-                persistObj.retrieve(timeObj.getInitTime().get(timeIndx - 1));
-    }
 
     /**
-     * input file
-     */
-    private void inputFromFile(int timeIndx) {
-        ObjectInputStream in = null;
-        try {
-            in = new ObjectInputStream(new BufferedInputStream(
-                    new FileInputStream(filePath + timeIndx + ".ser")));
-            paintedCracks = (ArrayList<SemiellipticalCrack>) in.readObject();
-        } catch (IOException ex) {
-        } catch (Exception ex) {
-        } finally {
-            if (in != null) {
-                try {
-                    in.close();
-                } catch (IOException ex) {
-                }
-            }
-        }
-    }
+//     * input file
+//     */
+//    private void inputFromFile(int timeIndx) {
+//        ObjectInputStream in = null;
+//        try {
+//            in = new ObjectInputStream(new BufferedInputStream(
+//                    new FileInputStream(filePath + timeIndx + ".ser")));
+//            paintedCracks = (ArrayList<SemiellipticalCrack>) in.readObject();
+//        } catch (IOException ex) {
+//        } catch (Exception ex) {
+//        } finally {
+//            if (in != null) {
+//                try {
+//                    in.close();
+//                } catch (IOException ex) {
+//                }
+//            }
+//        }
+//    }
 
     public ArrayList<SemiellipticalCrack> getPainted() {
         return paintedCracks;

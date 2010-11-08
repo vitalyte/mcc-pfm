@@ -83,7 +83,8 @@ public class SemiellipticalCrack implements Externalizable, Serializable {
         crackTip = obj1.getCrackTips();
         crackTip.addAll(obj2.getCrackTips());
         this.depthB = Math.max(obj1.getDepthB(), obj2.getDepthB());
-        initTime = currentTime;
+        this.initTime = currentTime;
+        this.currentTime = currentTime;
         aspectRatio = depthB / (this.getLength2a() / 2);
         this.checkMaxCondition();
 
