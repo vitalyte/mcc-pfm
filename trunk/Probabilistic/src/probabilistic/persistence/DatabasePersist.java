@@ -27,6 +27,7 @@ public class DatabasePersist {
     private String protocol = "jdbc:derby:";
     ArrayList statements;
     PreparedStatement crackInsert = null;
+    PreparedStatement resultInsert = null;
     PreparedStatement pointInsert = null;
     PreparedStatement psUpdate = null;
     PreparedStatement crackPointInsert = null;
@@ -35,12 +36,12 @@ public class DatabasePersist {
     Statement stat = null;
     ResultSet rs = null;
     Connection conn;
-    long crackID, tipID;
+    long crackID, tipID, resultID;
     String dbName = "crackDB";
     private static final String selectSemielepticalcrackPoint =
             "SELECT ID,CURRENTTIME,DEPTHB,INITTIME,ASPECTRATIO "
             + "FROM CRACK.SEMIELLIPTICALCRACK WHERE CURRENTTIME = ?";
-    private static final String selectPoint = 
+    private static final String selectPoint =
             "SELECT ID,X,Y,IDCRACK FROM CRACK.POINT WHERE POINT.IDCRACK = ?";
     private static final String deleteSemielepticalcrack =
             "DROP TABLE CRACK.SEMIELLIPTICALCRACK";
@@ -50,10 +51,16 @@ public class DatabasePersist {
             "DROP INDEX CURTIME";
     private static final String deletePointINDXIDCRACK =
             "DROP INDEX POINTIDCRACK";
+    private static final String deleteResults =
+            "DROP TABLE CRACK.RESULTS";
     private static final String createSemielepticalcrack =
             "create table CRACK.SEMIELLIPTICALCRACK"
             + "(ID BIGINT not null primary key,"
             + "CURRENTTIME DOUBLE, DEPTHB DOUBLE, INITTIME DOUBLE, ASPECTRATIO DOUBLE, LENGTH2A DOUBLE)";
+    private static final String createResults =
+            "create table CRACK.RESULTS"
+            + "(ID BIGINT not null primary key,"
+            + "CURRENTTIME DOUBLE, MAXDEPTHB DOUBLE, INITTIME DOUBLE, AVASPECTRATIO DOUBLE, MAXLENGTH2A DOUBLE, NUMBOFCRACKS BIGINT)";
     private static final String createPoint =
             "create table CRACK.POINT"
             + "(ID BIGINT not null primary key, Y DOUBLE, X DOUBLE, IDCRACK BIGINT NOT NULL)";
@@ -112,6 +119,7 @@ public class DatabasePersist {
     public void setup() {
         crackID = 1;
         tipID = 1;
+        resultID = 1;
         /* load the desired JDBC driver */
         loadDriver();
 
@@ -122,6 +130,7 @@ public class DatabasePersist {
          * because we want the source to support J2SE 1.4.2 environments. */
         statements = new ArrayList(); // list of Statements, PreparedStatements
         crackInsert = null;
+        resultInsert = null;
         psUpdate = null;
         stat = null;
         rs = null;
@@ -172,12 +181,14 @@ public class DatabasePersist {
              * SQL statements commands against the database.*/
             stat = conn.createStatement();
             try {
+                stat.execute(deleteResults);
                 stat.execute(deleteSemielepticalcrack);
                 stat.execute(deletePoint);
                 stat.execute(deleteSemielepticalcrackINDX);
                 stat.execute(deletePointINDXIDCRACK);
             } catch (SQLException sQLException) {
             }
+            stat.execute(createResults);
             stat.execute(createSemielepticalcrack);
             stat.execute(createPoint);
             stat.execute(createPointINDX);
@@ -200,6 +211,11 @@ public class DatabasePersist {
              * improve security (because of Java type checking).
              */
             // parameter 1 is num (int), parameter 2 is addr (varchar)
+            String resultsSql = "insert into RESULTS (ID, CURRENTTIME, MAXDEPTHB, INITTIME, AVASPECTRATIO, MAXLENGTH2A, NUMBOFCRACKS) "
+                    + "values (?, ?, ?, ?, ?, ?, ?)";
+            resultInsert = conn.prepareStatement(resultsSql);
+            statements.add(resultInsert);
+
             String crackSql = "insert into SEMIELLIPTICALCRACK (CURRENTTIME, DEPTHB, INITTIME, ASPECTRATIO, ID, LENGTH2A) "
                     + "values (?, ?, ?, ?, ?, ?)";
             crackInsert = conn.prepareStatement(crackSql);
@@ -208,17 +224,34 @@ public class DatabasePersist {
                     + "values (?, ?, ?, ?)";
             pointInsert = conn.prepareStatement(pointSql);
             statements.add(pointInsert);
+            int numbOfCracks = ellipticalCrackList.size();
+            double currentTimeLoc = 0;
+            double maxLength = 0;
+            double maxDepth = 0;
+            double averAspectRatio = 0;
+            double inittime = 0;
 
 
-            for (int i = 0; i < ellipticalCrackList.size(); i++) {
+            for (int i = 0; i < numbOfCracks; i++) {
                 SemiellipticalCrack crack = ellipticalCrackList.get(i);
-                crackInsert.setDouble(1, crack.getCurrentTime());
+                currentTimeLoc = crack.getCurrentTime();
+                crackInsert.setDouble(1, currentTimeLoc);
                 crackInsert.setDouble(2, crack.getDepthB());
                 crackInsert.setDouble(3, crack.getInitTime());
                 crackInsert.setDouble(4, crack.getAspectRatio());
                 crackInsert.setLong(5, crackID);
                 crackInsert.setDouble(6, crack.getLength2a());
                 crackInsert.executeUpdate();
+                if (maxLength < crack.getLength2a()) {
+                    maxLength = crack.getLength2a();
+                    inittime = crack.getInitTime();
+                }
+                if (maxDepth < crack.getDepthB()) {
+                    maxDepth = crack.getDepthB();
+                }
+                 {
+                    averAspectRatio =averAspectRatio+ crack.getAspectRatio();
+                }
 
 
                 for (int j = 0; j < crack.getCrackTip().size(); j++) {
@@ -232,6 +265,17 @@ public class DatabasePersist {
                 }
                 crackID++;
             }
+            resultInsert.setLong(1, resultID);
+            resultInsert.setDouble(2, currentTimeLoc);
+            resultInsert.setDouble(3, maxDepth);
+            resultInsert.setDouble(4, inittime);
+            resultInsert.setDouble(5, averAspectRatio/numbOfCracks);
+            resultInsert.setDouble(6, maxLength);
+            resultInsert.setLong(7, numbOfCracks);
+            resultInsert.executeUpdate();
+            resultID++;
+
+
 
 
         } catch (SQLException sqle) {
