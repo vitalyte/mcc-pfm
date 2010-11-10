@@ -4,14 +4,8 @@
  */
 package probabilistic;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.logging.Level;
@@ -19,7 +13,6 @@ import java.util.logging.Logger;
 import org.apache.commons.math.ode.DerivativeException;
 import org.apache.commons.math.ode.IntegratorException;
 import probabilistic.persistence.DatabasePersist;
-import probabilistic.persistence.PersistenceRun;
 
 /**
  *
@@ -54,7 +47,7 @@ public class Simulation {
         timeObj = new InitiationTime(surface.getNmax(), meanInitiationTime, scaleInitiationTime);
         Simulation.sigma = sigma;
         Simulation.yieldStress = yieldStress;
-        ellipticalCrackList = new ArrayList<SemiellipticalCrack>();
+        ellipticalCrackList = new ArrayList<SemiellipticalCrack>(surface.getNmax());
 //        cracksHistoryList = new ArrayList<ArrayList>();
         Simulation.parametrK = parametrK;
 
@@ -106,7 +99,7 @@ public class Simulation {
                         coalescence(i);
                         if (growth) {
                             //Persistence (Serialization)
-                            if (step >= 100 && i < (surface.getNmax() - 1)) {
+                            if (step >= 10 && i < (surface.getNmax() - 1)) {
                                 outputToDB();
                                 step = 0;
                                 System.out.println("timeIndex x from X= " + i + "/" + (surface.getNmax() - 1));
@@ -158,6 +151,7 @@ public class Simulation {
     private void outputToDB() {
         persistObj.persist(ellipticalCrackList);
         persistObj.commit();
+
 
     }
 
