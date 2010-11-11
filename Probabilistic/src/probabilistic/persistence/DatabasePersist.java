@@ -60,7 +60,8 @@ public class DatabasePersist {
     private static final String createResults =
             "create table CRACK.RESULTS"
             + "(ID BIGINT not null primary key,"
-            + "CURRENTTIME DOUBLE, MAXDEPTHB DOUBLE, INITTIME DOUBLE, AVASPECTRATIO DOUBLE, MAXLENGTH2A DOUBLE, NUMBOFCRACKS BIGINT)";
+            + "CURRENTTIME DOUBLE, MAXDEPTHB DOUBLE, INITTIME DOUBLE, ASPRATIOM2A DOUBLE, "
+            + "MAXLENGTH2A DOUBLE, NUMBOFCRACKS BIGINT, ASPRATIOB DOUBLE)";
     private static final String createPoint =
             "create table CRACK.POINT"
             + "(ID BIGINT not null primary key, Y DOUBLE, X DOUBLE, IDCRACK BIGINT NOT NULL)";
@@ -200,7 +201,7 @@ public class DatabasePersist {
 
     }
 
-    public void persist(ArrayList<SemiellipticalCrack> ellipticalCrackList) {
+    public void persist(ArrayList<SemiellipticalCrack> ellipticalCrackList, boolean persistGraph) {
 
         try {
             /* It is recommended to use PreparedStatements when you are
@@ -211,8 +212,8 @@ public class DatabasePersist {
              * improve security (because of Java type checking).
              */
             // parameter 1 is num (int), parameter 2 is addr (varchar)
-            String resultsSql = "insert into RESULTS (ID, CURRENTTIME, MAXDEPTHB, INITTIME, AVASPECTRATIO, MAXLENGTH2A, NUMBOFCRACKS) "
-                    + "values (?, ?, ?, ?, ?, ?, ?)";
+            String resultsSql = "insert into RESULTS (ID, CURRENTTIME, MAXDEPTHB, INITTIME, ASPRATIOM2A, MAXLENGTH2A, NUMBOFCRACKS, ASPRATIOB) "
+                    + "values (?, ?, ?, ?, ?, ?, ?, ?)";
             resultInsert = conn.prepareStatement(resultsSql);
             statements.add(resultInsert);
 
@@ -228,50 +229,61 @@ public class DatabasePersist {
             double currentTimeLoc = 0;
             double maxLength = 0;
             double maxDepth = 0;
-            double averAspectRatio = 0;
+            double aspectRatio = 0;
+            double aspectRatioB = 0;
             double inittime = 0;
 
 
             for (int i = 0; i < numbOfCracks; i++) {
                 SemiellipticalCrack crack = ellipticalCrackList.get(i);
                 currentTimeLoc = crack.getCurrentTime();
-                crackInsert.setDouble(1, currentTimeLoc);
-                crackInsert.setDouble(2, crack.getDepthB());
-                crackInsert.setDouble(3, crack.getInitTime());
-                crackInsert.setDouble(4, crack.getAspectRatio());
-                crackInsert.setLong(5, crackID);
-                crackInsert.setDouble(6, crack.getLength2a());
-                crackInsert.executeUpdate();
+                if (persistGraph) {
+                    crackInsert.setDouble(1, currentTimeLoc);
+                    crackInsert.setDouble(2, crack.getDepthB());
+                    crackInsert.setDouble(3, crack.getInitTime());
+                    crackInsert.setDouble(4, crack.getAspectRatio());
+                    crackInsert.setLong(5, crackID);
+                    crackInsert.setDouble(6, crack.getLength2a());
+                    crackInsert.executeUpdate();
+                }
+
                 if (maxLength < crack.getLength2a()) {
                     maxLength = crack.getLength2a();
                     inittime = crack.getInitTime();
+                    aspectRatio = crack.getAspectRatio();
                 }
                 if (maxDepth < crack.getDepthB()) {
                     maxDepth = crack.getDepthB();
+                    aspectRatioB = crack.getAspectRatio();
                 }
-                 {
-                    averAspectRatio =averAspectRatio+ crack.getAspectRatio();
-                }
+
 
 
                 for (int j = 0; j < crack.getCrackTip().size(); j++) {
-                    Point tip = crack.getCrackTip().get(j);
-                    pointInsert.setLong(1, tipID);
-                    pointInsert.setDouble(2, tip.getY());
-                    pointInsert.setDouble(3, tip.getX());
-                    pointInsert.setLong(4, crackID);
-                    pointInsert.executeUpdate();
-                    tipID++;
+                    if (persistGraph) {
+                        Point tip = crack.getCrackTip().get(j);
+                        pointInsert.setLong(1, tipID);
+                        pointInsert.setDouble(2, tip.getY());
+                        pointInsert.setDouble(3, tip.getX());
+                        pointInsert.setLong(4, crackID);
+
+                        pointInsert.executeUpdate();
+                        tipID++;
+                    }
+
                 }
-                crackID++;
+                if (persistGraph) {
+                    crackID++;
+                }
             }
             resultInsert.setLong(1, resultID);
             resultInsert.setDouble(2, currentTimeLoc);
             resultInsert.setDouble(3, maxDepth);
             resultInsert.setDouble(4, inittime);
-            resultInsert.setDouble(5, averAspectRatio/numbOfCracks);
+            resultInsert.setDouble(5, aspectRatio / numbOfCracks);
             resultInsert.setDouble(6, maxLength);
             resultInsert.setLong(7, numbOfCracks);
+            resultInsert.setDouble(8, aspectRatioB);
             resultInsert.executeUpdate();
             resultID++;
 
