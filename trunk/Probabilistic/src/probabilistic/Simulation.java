@@ -66,6 +66,7 @@ public class Simulation {
         filledCkracks = false;
         int i = 0;
         int step = 1;
+        int stepGraph = 1;
         if (isFilledCkracks() == false) {
             exitMaxCondition:
             while (i <= (surface.getNmax() - 1)) {
@@ -100,7 +101,14 @@ public class Simulation {
                         if (growth) {
                             //Persistence (Serialization)
                             if (step >= 10 && i < (surface.getNmax() - 1)) {
-                                outputToDB();
+
+                                if (stepGraph <= 100) {
+                                    outputToDB(false);
+                                } else {
+                                    outputToDB(true);
+                                    stepGraph = 0;
+                                }
+
                                 step = 0;
                                 System.out.println("timeIndex x from X= " + i + "/" + (surface.getNmax() - 1));
                             }
@@ -109,7 +117,7 @@ public class Simulation {
 //                                outputToDB();
 //                                i++;
                                 break exitMaxCondition;
-                            }                            
+                            }
                             break coalescenceGrowthCycle;
                         }
                         //підростання тріщин
@@ -127,29 +135,32 @@ public class Simulation {
                         }
                         growth = true;
                     }
-                    if(i == (surface.getNmax() - 1)){
+                    if (i == (surface.getNmax() - 1)) {
                         System.out.println("timeIndex x from X= " + i + "/" + (surface.getNmax() - 1));
                         break exitMaxCondition;
                     }
                     i++;
                     step++;
+                    stepGraph++;
                 }
             }
 
 
             filledCkracks = true;
             maxTimeIndx = i;
-            outputToDB();
+            outputToDB(true);
 //            outputToFile(i);
         }
         getPaintedCracks(maxTimeIndx);
     }
+
     private void inputFromDB(int timeIndx) {
         paintedCracks =
                 persistObj.retrieve(timeObj.getInitTime().get(timeIndx));
     }
-    private void outputToDB() {
-        persistObj.persist(ellipticalCrackList);
+
+    private void outputToDB(boolean parGraph) {
+        persistObj.persist(ellipticalCrackList, parGraph);
         persistObj.commit();
 
 
@@ -224,7 +235,7 @@ public class Simulation {
             newCrack.setDepthB(depth);
         }
 //      check that crack not in stress release zone
-        if (!newCrack.isInReleaseZone(rndX, rndY, ellipticalCrackList) && (newCrack.getLength2a()>0)) {
+        if (!newCrack.isInReleaseZone(rndX, rndY, ellipticalCrackList) && (newCrack.getLength2a() > 0)) {
             ellipticalCrackList.add(newCrack);
             //does some old cracks will be in stress releaze zone of this crack
 //            newCrack.setInStressRelZoneScreen(ellipticalCrackList);
@@ -301,12 +312,9 @@ public class Simulation {
 //        }
 //
 //    }
-
-
-
     /**
-//     * input file
-//     */
+    //     * input file
+    //     */
 //    private void inputFromFile(int timeIndx) {
 //        ObjectInputStream in = null;
 //        try {
@@ -324,7 +332,6 @@ public class Simulation {
 //            }
 //        }
 //    }
-
     public ArrayList<SemiellipticalCrack> getPainted() {
         return paintedCracks;
     }
@@ -432,5 +439,4 @@ public class Simulation {
     public static double getAverageDepth() {
         return averageDepth;
     }
-
 }
