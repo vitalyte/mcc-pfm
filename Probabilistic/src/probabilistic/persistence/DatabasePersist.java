@@ -270,11 +270,13 @@ public class DatabasePersist {
                         pointInsert.executeUpdate();
                         tipID++;
                     }
+                    
 
                 }
                 if (persistGraph) {
                     crackID++;
                 }
+                
             }
             resultInsert.setLong(1, resultID);
             resultInsert.setDouble(2, currentTimeLoc);
