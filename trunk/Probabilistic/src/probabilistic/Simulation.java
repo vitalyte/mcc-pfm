@@ -100,18 +100,17 @@ public class Simulation {
                         coalescence(i);
                         if (growth) {
                             //Persistence (Serialization)
-                            if (step >= 10 && i < (surface.getNmax() - 1)) {
-
-                                if (stepGraph <= 100) {
-                                    outputToDB(false);
-                                } else {
-                                    outputToDB(true);
-                                    stepGraph = 0;
-                                }
-
-                                step = 0;
-                                System.out.println("timeIndex x from X= " + i + "/" + (surface.getNmax() - 1));
+                            if ((stepGraph >= 100)) {
+                                outputToDB(true);
+                                stepGraph = 0;
+                                System.out.println("timeIndexGraph x from X= " + i + "/" + (surface.getNmax() - 1));
                             }
+                            if (!(stepGraph >= 100) && (step >= 10) && i < (surface.getNmax() - 1)) {
+                                outputToDB(false);
+                                step = 0;
+                                
+                            }
+
                             if (maxLengthCondition) {
 //                                maxTimeIndx = i;
 //                                outputToDB();
